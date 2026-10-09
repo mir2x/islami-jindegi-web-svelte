@@ -1,0 +1,56 @@
+{
+	"name": "islami-jindegi-web",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"format": "prettier --write \"src/**/*.{ts,svelte,css}\"",
+		"start": "node build"
+	},
+	"devDependencies": {
+		"@fontsource-variable/geist-mono": "^5.3.0",
+		"@fontsource/poppins": "^5.3.0",
+		"@lucide/svelte": "^1.53.0",
+		"@sveltejs/adapter-node": "^6.0.0",
+		"@sveltejs/kit": "^3.0.0",
+		"@sveltejs/vite-plugin-svelte": "^7.2.0",
+		"@tailwindcss/vite": "^4.3.3",
+		"@tiptap/core": "3.31.4",
+		"@tiptap/extension-image": "3.31.4",
+		"@tiptap/extension-placeholder": "3.31.4",
+		"@tiptap/extension-table": "3.31.4",
+		"@tiptap/extension-text-align": "3.31.4",
+		"@tiptap/extension-text-style": "3.31.4",
+		"@tiptap/pm": "3.31.4",
+		"@tiptap/starter-kit": "3.31.4",
+		"@types/node": "^26.6.4",
+		"@umalqura/core": "^0.0.7",
+		"clsx": "^2.1.1",
+		"pdfjs-dist": "^6.4.299",
+		"prettier": "^3.9.9",
+		"prettier-plugin-svelte": "^4.1.1",
+		"svelte": "^5.57.1",
+		"svelte-check": "^4.6.0",
+		"tailwind-merge": "^3.7.0",
+		"tailwindcss": "^4.3.3",
+		"tw-animate-css": "^1.4.0",
+		"typescript": "^6.0.3",
+		"vite": "^8.3.0"
+	},
+	"imports": {
+		"#lib/*": "./src/lib/*"
+	},
+	"dependencies": {
+		"adhan": "^4.4.6",
+		"sharp": "^0.35.5"
+	},
+	"engines": {
+		"node": ">=22.17"
+	}
+}

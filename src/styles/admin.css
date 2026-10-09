@@ -1,0 +1,192 @@
+/* Admin dashboard only: imported by the admin layout, so the public bundle never carries it.
+   `admin` stays on <html> while the dashboard is open; `dark` follows the admin's own preference.
+   Dark mode takes the shared tokens from `.dark` in app.css and only fills in what the public
+   palette lacks (charts/sidebar). Light mode keeps the :root palette but re-lights the sidebar. */
+.admin.dark {
+	--chart-1: #7ec7b2;
+	--chart-2: #52a793;
+	--chart-3: #bedbd7;
+	--chart-4: #2d6d84;
+	--chart-5: #085053;
+	--sidebar: #0f2f3c;
+	--sidebar-foreground: #bedbd7;
+	--sidebar-primary: #7ec7b2;
+	--sidebar-primary-foreground: #0a3a3a;
+	--sidebar-accent: #19546c;
+	--sidebar-accent-foreground: #daf5f2;
+	--sidebar-border: oklch(1 0 0 / 10%);
+	--sidebar-ring: #7ec7b2;
+}
+
+.admin:not(.dark) {
+	--sidebar: #ffffff;
+	--sidebar-foreground: #2f4a50;
+	--sidebar-primary: #1f8a70;
+	--sidebar-primary-foreground: #ffffff;
+	--sidebar-accent: #e7f4ef;
+	--sidebar-accent-foreground: #14564a;
+	--sidebar-border: #e5eae8;
+	--sidebar-ring: #1f8a70;
+}
+
+/* ─── Tiptap Editor ─────────────────────────────────────────────────────── */
+.ProseMirror {
+	padding: 1rem 1.25rem;
+	min-height: 200px;
+	outline: none;
+	font-size: 0.9rem;
+	line-height: 1.75;
+	color: var(--foreground);
+}
+.ProseMirror p {
+	margin-bottom: 0.65rem;
+}
+.ProseMirror p:last-child {
+	margin-bottom: 0;
+}
+.ProseMirror h1 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin: 1rem 0 0.5rem;
+	line-height: 1.3;
+}
+.ProseMirror h2 {
+	font-size: 1.25rem;
+	font-weight: 700;
+	margin: 0.9rem 0 0.45rem;
+	line-height: 1.3;
+}
+.ProseMirror h3 {
+	font-size: 1.1rem;
+	font-weight: 600;
+	margin: 0.75rem 0 0.4rem;
+	line-height: 1.3;
+}
+.ProseMirror h4 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin: 0.65rem 0 0.35rem;
+}
+.ProseMirror ul {
+	list-style: disc;
+	padding-left: 1.5rem;
+	margin-bottom: 0.65rem;
+}
+.ProseMirror ol {
+	list-style: decimal;
+	padding-left: 1.5rem;
+	margin-bottom: 0.65rem;
+}
+.ProseMirror li {
+	margin-bottom: 0.2rem;
+}
+.ProseMirror li p {
+	margin-bottom: 0;
+}
+.ProseMirror blockquote {
+	border-left: 3px solid var(--primary);
+	padding-left: 1rem;
+	margin: 0.75rem 0;
+	color: var(--muted-foreground);
+	font-style: italic;
+}
+.ProseMirror pre {
+	background: var(--muted);
+	border-radius: 0.5rem;
+	padding: 0.75rem 1rem;
+	margin-bottom: 0.65rem;
+	overflow-x: auto;
+}
+.ProseMirror pre code {
+	background: none;
+	padding: 0;
+	font-size: 0.8rem;
+}
+.ProseMirror code {
+	background: var(--muted);
+	padding: 0.1rem 0.3rem;
+	border-radius: 0.25rem;
+	font-size: 0.8rem;
+	font-family: var(--font-mono);
+}
+.ProseMirror hr {
+	border: none;
+	border-top: 1px solid var(--border);
+	margin: 1rem 0;
+}
+.ProseMirror img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 0.5rem;
+	display: block;
+	margin: 0.5rem 0;
+}
+.ProseMirror img.ProseMirror-selectednode {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+}
+
+/* Tables */
+.ProseMirror table {
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 0.75rem;
+	table-layout: fixed;
+}
+.ProseMirror th,
+.ProseMirror td {
+	border: 1px solid var(--border);
+	padding: 0.4rem 0.65rem;
+	vertical-align: top;
+	position: relative;
+	min-width: 60px;
+}
+.ProseMirror th {
+	background: var(--muted);
+	font-weight: 600;
+}
+.ProseMirror .selectedCell::after {
+	background: oklch(0.64 0.22 150 / 0.12);
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+.ProseMirror .column-resize-handle {
+	background-color: var(--primary);
+	bottom: -2px;
+	pointer-events: none;
+	position: absolute;
+	right: -2px;
+	top: 0;
+	width: 4px;
+}
+
+/* Placeholder */
+.ProseMirror p.is-editor-empty:first-child::before {
+	color: var(--muted-foreground);
+	content: attr(data-placeholder);
+	float: left;
+	height: 0;
+	pointer-events: none;
+	opacity: 0.6;
+}
+
+/* RTL support — dir attribute on blocks */
+.ProseMirror [dir='rtl'],
+.prose-content [dir='rtl'] {
+	direction: rtl;
+	text-align: right;
+}
+.ProseMirror [dir='ltr'],
+.prose-content [dir='ltr'] {
+	direction: ltr;
+	text-align: left;
+}
+
+/* Link */
+.ProseMirror a {
+	color: var(--primary);
+	text-decoration: underline;
+	cursor: pointer;
+}

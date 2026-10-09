@@ -1,0 +1,13 @@
+{
+	"name": "ইসলামী যিন্দেগী - Islami Jindegi",
+	"short_name": "Islami Jindegi",
+	"description": "ইসলামী জীবনযাপনের আলোকবর্তিকা — কুরআন, হাদীস, নামাজের সময়সূচী, হিজরী ক্যালেন্ডার, বয়ান ও বই",
+	"start_url": "/bn",
+	"display": "standalone",
+	"background_color": "#062329",
+	"theme_color": "#0f766e",
+	"icons": [
+		{ "src": "/icon.png", "sizes": "192x192", "type": "image/png" },
+		{ "src": "/logo-icon.png", "sizes": "512x512", "type": "image/png" }
+	]
+}

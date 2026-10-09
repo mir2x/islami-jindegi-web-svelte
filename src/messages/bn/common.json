@@ -1,0 +1,36 @@
+{
+  "Metadata": {
+    "title": "ইসলামী যিন্দেগী",
+    "description": "ইসলামী জীবনযাপনের আলোকবর্তিকা",
+    "homeTitle": "ইসলামী যিন্দেগী — কুরআন, হাদীস, বয়ান, কিতাব ও মাসাইল",
+    "homeDescription": "কুরআন মাজীদ, হাদীস, বয়ান, কিতাব, মালফুযাত, মাসাইল ও দু'আ-দুরূদ — নামাযের সময়সূচী ও হিজরী ক্যালেন্ডারসহ নির্ভরযোগ্য ইসলামী জ্ঞান এক জায়গায়।"
+  },
+  "Common": {
+    "pageNumber": "পৃষ্ঠা {number}",
+    "pagination": "পৃষ্ঠাসমূহ",
+    "loading": "লোড হচ্ছে...",
+    "search": "খুঁজুন",
+    "save": "সংরক্ষণ",
+    "cancel": "বাতিল",
+    "delete": "মুছে ফেলুন",
+    "edit": "সম্পাদনা",
+    "create": "তৈরি করুন",
+    "back": "পিছনে",
+    "close": "বন্ধ করুন",
+    "confirm": "নিশ্চিত করুন",
+    "noResults": "কোনো ফলাফল পাওয়া যায়নি",
+    "somethingWentWrong": "কিছু একটা সমস্যা হয়েছে",
+    "tryAgain": "আবার চেষ্টা করুন",
+    "readMore": "আরও পড়ুন",
+    "viewAll": "সব দেখুন",
+    "languageSwitcherLabel": "ভাষা",
+    "searchPlaceholder": "খুঁজুন...",
+    "searchShort": "সার্চ",
+    "all": "সব",
+    "previous": "আগের",
+    "next": "পরের",
+    "offlineColumn": "অফলাইন",
+    "offlineFilterLabel": "শুধু অফলাইন",
+    "offlineUpdateFailed": "অফলাইন সুবিধা আপডেট করতে ব্যর্থ হয়েছে"
+  }
+}

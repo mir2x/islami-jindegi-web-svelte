@@ -1,0 +1,176 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@fontsource/poppins/latin-400.css';
+@import '@fontsource/poppins/latin-500.css';
+@import '@fontsource/poppins/latin-600.css';
+@import '@fontsource/poppins/latin-700.css';
+@import '@fontsource-variable/geist-mono/wght.css';
+@import './styles/fonts.css';
+@import './styles/prose.css';
+
+@custom-variant dark (&:is(.dark *));
+/* Viewport-height variants for the app-shell home layout: `tall` viewports get the
+   fixed no-scroll shell, `short` ones (small laptops, 125–150% OS scaling, browser
+   zoom) fall back to a normally-flowing, scrollable page. rem-based so browser zoom
+   moves the breakpoint along with the content. */
+@custom-variant tall (@media (height >= 60rem));
+@custom-variant short (@media (height < 60rem));
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: 'SolaimanLipi', 'NoorehudaProse', 'Poppins', sans-serif;
+	--font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+	--font-heading: 'SolaimanLipi', 'NoorehudaProse', 'Poppins', sans-serif;
+	--animate-ticker-in: ticker-in 0.45s ease both;
+	--animate-ticker-out: ticker-out 0.45s ease both;
+	--color-sidebar-ring: var(--sidebar-ring);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar: var(--sidebar);
+	--color-chart-5: var(--chart-5);
+	--color-chart-4: var(--chart-4);
+	--color-chart-3: var(--chart-3);
+	--color-chart-2: var(--chart-2);
+	--color-chart-1: var(--chart-1);
+	--color-ring: var(--ring);
+	--color-input: var(--input);
+	--color-border: var(--border);
+	--color-destructive: var(--destructive);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-accent: var(--accent);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-muted: var(--muted);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary: var(--secondary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary: var(--primary);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-popover: var(--popover);
+	--color-card-foreground: var(--card-foreground);
+	--color-card: var(--card);
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+	--background: oklch(0.978 0 0);
+	--foreground: oklch(0.145 0 0);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.145 0 0);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.145 0 0);
+	--primary: oklch(0.527 0.157 163);
+	--primary-foreground: oklch(0.985 0 0);
+	--secondary: oklch(0.96 0 0);
+	--secondary-foreground: oklch(0.205 0 0);
+	--muted: oklch(0.96 0 0);
+	--muted-foreground: oklch(0.52 0 0);
+	--accent: oklch(0.94 0.012 163);
+	--accent-foreground: oklch(0.3 0.08 163);
+	--destructive: oklch(0.577 0.245 27.325);
+	--border: oklch(0.91 0 0);
+	--input: oklch(0.91 0 0);
+	--ring: oklch(0.527 0.157 163);
+	--chart-1: oklch(0.527 0.157 163);
+	--chart-2: oklch(0.696 0.171 163);
+	--chart-3: oklch(0.836 0.092 163);
+	--chart-4: oklch(0.4 0.11 163);
+	--chart-5: oklch(0.27 0.07 163);
+	--radius: 0.75rem;
+	--sidebar: oklch(0.162 0.044 163);
+	--sidebar-foreground: oklch(0.88 0.022 163);
+	--sidebar-primary: oklch(0.62 0.172 163);
+	--sidebar-primary-foreground: oklch(0.06 0.015 163);
+	--sidebar-accent: oklch(0.23 0.057 163);
+	--sidebar-accent-foreground: oklch(0.92 0.022 163);
+	--sidebar-border: oklch(0.26 0.058 163);
+	--sidebar-ring: oklch(0.62 0.172 163);
+}
+
+/* Public site dark theme — Islami Jindegi's brand teal, carried over from the
+   legacy site's palette (islamic-jindegi-web/app/styles/settings/colors.css). */
+.dark {
+	--background: #163f4f;
+	--foreground: #ebebeb;
+	/* --card intentionally stays in the dark teal family (not white): --foreground
+     is light everywhere on this site, and `bg-card` wraps ordinary content rows
+     (list items, sidebar panels) whose text uses `text-foreground`/`text-muted-
+     foreground`, not a card-specific token. A white --card here would make that
+     text unreadable. The one white-tile look from the reference design (home
+     page icon grid) is applied as a targeted `dark:` override on that component
+     instead of changing this global token. */
+	--card: #19546c;
+	--card-foreground: #ebebeb;
+	--popover: #19546c;
+	--popover-foreground: #ebebeb;
+	--primary: #7ec7b2;
+	--primary-foreground: #0a3a3a;
+	--secondary: #19546c;
+	--secondary-foreground: #ebebeb;
+	--muted: #2d6d84;
+	--muted-foreground: #bedbd7;
+	--accent: #085053;
+	--accent-foreground: #daf5f2;
+	--destructive: #a12f1f;
+	--border: oklch(1 0 0 / 12%);
+	--input: #2d6d84;
+	--ring: #7ec7b2;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: oklch(0.3 0.018 155) transparent;
+}
+
+*::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: oklch(0.3 0.018 155);
+	border-radius: 999px;
+	cursor: grab;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: oklch(0.4 0.025 155);
+}
+
+*::-webkit-scrollbar-thumb:active {
+	background: oklch(0.5 0.03 150);
+	cursor: grabbing;
+}
+
+*::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-size: 18px;
+		line-height: 1.65;
+	}
+	html {
+		@apply font-sans;
+	}
+}

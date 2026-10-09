@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "R6FXLLJ2MY.com.topofstacksoftware.IslamiJindegi",
+        "paths": [
+          "/dua/*",
+          "/bayan/*",
+          "/books/*",
+          "/articles/*",
+          "/news/*",
+          "/malfuzat/*",
+          "/masail/*",
+          "/madrasah/*",
+          "/contact",
+          "/donate"
+        ]
+      }
+    ]
+  }
+}

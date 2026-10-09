@@ -1,0 +1,161 @@
+@font-face {
+	font-family: 'SolaimanLipi';
+	src: url('/fonts/SolaimanLipi.woff2') format('woff2');
+	font-weight: 400 500;
+	font-style: normal;
+	font-display: swap;
+	unicode-range:
+		U+0980- U+09FF,
+		U+200C- U+200D,
+		U+25CC;
+}
+
+@font-face {
+	font-family: 'SolaimanLipi';
+	src: url('/fonts/SolaimanLipi-Bold.woff2') format('woff2');
+	font-weight: 600 700;
+	font-style: normal;
+	font-display: swap;
+	unicode-range:
+		U+0980- U+09FF,
+		U+200C- U+200D,
+		U+25CC;
+}
+
+/* ── Quran Arabic fonts (mirrored from islami-jindegi-app's assets/fonts) ── */
+@font-face {
+	font-family: 'Noorehuda';
+	src: url('/fonts/Noorehuda.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+/* Same font file as above, scaled up — Noorehuda's glyphs render visibly smaller than
+   SolaimanLipi/Latin at a shared font-size. Kept separate so the Quran reader (which
+   references 'Noorehuda' directly at a size already tuned for it) is unaffected. */
+@font-face {
+	font-family: 'NoorehudaProse';
+	src: url('/fonts/Noorehuda.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+	size-adjust: 175%;
+}
+@font-face {
+	font-family: 'AlMushafQuran';
+	src: url('/fonts/AlMushafQuran.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+	font-family: 'AlQalamKolkatta';
+	src: url('/fonts/AlQalamKolkatta.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+	font-family: 'AlQalamQuran';
+	src: url('/fonts/AlQalamQuran.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+	font-family: 'AlQalamQuranMajeed';
+	src: url('/fonts/AlQalamQuranMajeed.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+	font-family: 'Uthman';
+	src: url('/fonts/Uthman.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+	font-family: 'Uthmani';
+	src: url('/fonts/Uthmani.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+	font-family: 'MeQuran';
+	src: url('/fonts/MeQuran.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+	font-family: 'Kitab';
+	src: url('/fonts/Kitab.ttf') format('truetype');
+	font-display: swap;
+	unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+/* ── Bengali fonts (mirrored from islami-jindegi-app's assets/fonts) ── */
+@font-face {
+	font-family: 'Kalpurush';
+	src: url('/fonts/Kalpurush.ttf') format('truetype');
+	font-display: swap;
+	unicode-range:
+		U+0980- U+09FF,
+		U+200C- U+200D,
+		U+25CC;
+}
+@font-face {
+	font-family: 'NotoSansBengali';
+	src: url('/fonts/NotoSansBengali-Regular.ttf') format('truetype');
+	font-weight: 400 500;
+	font-display: swap;
+	unicode-range:
+		U+0980- U+09FF,
+		U+200C- U+200D,
+		U+25CC;
+}
+@font-face {
+	font-family: 'NotoSansBengali';
+	src: url('/fonts/NotoSansBengali-Bold.ttf') format('truetype');
+	font-weight: 600 700;
+	font-display: swap;
+	unicode-range:
+		U+0980- U+09FF,
+		U+200C- U+200D,
+		U+25CC;
+}
+@font-face {
+	font-family: 'SiyamRupali';
+	src: url('/fonts/SiyamRupali.ttf') format('truetype');
+	font-display: swap;
+	unicode-range:
+		U+0980- U+09FF,
+		U+200C- U+200D,
+		U+25CC;
+}
+@font-face {
+	font-family: 'BenSenHandwriting';
+	src: url('/fonts/BenSenHandwriting.ttf') format('truetype');
+	font-display: swap;
+	unicode-range:
+		U+0980- U+09FF,
+		U+200C- U+200D,
+		U+25CC;
+}
+
+/* News-ticker roll: incoming headline rises from below while the outgoing
+   one exits upward (used by the latest-news bar on the home page). */
+@keyframes ticker-in {
+	from {
+		transform: translateY(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+@keyframes ticker-out {
+	from {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	to {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+}

@@ -1,0 +1,6 @@
+.svelte-kit
+build
+node_modules
+static
+src/messages
+pnpm-lock.yaml

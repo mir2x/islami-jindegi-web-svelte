@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.islami_jindegi",
+      "sha256_cert_fingerprints": [
+        "84:11:59:85:2F:69:F4:89:6F:67:B9:FF:E1:A2:C3:E6:16:EC:26:E4:53:7A:42:5B:F0:9C:14:F7:75:07:B2:9C",
+        "DD:D4:77:6F:13:17:A4:A1:B8:96:8B:57:44:DB:35:1E:CE:27:EA:F3:A8:86:B0:2D:C5:34:FD:1B:10:C8:C7:D7"
+      ]
+    }
+  }
+]
