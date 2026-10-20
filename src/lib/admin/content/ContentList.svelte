@@ -148,7 +148,7 @@
 					{#each config.columns as col (col.kind + col.label)}
 						<td class="px-5 py-4"><ContentCell kind={col.kind} {item} copyId={config.copyId} onoffline={(v) => setOffline(item, v)} /></td>
 					{/each}
-					<td class="px-5 py-4"><RowActions onedit={(e) => edit(item.id, e)} ondelete={() => (deleting = item)} /></td>
+					<td class="px-5 py-4"><RowActions publicHref={`${config.publicPath}/${item.id}`} onedit={(e) => edit(item.id, e)} ondelete={() => (deleting = item)} /></td>
 				</tr>
 			{/each}
 		{/if}

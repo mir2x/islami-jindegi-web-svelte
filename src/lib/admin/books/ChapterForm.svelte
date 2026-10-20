@@ -13,6 +13,7 @@
 	import PublicViewButton from '../ui/PublicViewButton.svelte';
 	import Tabs from '../ui/Tabs.svelte';
 	import { saveForm } from '../ui/save.ts';
+	import DeleteItemButton from './DeleteItemButton.svelte';
 	import BookPicker from './BookPicker.svelte';
 
 	interface Props {
@@ -42,15 +43,18 @@
 			return toast.error(t('bookRequired'));
 		}
 		saving = true;
-		await saveForm({
+		const ok = await saveForm({
 			apiPath: chapter ? '/api/chapters' : `/api/books/${bookId}/chapters`,
 			id: chapter?.id,
 			name: 'Chapter',
 			fallback: '/admin/books',
+			stay: true,
+			redirect: (created) => `/admin/chapters/${created.id}/edit`,
 			failMessage: tc('somethingWentWrong'),
 			payload: { title: title.trim(), body: body || null, position: position ? parseInt(position) : undefined }
 		});
 		saving = false;
+		if (ok) window.dispatchEvent(new Event('book-hierarchy:refresh'));
 	}
 </script>
 
@@ -90,9 +94,10 @@
 			{/if}
 		</div>
 
-		<div class="flex gap-3 mt-6">
-			<Button type="submit" disabled={saving} class="flex-1 sm:flex-none sm:px-8">{saving ? t('saving') : chapter ? t('updateChapter') : t('createChapter')}</Button>
+		<div class="flex flex-wrap items-center justify-end gap-3 mt-6">
+			{#if chapter}<DeleteItemButton type="chapter" id={chapter.id} title={chapter.title} nextHref={`/admin/chapters?bookId=${chapter.bookId}`} />{/if}
 			<Button variant="outline" onclick={() => goBack('/admin/books')}>{tc('cancel')}</Button>
+			<Button type="submit" disabled={saving} class="flex-1 sm:flex-none sm:px-8">{saving ? t('saving') : chapter ? t('updateChapter') : t('createChapter')}</Button>
 		</div>
 	</form>
 </div>

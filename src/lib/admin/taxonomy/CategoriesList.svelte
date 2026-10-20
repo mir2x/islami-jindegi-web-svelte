@@ -59,7 +59,6 @@
 	}
 
 	async function refresh() {
-		lookups.invalidate('categories');
 		await Promise.all([load(), lookups.ensureCategories()]);
 	}
 

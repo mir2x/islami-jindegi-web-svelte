@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { goBack } from '../navigate.ts';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import Plus from '@lucide/svelte/icons/plus';
 	import { onMount } from 'svelte';
-	import { useT } from '#lib/i18n/use-t.svelte.ts';
+	import { localePath, useT } from '#lib/i18n/use-t.svelte.ts';
 	import { authorsForModule, categoriesForModule } from '#lib/modules.ts';
 	import type { BookDetail } from '#lib/types.ts';
 	import { lookups } from '../lookups.svelte.ts';
@@ -115,6 +116,10 @@
 						<Field label={t('priceLabel')}><input bind:value={price} placeholder={t('pricePlaceholder')} maxlength={50} class={inputCls} /></Field>
 						<Field label={t('publishedAtLabel')}><input type="date" bind:value={publishedAt} class={inputCls} /></Field>
 					</div>
+					<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+						<Field label={t('positionLabel')}><input type="number" min="1" bind:value={position} placeholder={t('autoPlaceholder')} class={inputCls} /></Field>
+						<div class="h-9 flex items-center"><Checkbox bind:checked={published}>{t('publishedLabel')}</Checkbox></div>
+					</div>
 				</Card>
 
 				<Card variant="compact" title={t('authorsAndCategories')}>
@@ -149,13 +154,21 @@
 			</div>
 
 			<div class="space-y-4">
+				{#if book}
+					{@const first = book.chapters[0]}
+					{@const subs = book.chapters.reduce((sum, c) => sum + c.subChapters.length, 0)}
+					<Card variant="compact" title={t('chaptersHeading')} class="border-primary/50 bg-primary/5">
+						<p class="text-xs text-muted-foreground">{t('chapterCount', { count: book.chapters.length })} · {t('subchapterCount', { count: subs })}</p>
+						<Button href={localePath(first ? `/admin/chapters/${first.id}/edit` : `/admin/chapters/new?bookId=${book.id}`)} class="w-full">{first ? t('manageChapters') : t('addChapter')}</Button>
+						<div class="grid grid-cols-2 gap-2">
+							<Button variant="outline" size="sm" href={localePath(`/admin/chapters/new?bookId=${book.id}`)} class="gap-1 text-xs"><Plus class="w-3.5 h-3.5" /> {t('addChapter')}</Button>
+							<Button variant="outline" size="sm" href={localePath(`/admin/subchapters/new?bookId=${book.id}`)} class="gap-1 text-xs"><Plus class="w-3.5 h-3.5" /> {t('addSubchapter')}</Button>
+						</div>
+					</Card>
+				{/if}
 				<Card variant="compact" title={t('media')}>
 					<Field label={t('coverImage')}><MediaField accept="image" bind:value={coverUrl} placeholder={t('noCoverImage')} compact /></Field>
 					<Field label={t('documentPdf')}><MediaField accept="document" bind:value={documentUrl} placeholder={t('noDocument')} compact /></Field>
-				</Card>
-				<Card variant="compact" title={t('settings')}>
-					<Field label={t('positionLabel')}><input type="number" min="1" bind:value={position} placeholder={t('autoPlaceholder')} class={inputCls} /></Field>
-					<Checkbox bind:checked={published}>{t('publishedLabel')}</Checkbox>
 				</Card>
 			</div>
 		</div>

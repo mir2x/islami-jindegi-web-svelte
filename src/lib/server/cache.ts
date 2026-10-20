@@ -52,3 +52,9 @@ export async function cached<T>(key: string, ttlSeconds: number, load: () => Pro
 	}
 	return refresh(key, ttlMs, load);
 }
+
+/** Drops every cached value (and any in-flight load), so the next request reads the API afresh. */
+export function clearCache() {
+	store.clear();
+	inflight.clear();
+}

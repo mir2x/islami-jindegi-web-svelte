@@ -23,6 +23,7 @@
 	let { kind, tabs }: { kind: 'chapters' | 'subchapters'; tabs: Snippet } = $props();
 
 	const PAGE_SIZE = 20;
+	const publicHref = (row: Row) => ('chapterId' in row ? `/books/${row.bookId}?chapter=${row.chapterId}&sub=${row.id}` : `/books/${row.bookId}?chapter=${row.id}`);
 	const t = useT('BooksAdmin');
 	const tc = useT('Common');
 	// A tab is mounted per kind (BooksPage keys on it), so these seed once.
@@ -146,7 +147,7 @@
 							><p class="truncate {c.mono ? 'text-sm font-mono text-muted-foreground' : c.bold ? 'font-semibold' : 'text-sm text-muted-foreground'}">{c.text(row)}</p></td
 						>
 					{/each}
-					<td class="px-5 py-4"><RowActions onedit={(e) => adminNavigate(`/admin/${kind}/${row.id}/edit`, e)} ondelete={() => (deleting = row)} /></td>
+					<td class="px-5 py-4"><RowActions publicHref={publicHref(row)} onedit={(e) => adminNavigate(`/admin/${kind}/${row.id}/edit`, e)} ondelete={() => (deleting = row)} /></td>
 				</tr>
 			{/each}
 		{/if}

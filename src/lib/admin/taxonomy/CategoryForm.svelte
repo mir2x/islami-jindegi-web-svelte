@@ -54,7 +54,6 @@
 			if (category) await api.put(`/api/categories/${category.id}`, payload);
 			else await api.post('/api/categories', payload);
 			toast.success(category ? 'Category updated' : 'Category created');
-			lookups.invalidate('categories');
 			goBack('/admin/categories');
 		} catch (err) {
 			// A duplicate title is the common case: staff used to consolidate categories by renaming one onto another.
@@ -71,7 +70,6 @@
 		try {
 			await api.post(`/api/categories/${category.id}/merge`, { targetId: conflictTarget.id });
 			toast.success(`Merged into "${conflictTarget.title}"`);
-			lookups.invalidate('categories');
 			goBack('/admin/categories');
 		} catch (err) {
 			toast.error(err instanceof ApiError ? err.message : 'Merge failed');

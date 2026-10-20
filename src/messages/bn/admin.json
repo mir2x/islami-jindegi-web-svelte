@@ -33,6 +33,7 @@
     "notifications": "নোটিফিকেশন"
   },
   "BooksAdmin": {
+    "selectChapterPrompt": "হায়ারার্কি থেকে একটি অধ্যায় বা উপ-অধ্যায় নির্বাচন করুন, অথবা নতুন যোগ করুন।",
     "title": "বই",
     "addBook": "বই যোগ করুন",
     "addChapter": "অধ্যায় যোগ করুন",
@@ -100,6 +101,12 @@
     "deleteDescriptionShort": "<strong>{name}</strong> স্থায়ীভাবে মুছে ফেলা হবে। এটি ফেরানো যাবে না।"
   },
   "BookForm": {
+    "chaptersHeading": "অধ্যায়সমূহ",
+    "chapterCount": "{count} টি অধ্যায়",
+    "subchapterCount": "{count} টি উপ-অধ্যায়",
+    "manageChapters": "অধ্যায় সম্পাদনা (প্রথম অধ্যায় থেকে)",
+    "addChapter": "অধ্যায়",
+    "addSubchapter": "উপ-অধ্যায়",
     "titleRequired": "শিরোনাম আবশ্যক",
     "bookUpdated": "বই আপডেট হয়েছে",
     "bookCreated": "বই তৈরি হয়েছে",

@@ -189,7 +189,7 @@
 						<!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
 						<div onclick={(e) => e.stopPropagation()}><Switch checked={book.isOfflineAvailable} label="Available offline" onchange={(v) => setOffline(book, v)} /></div>
 					</td>
-					<td class="px-5 py-4"><RowActions onedit={(e) => adminNavigate(`/admin/books/${book.id}/edit`, e)} ondelete={() => (deleting = book)} /></td>
+					<td class="px-5 py-4"><RowActions publicHref="/books/{book.id}" onedit={(e) => adminNavigate(`/admin/books/${book.id}/edit`, e)} ondelete={() => (deleting = book)} /></td>
 				</tr>
 			{/each}
 		{/if}

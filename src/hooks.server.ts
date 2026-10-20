@@ -29,7 +29,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	response.headers.set('x-content-type-options', 'nosniff');
 	response.headers.set('referrer-policy', 'strict-origin-when-cross-origin');
 	// The dashboard is client-rendered, so its HTML shell carries no meta tags: keep it out of search by header.
-	if (NOINDEX || /^\/(bn|en)\/admin(\/|$)/.test(pathname)) response.headers.set('x-robots-tag', 'noindex, nofollow');
+	const isAdmin = /^\/(bn|en)\/admin(\/|$)/.test(pathname);
+	if (NOINDEX || isAdmin) response.headers.set('x-robots-tag', 'noindex, nofollow');
+	// The admin shell must never be held by a browser or CDN.
+	if (isAdmin) response.headers.set('cache-control', 'no-store, must-revalidate');
 
 	// Public, cookie-free HTML: let a CDN hold it briefly. Everything else keeps its own headers.
 	if (response.status === 200 && event.request.method === 'GET' && !response.headers.has('cache-control') && response.headers.get('content-type')?.startsWith('text/html')) {

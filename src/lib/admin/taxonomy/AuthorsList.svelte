@@ -52,7 +52,6 @@
 	}
 
 	async function refresh() {
-		lookups.invalidate('authors');
 		await Promise.all([load(), lookups.ensureAuthors()]);
 	}
 

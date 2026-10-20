@@ -24,7 +24,6 @@
 			.sort((a, b) => a.position - b.position)}
 	save={async (module, ids) => {
 		await api.put('/api/authors/reorder', { module, authorIds: ids });
-		lookups.invalidate('authors');
 		await lookups.ensureAuthors();
 	}}
 />

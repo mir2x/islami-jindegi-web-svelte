@@ -22,7 +22,7 @@
 		outline: 'border-border bg-background hover:bg-muted dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
 		secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
 		ghost: 'hover:bg-muted dark:hover:bg-muted/50',
-		destructive: 'bg-destructive/10 text-destructive hover:bg-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30',
+		destructive: 'bg-red-600 text-white shadow-xs hover:bg-red-700',
 		link: 'text-primary underline-offset-4 hover:underline'
 	};
 	const sizes: Record<Size, string> = {

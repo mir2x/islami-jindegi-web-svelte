@@ -2,23 +2,27 @@
 	import BookOpen from '@lucide/svelte/icons/book-open';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import Plus from '@lucide/svelte/icons/plus';
 	import Loader2 from '@lucide/svelte/icons/loader-circle';
 	import Search from '@lucide/svelte/icons/search';
+	import { goto } from '$app/navigation';
 	import { tick, untrack } from 'svelte';
-	import { localePath } from '#lib/i18n/use-t.svelte.ts';
+	import { localePath, useT } from '#lib/i18n/use-t.svelte.ts';
 	import type { ChapterListItem, PagedResult, SubChapterListItem } from '#lib/types.ts';
 	import { cn } from '#lib/utils.ts';
 	import { api } from '../api.ts';
 	import { editorTab, withEditorTab } from '../editor-tab.svelte.ts';
-	import { inputCls, inp } from '../ui/classes.ts';
+	import Button from '../ui/Button.svelte';
+	import { inp } from '../ui/classes.ts';
 
 	interface Props {
 		bookId: string;
-		currentId: string;
-		currentType: 'chapter' | 'subchapter';
+		currentId?: string;
+		currentType?: 'chapter' | 'subchapter';
 	}
 	let { bookId, currentId, currentType }: Props = $props();
 
+	const t = useT('BooksAdmin');
 	const tab = editorTab();
 	let chapters = $state<ChapterListItem[]>([]);
 	let subs = $state<SubChapterListItem[]>([]);
@@ -26,9 +30,18 @@
 	let search = $state('');
 	let expanded = $state<Record<string, boolean>>({});
 	let listEl = $state<HTMLElement>();
+	// Bumped when a chapter or subchapter is saved, so the tree picks up renamed or moved items.
+	let version = $state(0);
+
+	$effect(() => {
+		const bump = () => version++;
+		window.addEventListener('book-hierarchy:refresh', bump);
+		return () => window.removeEventListener('book-hierarchy:refresh', bump);
+	});
 
 	$effect(() => {
 		const id = bookId;
+		void version;
 		let cancelled = false;
 		Promise.all([
 			api.get<PagedResult<ChapterListItem>>(`/api/chapters?bookId=${id}&pageSize=5000&sort=position_asc`),
@@ -72,6 +85,14 @@
 		e.stopPropagation();
 		expanded[id] = !expanded[id];
 	};
+	// Opens the new-subchapter form with this chapter (and optionally subchapter) preselected as the parent.
+	const addUnder = (chapterId: string, parentId: string | null, e: MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		const qs = new URLSearchParams({ bookId, chapterId, ...(parentId ? { parentSubChapterId: parentId } : {}) });
+		void goto(localePath(`/admin/subchapters/new?${qs}`));
+	};
+	const plusCls = 'shrink-0 inline-flex items-center justify-center w-5 h-5 rounded-md border border-border bg-background text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring';
 	const link = (kind: 'chapters' | 'subchapters', id: string) => withEditorTab(localePath(`/admin/${kind}/${id}/edit`), tab.current);
 </script>
 
@@ -100,6 +121,7 @@
 						{:else}<div class="w-4.5"></div>{/if}
 						<span class="text-xs font-mono shrink-0 opacity-70">{sub.position}.</span>
 						<span class="line-clamp-2 leading-tight flex-1">{sub.title}</span>
+						<button type="button" title={t('addSubchapter')} aria-label={t('addSubchapter')} onclick={(e) => addUnder(chapterId, sub.id, e)} class={plusCls}><Plus class="w-3.5 h-3.5" /></button>
 					</a>
 					{#if open}{@render subTree(sub.id, chapterId, depth + 1)}{/if}
 				</div>
@@ -111,6 +133,10 @@
 <div class="hidden lg:flex flex-col h-full bg-sidebar border-r border-sidebar-border w-80 shrink-0">
 	<div class="p-4 border-b border-sidebar-border sticky top-0 bg-sidebar z-10 space-y-3">
 		<div class="flex items-center gap-2 text-sm font-medium text-muted-foreground px-1"><BookOpen class="w-4 h-4" /><span>Book Hierarchy</span></div>
+		<div class="grid grid-cols-2 gap-2">
+			<Button variant="outline" size="sm" href={localePath(`/admin/chapters/new?bookId=${bookId}`)} class="gap-1 text-xs"><Plus class="w-3.5 h-3.5" /> {t('addChapter')}</Button>
+			<Button variant="outline" size="sm" href={localePath(`/admin/subchapters/new?bookId=${bookId}`)} class="gap-1 text-xs"><Plus class="w-3.5 h-3.5" /> {t('addSubchapter')}</Button>
+		</div>
 		<div class="relative">
 			<Search class="absolute left-2.5 top-2 h-4 w-4 text-muted-foreground" />
 			<input placeholder="Search title or position..." bind:value={search} class={inp('pl-8 bg-background')} />
@@ -146,6 +172,7 @@
 							{:else}<div class="w-5"></div>{/if}
 							<span class="text-xs font-bold shrink-0 opacity-80">{chapter.position}.</span>
 							<span class="line-clamp-2 leading-tight flex-1">{chapter.title}</span>
+							<button type="button" title={t('addSubchapter')} aria-label={t('addSubchapter')} onclick={(e) => addUnder(chapter.id, null, e)} class={plusCls}><Plus class="w-3.5 h-3.5" /></button>
 						</a>
 						{#if open}<div class="mt-0.5">{@render subTree(null, chapter.id, 1)}</div>{/if}
 					</div>

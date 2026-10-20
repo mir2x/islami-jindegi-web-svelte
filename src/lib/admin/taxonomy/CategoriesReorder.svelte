@@ -24,7 +24,6 @@
 			.sort((a, b) => a.position - b.position)}
 	save={async (module, ids) => {
 		await api.put('/api/categories/reorder', { module, categoryIds: ids });
-		lookups.invalidate('categories');
 		await lookups.ensureCategories();
 	}}
 />

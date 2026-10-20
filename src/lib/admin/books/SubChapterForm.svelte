@@ -14,14 +14,17 @@
 	import PublicViewButton from '../ui/PublicViewButton.svelte';
 	import Tabs from '../ui/Tabs.svelte';
 	import { saveForm } from '../ui/save.ts';
+	import DeleteItemButton from './DeleteItemButton.svelte';
 	import BookPicker from './BookPicker.svelte';
 	import ChapterTreePicker from './ChapterTreePicker.svelte';
 
 	interface Props {
 		subChapter?: SubChapterDetail | null;
 		defaultBookId?: string;
+		defaultChapterId?: string;
+		defaultParentId?: string;
 	}
-	let { subChapter = null, defaultBookId = '' }: Props = $props();
+	let { subChapter = null, defaultBookId = '', defaultChapterId = '', defaultParentId = '' }: Props = $props();
 
 	const t = useT('SubChapterForm');
 	const tc = useT('Common');
@@ -35,9 +38,9 @@
 	// svelte-ignore state_referenced_locally
 	let bookId = $state(subChapter?.bookId ?? defaultBookId);
 	// svelte-ignore state_referenced_locally
-	let chapterId = $state(subChapter?.chapterId ?? '');
+	let chapterId = $state(subChapter?.chapterId ?? defaultChapterId);
 	// svelte-ignore state_referenced_locally
-	let parentId = $state(subChapter?.parentSubChapterId ?? '');
+	let parentId = $state(subChapter?.parentSubChapterId ?? defaultParentId);
 	let saving = $state(false);
 	// Chapters are tagged with the book they were fetched for, so another (or cleared) book derives to empty.
 	let loaded = $state<{ bookId: string; chapters: Chapter[] } | null>(null);
@@ -68,15 +71,18 @@
 			return toast.error(t('parentChapterRequired'));
 		}
 		saving = true;
-		await saveForm({
+		const ok = await saveForm({
 			apiPath: '/api/subchapters',
 			id: subChapter?.id,
 			name: 'Subchapter',
 			fallback: '/admin/books',
+			stay: true,
+			redirect: (created) => `/admin/subchapters/${created.id}/edit`,
 			failMessage: tc('somethingWentWrong'),
 			payload: { title: title.trim(), body: body || null, position: position ? parseInt(position) : undefined, chapterId, parentSubChapterId: parentId || null }
 		});
 		saving = false;
+		if (ok) window.dispatchEvent(new Event('book-hierarchy:refresh'));
 	}
 </script>
 
@@ -136,9 +142,10 @@
 			{/if}
 		</div>
 
-		<div class="flex gap-3 mt-6">
-			<Button type="submit" disabled={saving} class="flex-1 sm:flex-none sm:px-8">{saving ? t('saving') : subChapter ? t('updateSubchapter') : t('createSubchapter')}</Button>
+		<div class="flex flex-wrap items-center justify-end gap-3 mt-6">
+			{#if subChapter}<DeleteItemButton type="subchapter" id={subChapter.id} title={subChapter.title} nextHref={`/admin/chapters?bookId=${subChapter.bookId}`} />{/if}
 			<Button variant="outline" onclick={() => goBack('/admin/books')}>{tc('cancel')}</Button>
+			<Button type="submit" disabled={saving} class="flex-1 sm:flex-none sm:px-8">{saving ? t('saving') : subChapter ? t('updateSubchapter') : t('createSubchapter')}</Button>
 		</div>
 	</form>
 </div>

@@ -15,10 +15,15 @@ export class ApiError extends Error {
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
 	const token = auth.peekToken();
 	const res = await fetch(`${NEXT_PUBLIC_API_URL}${path}`, {
+		cache: 'no-store',
 		...options,
 		headers: { ...(options?.body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) }
 	});
 	if (res.status === 401) auth.clear();
+	// A successful write: have the public site drop its cached copy so the change shows straight away.
+	if (res.ok && options?.method && options.method !== 'GET' && token) {
+		void fetch('/api/revalidate', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
+	}
 
 	if (!res.ok) {
 		// The API returns { message } for conflicts and validation failures; fall back to the raw body.

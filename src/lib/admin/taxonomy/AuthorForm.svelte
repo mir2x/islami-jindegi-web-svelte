@@ -52,7 +52,6 @@
 			if (author) await api.put(`/api/authors/${author.id}`, payload);
 			else await api.post('/api/authors', payload);
 			toast.success(author ? 'Author updated' : 'Author created');
-			lookups.invalidate('authors');
 			goBack('/admin/authors');
 		} catch (err) {
 			// A duplicate name is the common case: staff used to consolidate authors by renaming one onto another, which moves no content.
@@ -69,7 +68,6 @@
 		try {
 			await api.post(`/api/authors/${author.id}/merge`, { targetId: conflictTarget.id });
 			toast.success(`Merged into "${conflictTarget.name}"`);
-			lookups.invalidate('authors');
 			goBack('/admin/authors');
 		} catch (err) {
 			toast.error(err instanceof ApiError ? err.message : 'Merge failed');

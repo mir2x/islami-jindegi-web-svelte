@@ -33,6 +33,7 @@
     "notifications": "Notifications"
   },
   "BooksAdmin": {
+    "selectChapterPrompt": "Select a chapter or subchapter from the hierarchy, or add a new one.",
     "title": "Books",
     "addBook": "Add book",
     "addChapter": "Add chapter",
@@ -100,6 +101,12 @@
     "deleteDescriptionShort": "<strong>{name}</strong> will be permanently deleted. This cannot be undone."
   },
   "BookForm": {
+    "chaptersHeading": "Chapters",
+    "chapterCount": "{count, plural, one {# chapter} other {# chapters}}",
+    "subchapterCount": "{count, plural, one {# subchapter} other {# subchapters}}",
+    "manageChapters": "Edit chapters (starts at first chapter)",
+    "addChapter": "Chapter",
+    "addSubchapter": "Subchapter",
     "titleRequired": "Title is required",
     "bookUpdated": "Book updated",
     "bookCreated": "Book created",

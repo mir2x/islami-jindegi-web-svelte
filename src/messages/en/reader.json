@@ -29,7 +29,7 @@
     "publisher": "Publisher: {name}",
     "price": "Price: {price}",
     "booksLabel": "Books",
-    "introduction": "Introduction",
+    "introduction": "About this book",
     "openNavigation": "Open navigation",
     "readPdf": "Read PDF",
     "chapterIndexHint": "This chapter contains the following topics:",
