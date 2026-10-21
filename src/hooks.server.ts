@@ -1,6 +1,7 @@
 import { COMPRESS } from '$app/env/private';
 import { NEXT_PUBLIC_NOINDEX } from '$app/env/public';
 import type { Handle } from '@sveltejs/kit/hooks';
+import { withVisitorIp } from '#lib/server/client-ip.ts';
 import { compress } from '#lib/server/compress.ts';
 import { resolveRedirect } from '#lib/server/redirects.ts';
 
@@ -22,9 +23,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	const lang = pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'bn';
-	const response = await resolve(event, {
-		transformPageChunk: ({ html }) => html.replace('%lang%', lang)
-	});
+	const response = await withVisitorIp(event.request.headers, () =>
+		resolve(event, {
+			transformPageChunk: ({ html }) => html.replace('%lang%', lang)
+		})
+	);
 
 	response.headers.set('x-content-type-options', 'nosniff');
 	response.headers.set('referrer-policy', 'strict-origin-when-cross-origin');

@@ -31,6 +31,11 @@ changing the API URL only needs a restart. Declared in `src/env.ts`.
 | `NEXT_PUBLIC_NOINDEX`          | `1` on staging: robots, sitemap and meta all go noindex                     |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Google OAuth client id of the admin sign-in button                          |
 | `COMPRESS`                     | `0` to skip in-process brotli/gzip when a reverse proxy already compresses |
+| `API_INTERNAL_URL`             | optional: API base for server-side calls on the host network (see below)    |
+
+`API_INTERNAL_URL` (e.g. `http://ij-backend:8080`) lets the server reach the API without going out through the public
+edge. Each server-side call then carries the visitor's IP as `x-client-ip`, so the API rate-limits per visitor and not
+per web server. Unset, the server uses `NEXT_PUBLIC_API_URL`.
 
 ## URLs and SEO parity
 

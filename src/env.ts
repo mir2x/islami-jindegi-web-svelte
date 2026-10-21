@@ -9,6 +9,11 @@ export const variables = defineEnvVars({
 		description: 'Compress dynamic responses (brotli/gzip). Set to 0 when a reverse proxy already does it.',
 		schema: (value) => value !== '0'
 	},
+	API_INTERNAL_URL: {
+		description:
+			'Optional base URL the server uses to reach the API from inside the host network (e.g. http://ij-backend:8080). The visitor IP is forwarded as x-client-ip so the API rate-limits per visitor, not per web server. Unset: the server uses NEXT_PUBLIC_API_URL.',
+		schema: (value) => (value ?? '').replace(/\/$/, '')
+	},
 	NEXT_PUBLIC_API_URL: {
 		public: true,
 		description: 'Base URL of the Islami Jindegi API, e.g. https://api.islamijindegi.com',
