@@ -2,16 +2,13 @@
 	import { goto } from '$app/navigation';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
-	import Play from '@lucide/svelte/icons/play';
 	import { onDestroy, tick } from 'svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 	import { currentLocale, localePath, useT } from '#lib/i18n/use-t.svelte.ts';
-	import { useNum } from '#lib/use-num.svelte.ts';
 	import { quranLastRead } from '#lib/storage/last-read.svelte.ts';
 	import type { QuranReciter, QuranSurah, QuranSurahDetail } from '#lib/types.ts';
 	import AudioBar from './AudioBar.svelte';
 	import AyahCard from './AyahCard.svelte';
-	import BookmarksModal from './BookmarksModal.svelte';
 	import { quranFontVars, quranPrefs as prefs } from './prefs.svelte.ts';
 	import SearchModal from './SearchModal.svelte';
 	import { SurahAudio } from './surah-audio.svelte.ts';
@@ -19,6 +16,7 @@
 	import SurahSettings from './SurahSettings.svelte';
 	import SurahTopBar from './SurahTopBar.svelte';
 	import TafsirModal from './TafsirModal.svelte';
+	import SurahPhoneBar from './SurahPhoneBar.svelte';
 	import TilawatDialog from './TilawatDialog.svelte';
 
 	interface Props {
@@ -31,15 +29,12 @@
 	let { surah, allSurahs, reciters, translators, initialAyah }: Props = $props();
 
 	const t = useT('SurahReader');
-	const n = useNum();
 	const locale = $derived(currentLocale());
-	const revelation = $derived(surah.revelationType === 'Meccan' ? t('meccan') : surah.revelationType === 'Medinan' ? t('medinan') : surah.revelationType);
 	const desktop = new MediaQuery('min-width: 1024px', false);
 	let scroller = $state<HTMLElement>();
 	let settingsOpen = $state(false);
 	let navPref = $state<boolean | null>(null);
 	let searchOpen = $state(false);
-	let bookmarksOpen = $state(false);
 	let tilawatOpen = $state(false);
 	let tafsirAyah = $state<number | null>(null);
 	let showWords = $state(false);
@@ -52,7 +47,6 @@
 	const reciterId = $derived(prefs.reciter(reciters));
 	const prev = $derived(surah.surahNumber > 1 ? allSurahs.find((s) => s.number === surah.surahNumber - 1) : null);
 	const next = $derived(surah.surahNumber < 114 ? allSurahs.find((s) => s.number === surah.surahNumber + 1) : null);
-	const bismillah = $derived(surah.surahNumber !== 1 && surah.surahNumber !== 9);
 
 	function scrollToAyah(n: number) {
 		requestAnimationFrame(() => scroller?.querySelector(`[data-ayah="${n}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
@@ -121,14 +115,13 @@
 
 <svelte:window onkeydown={onKey} />
 
-<div class="flex flex-col bg-background h-full" style={quranFontVars()}>
+<div class="relative flex flex-col bg-background h-full overflow-hidden" style={quranFontVars()}>
 	<SurahTopBar
 		{surah}
 		{navOpen}
 		{settingsOpen}
 		ontoggleNav={() => (navPref = !navOpen)}
 		ontoggleSettings={() => (settingsOpen = !settingsOpen)}
-		onbookmarks={() => (bookmarksOpen = true)}
 		onsearch={() => (searchOpen = true)}
 	/>
 
@@ -147,23 +140,12 @@
 		/>
 	{/if}
 
-	<div class="flex flex-1 overflow-hidden">
+	<div class="relative flex flex-1 overflow-hidden">
+		<!-- Phones: tap outside the sidebar to close it. -->
+		{#if navOpen}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (navPref = false)} class="sm:hidden absolute inset-0 z-40 bg-black/50 cursor-default"></button>{/if}
 		{#if navOpen}<SurahNav {allSurahs} surahNumber={surah.surahNumber} activeAyah={audio.activeAyah} ongo={go} />{/if}
 
 		<div bind:this={scroller} class="flex-1 overflow-y-auto">
-			<div class="text-center py-8 border-b border-border/50">
-				<p class="text-4xl sm:text-5xl text-foreground mb-2" style="font-family: var(--quran-arabic-font); direction: rtl; line-height: 1.6">{surah.nameArabic}</p>
-				<p class="text-lg font-semibold text-foreground">{surah.nameBengali}</p>
-				<p class="text-sm text-muted-foreground mt-1">{t('surahMeta', { ayahCount: n(surah.totalAyahs), revelation, para: n(surah.paraNumber) })}</p>
-				<button
-					type="button"
-					onclick={() => (tilawatOpen = true)}
-					class="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
-					><Play class="w-4 h-4" />{t('listenTilawat')}</button
-				>
-				{#if bismillah}<p class="mt-4 text-xl text-foreground" style="font-family: var(--quran-arabic-font); direction: rtl">بِسۡمِ اللّٰہِ الرَّحۡمٰنِ الرَّحِیۡمِ</p>{/if}
-			</div>
-
 			<div class="max-w-2xl mx-auto w-full px-4 py-6">
 				{#each surah.ayahs as ayah (ayah.number)}
 					<AyahCard
@@ -205,6 +187,28 @@
 
 	<AudioBar {audio} surahName={surah.nameBengali} totalAyahs={surah.totalAyahs} onrange={() => (tilawatOpen = true)} />
 
+	<SurahPhoneBar
+		{translators}
+		selected={selectedTranslators}
+		ontoggle={(name) => prefs.toggleTranslator(name, translators)}
+		{showWords}
+		onwords={() => (showWords = !showWords)}
+		listenOpen={tilawatOpen}
+		onlisten={() => {
+			settingsOpen = false;
+			tilawatOpen = !tilawatOpen;
+		}}
+		onopen={() => {
+			tilawatOpen = false;
+			settingsOpen = false;
+		}}
+		{settingsOpen}
+		onsettings={() => {
+			tilawatOpen = false;
+			settingsOpen = !settingsOpen;
+		}}
+	/>
+
 	{#if tilawatOpen}
 		<TilawatDialog
 			onclose={() => (tilawatOpen = false)}
@@ -223,6 +227,5 @@
 		/>
 	{/if}
 	{#if searchOpen}<SearchModal onclose={() => (searchOpen = false)} onnavigate={go} />{/if}
-	{#if bookmarksOpen}<BookmarksModal onclose={() => (bookmarksOpen = false)} onnavigate={go} />{/if}
 	{#if tafsirAyah !== null}<TafsirModal surahNumber={surah.surahNumber} surahName={surah.nameBengali} ayahNumber={tafsirAyah} onclose={() => (tafsirAyah = null)} />{/if}
 </div>

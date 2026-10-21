@@ -19,6 +19,7 @@
 	import MushafTopBar from './MushafTopBar.svelte';
 	import PageFace from './PageFace.svelte';
 	import PageNav from './PageNav.svelte';
+	import PhoneBar from './PhoneBar.svelte';
 
 	interface Props {
 		edition: MushafEdition;
@@ -39,6 +40,7 @@
 	let navPara = $state(1);
 	let tilawatOpen = $state(false);
 	let tilawatSura = $state(1);
+	let tilawatStart = $state(1);
 	let width = $state(0);
 	let height = $state(0);
 	let touchX: number | null = null;
@@ -103,7 +105,18 @@
 		}
 		drawerOpen = !drawerOpen;
 	}
+	// Phone bottom bar: pause / resume, or open the tilawat sheet starting at the first ayah on this page.
+	function barPlay() {
+		if (tilawatOpen) {
+			tilawatOpen = false;
+			return;
+		}
+		if (audio.active) return audio.toggle();
+		openTilawat();
+		tilawatStart = rightBoxes[0]?.ayah_number ?? 1;
+	}
 	function openTilawat() {
+		tilawatStart = 1;
 		tilawatSura = currentSura ?? 1;
 		tilawatOpen = true;
 	}
@@ -138,6 +151,8 @@
 	}
 
 	onMount(() => {
+		// Two pages by default (one on a phone, where they would be unreadably small); a saved choice wins.
+		if (localStorage.getItem('mushaf_spread_mode') === null && window.matchMedia('(min-width: 768px)').matches) spreadStore.set('1');
 		void index.load(edition.id);
 		// Resume where this device last left off in this edition.
 		const saved = Number(localStorage.getItem(`mushaf_${edition.id}`));
@@ -149,13 +164,47 @@
 
 <svelte:window onkeydown={onKey} />
 
+<!-- The navigation panel is a docked column on desktop (always shown) and a slide-in drawer on phones. -->
+<div class="relative flex h-full w-full overflow-hidden">
+<!-- Full-width bar over both the panel and the page. -->
+<MushafTopBar
+	title={edition.title}
+	sura={currentSura}
+	visible={barsVisible}
+	{drawerOpen}
+	{scale}
+	{spread}
+	ontoggleDrawer={toggleDrawer}
+	onlisten={openTilawat}
+	onzoom={(d) => (scale = Math.min(3, Math.max(0.75, +(scale + d * 0.25).toFixed(2))))}
+	onspread={() => spreadStore.set(spread ? '0' : '1')}
+/>
+
+<!-- Phones: tap outside the drawer to close it. -->
+{#if drawerOpen}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (drawerOpen = false)} class="lg:hidden absolute inset-x-0 top-[60px] bottom-14 sm:bottom-0 z-[45] bg-black/50 cursor-default"></button>{/if}
+
+<MushafDrawer
+	open={drawerOpen}
+	title={edition.title}
+	{index}
+	editionId={edition.id}
+	{navSurah}
+	{navPara}
+	currentAyah={selected}
+	visiblePages={leftPage !== null ? [rightPage, leftPage] : [rightPage]}
+	onsurah={(s) => (navSurah = s)}
+	onpara={(p) => (navPara = p)}
+	ongoAyah={goToAyah}
+	ongoPage={goTo}
+/>
+
 <div
 	role="application"
 	bind:clientWidth={width}
 	bind:clientHeight={height}
 	ontouchstart={(e) => (touchX = e.touches[0].clientX)}
 	ontouchend={touchEnd}
-	class="relative h-full w-full overflow-hidden select-none bg-gradient-to-b from-neutral-200 via-neutral-300 to-neutral-400 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950"
+	class="relative h-full flex-1 min-w-0 overflow-hidden select-none bg-gradient-to-b from-neutral-200 via-neutral-300 to-neutral-400 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950"
 >
 	{#if bounds}
 		<div
@@ -202,22 +251,9 @@
 		</div>
 	{/if}
 
-	<MushafTopBar
-		title={edition.title}
-		sura={currentSura}
-		visible={barsVisible}
-		{drawerOpen}
-		{scale}
-		{spread}
-		ontoggleDrawer={toggleDrawer}
-		onlisten={openTilawat}
-		onzoom={(d) => (scale = Math.min(3, Math.max(0.75, +(scale + d * 0.25).toFixed(2))))}
-		onspread={() => spreadStore.set(spread ? '0' : '1')}
-	/>
-
 	<div
 		class={cn(
-			'absolute bottom-4 inset-x-0 z-30 flex items-center justify-center flex-wrap gap-3 px-3 transition-all duration-300',
+			'absolute bottom-4 max-sm:bottom-[68px] inset-x-0 z-30 flex items-center justify-center flex-wrap gap-3 px-3 transition-all duration-300',
 			barsVisible ? 'opacity-100' : 'opacity-0 pointer-events-none translate-y-2'
 		)}
 	>
@@ -234,6 +270,22 @@
 			onbookmark={toggleBookmark}
 		/>
 	</div>
+
+	<PhoneBar
+		visible={barsVisible}
+		{audio}
+		{reciters}
+		{reciterId}
+		{page}
+		{rightPage}
+		{leftPage}
+		totalPages={edition.totalPages}
+		bookmarked={mushafBookmarks.all.some((b) => b.editionId === edition.id && b.page === rightPage)}
+		onplay={barPlay}
+		onreciter={prefs.setReciter}
+		ongoto={goTo}
+		onbookmark={toggleBookmark}
+	/>
 
 	{#if !barsVisible}
 		<button
@@ -267,26 +319,13 @@
 		/>
 	{/if}
 
-	<MushafDrawer
-		open={drawerOpen}
-		{index}
-		editionId={edition.id}
-		{navSurah}
-		{navPara}
-		currentAyah={selected}
-		visiblePages={leftPage !== null ? [rightPage, leftPage] : [rightPage]}
-		onsurah={(s) => (navSurah = s)}
-		onpara={(p) => (navPara = p)}
-		ongoAyah={goToAyah}
-		ongoPage={goTo}
-	/>
-
 	{#if tilawatOpen}
 		<TilawatDialog
 			onclose={() => (tilawatOpen = false)}
 			surahNumber={tilawatSura}
 			totalAyahs={AYAH_COUNTS[tilawatSura - 1]}
 			defaultEnd="all"
+			defaultStart={tilawatStart}
 			allSurahs={SURA_NAMES.map((name, i) => ({ number: i + 1, nameBengali: name, totalAyahs: AYAH_COUNTS[i] }) as QuranSurah)}
 			{reciters}
 			{reciterId}
@@ -296,4 +335,5 @@
 			onstart={(s, e, r) => audio.startRange(tilawatSura, s, e, r)}
 		/>
 	{/if}
+</div>
 </div>

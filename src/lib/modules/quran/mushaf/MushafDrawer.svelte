@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { useT } from '#lib/i18n/use-t.svelte.ts';
 	import { cn } from '#lib/utils.ts';
-	import { TOP_BAR_SAFE } from './data.ts';
 	import DrawerBookmarksTab from './DrawerBookmarksTab.svelte';
 	import DrawerJuzTab from './DrawerJuzTab.svelte';
 	import DrawerSurahTab from './DrawerSurahTab.svelte';
@@ -10,6 +9,7 @@
 	type Tab = 'surah' | 'juz' | 'bookmarks';
 	interface Props {
 		open: boolean;
+		title: string;
 		index: MushafIndex;
 		editionId: string;
 		navSurah: number;
@@ -21,7 +21,7 @@
 		ongoAyah: (sura: number, ayah: number) => void;
 		ongoPage: (page: number) => void;
 	}
-	let { open, index, editionId, navSurah, navPara, currentAyah, visiblePages, onsurah, onpara, ongoAyah, ongoPage }: Props = $props();
+	let { open, title, index, editionId, navSurah, navPara, currentAyah, visiblePages, onsurah, onpara, ongoAyah, ongoPage }: Props = $props();
 
 	const t = useT('MushafReader');
 	let tab = $state<Tab>('surah');
@@ -32,15 +32,18 @@
 	]);
 </script>
 
-<!-- Navigation drawer (left, like the text reader): sits below the top bar, never covers it. -->
+<!-- Navigation panel: a slide-in drawer over the reader, below the top bar, on phones, a docked always-shown column from `lg`. -->
 <div
 	class={cn(
-		'absolute bottom-0 left-0 z-50 w-80 max-w-[85vw] flex flex-col bg-background border-r border-border shadow-2xl transition-transform duration-300',
-		open ? 'translate-x-0' : '-translate-x-full'
+		'absolute left-0 top-[60px] bottom-14 sm:bottom-0 z-50 w-80 max-w-[85vw] flex flex-col bg-background border-r border-border shadow-2xl',
+		'lg:relative lg:top-0 lg:bottom-0 lg:mt-[60px] lg:h-[calc(100%-60px)] lg:z-auto lg:max-w-none lg:shrink-0 lg:shadow-none',
+		'transition-transform duration-300',
+		open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
 	)}
-	style:top="{TOP_BAR_SAFE}px"
-	inert={!open}
 >
+	<div class="lg:hidden flex items-center justify-between gap-2 px-4 h-12 border-b border-border shrink-0">
+		<span class="text-sm font-semibold text-foreground truncate">{title}</span>
+	</div>
 	<div class="flex items-center border-b border-border shrink-0">
 		{#each tabs as item (item.id)}
 			<button

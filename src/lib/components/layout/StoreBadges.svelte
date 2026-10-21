@@ -3,7 +3,7 @@
 	import { useT } from '#lib/i18n/use-t.svelte.ts';
 	import { cn } from '#lib/utils.ts';
 
-	let { class: className = '', variant = 'compact' }: { class?: string; variant?: 'compact' | 'badge' | 'list' } = $props();
+	let { class: className = '', variant = 'compact' }: { class?: string; variant?: 'compact' | 'badge' | 'list' | 'tiles' } = $props();
 	const t = useT('Nav');
 
 	const STORES = [
@@ -48,6 +48,21 @@
 			>
 				<BrandIcon name={s.icon} class={cn(s.badgeSize, 'shrink-0')} />
 				{s.name}
+			</a>
+		{/each}
+	</div>
+{:else if variant === 'tiles'}
+	<div class={cn('grid grid-cols-3 gap-2', className)}>
+		{#each STORES as s (s.key)}
+			<a
+				href={s.href}
+				target="_blank"
+				rel="noopener noreferrer"
+				aria-label={t(s.key)}
+				class="flex flex-col items-center justify-center gap-1.5 px-1 py-3 rounded-xl border border-border bg-muted/40 text-foreground hover:bg-muted transition-colors"
+			>
+				<BrandIcon name={s.icon} class={cn(s.badgeSize, 'shrink-0')} />
+				<span class="text-[11px] font-medium leading-tight text-center">{s.name}</span>
 			</a>
 		{/each}
 	</div>

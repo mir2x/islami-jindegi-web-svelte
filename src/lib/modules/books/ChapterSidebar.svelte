@@ -67,7 +67,7 @@
 
 <aside
 	class={cn(
-		'fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto w-72 flex flex-col bg-card border-r border-border transition-transform duration-300 ease-in-out shrink-0',
+		'fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto w-72 flex flex-col bg-card border-r border-border transition-all duration-300 ease-in-out shrink-0',
 		open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
 	)}
 >

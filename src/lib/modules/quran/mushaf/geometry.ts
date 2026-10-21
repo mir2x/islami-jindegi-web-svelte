@@ -1,5 +1,5 @@
 import type { AyahBox } from '#lib/types.ts';
-import { BOTTOM_BAR_SAFE, TOP_BAR_SAFE } from './data.ts';
+import { BOTTOM_BAR_SAFE, PHONE_BOTTOM_BAR, TOP_BAR_SAFE } from './data.ts';
 
 export interface PageBounds {
 	w: number;
@@ -13,8 +13,11 @@ export interface PageBounds {
 export function computeBounds(width: number, height: number, imageWidth: number, imageHeight: number, barsVisible: boolean, spread: boolean): PageBounds | null {
 	if (!width || !height) return null;
 	const top = barsVisible ? TOP_BAR_SAFE : 0;
-	const availH = Math.max(0, height - top - (barsVisible ? BOTTOM_BAR_SAFE : 0));
+	const availH = Math.max(0, height - top - (barsVisible ? (width >= 640 ? BOTTOM_BAR_SAFE : PHONE_BOTTOM_BAR) : 0));
 	if (!availH) return null;
+	// Phones: the page fills the whole area below the top bar, edge to edge. The shape differs from the scan's
+	// by a few percent, so it is stretched very slightly rather than leaving bars around it.
+	if (width < 640) return { w: width, h: availH, x: 0, y: top, showSpread: spread };
 	const ar = (imageWidth / imageHeight) * (spread ? 2 : 1);
 	const fitsHeight = width / availH > ar;
 	const w = fitsHeight ? availH * ar : width;

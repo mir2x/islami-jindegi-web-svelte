@@ -9,6 +9,7 @@
 	const SECTIONS = $derived([
 		{ label: tNav('quran'), href: '/quran', icon: 'quran' },
 		{ label: tNav('books'), href: '/books', icon: 'book' },
+		{ label: tNav('hadith'), href: '/hadith', icon: 'hadith' },
 		{ label: tNav('bayan'), href: '/bayan', icon: 'bayan' },
 		{ label: tNav('malfuzat'), href: '/malfuzat', icon: 'malfuzat' },
 		{ label: tNav('masail'), href: '/masail', icon: 'masail' },
@@ -17,7 +18,6 @@
 		{ label: tNav('news'), href: '/news', icon: 'news' },
 		{ label: tNav('madrasah'), href: '/madrasah', icon: 'madrasah' },
 		{ label: tNav('namazTimes'), href: '/namaz-times', icon: 'namaz-time' },
-		{ label: t('navDonate'), href: '/donate', icon: 'donate' },
 		{ label: t('navSettings'), href: '/settings', icon: 'settings' }
 	]);
 </script>

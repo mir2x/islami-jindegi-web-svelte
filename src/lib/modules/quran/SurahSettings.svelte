@@ -30,7 +30,7 @@
 	const SPEEDS = [0.5, 1, 1.5, 2, 3];
 </script>
 
-<div class="shrink-0 border-b border-border bg-muted/30 px-4 py-4">
+<div class="max-sm:hidden min-h-0 overflow-y-auto border-b border-border bg-muted/30 px-4 py-4">
 	<div class="max-w-2xl mx-auto space-y-4">
 		<div>
 			<p class="{heading} mb-2">{t('translationLabel')}</p>

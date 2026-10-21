@@ -18,7 +18,7 @@
 		{ key: 'privacyPolicy', href: '/privacy-policy' }
 	];
 	// The footer lists every section except the three Quran/Hadith/Topics-first entries of the header.
-	const SECTIONS = NAV_LINKS.filter((l) => l.href !== '/quran' && l.href !== '/hadith');
+	const SECTIONS = NAV_LINKS.filter((l) => l.href !== '/quran' && l.href !== '/hadith' && l.href !== '/donate');
 	const SOCIAL = [
 		{ label: 'Twitter', href: 'https://x.com/IJindegi' },
 		{ label: 'Facebook', href: 'https://www.facebook.com/islamijindegiii' },

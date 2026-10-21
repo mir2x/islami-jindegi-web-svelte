@@ -210,3 +210,5 @@ export function getSpreadPair(p: number, totalPages: number): { right: number; l
 /** Reserved space (px) so the page image never renders under the top/bottom bars. */
 export const TOP_BAR_SAFE = 60;
 export const BOTTOM_BAR_SAFE = 72;
+/** Phones get a full-width bottom bar instead of the floating pills. */
+export const PHONE_BOTTOM_BAR = 56;

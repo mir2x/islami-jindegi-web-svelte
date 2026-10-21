@@ -5,7 +5,6 @@
 	import Repeat from '@lucide/svelte/icons/repeat';
 	import SkipBack from '@lucide/svelte/icons/skip-back';
 	import SkipForward from '@lucide/svelte/icons/skip-forward';
-	import Volume2 from '@lucide/svelte/icons/volume-2';
 	import X from '@lucide/svelte/icons/x';
 	import { useT } from '#lib/i18n/use-t.svelte.ts';
 	import { useNum } from '#lib/use-num.svelte.ts';
@@ -63,7 +62,6 @@
 				<button type="button" onclick={audio.skipForward} disabled={current >= totalAyahs} aria-label="Next" class={step}><SkipForward class="w-4 h-4" /></button>
 			</div>
 			<div class="flex items-center gap-1">
-				<Volume2 class="w-4 h-4 text-muted-foreground" />
 				<button
 					type="button"
 					onclick={audio.stop}

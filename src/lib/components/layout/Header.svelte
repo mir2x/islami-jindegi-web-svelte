@@ -3,11 +3,11 @@
 	import { page } from '$app/state';
 	import Menu from '@lucide/svelte/icons/menu';
 	import Settings from '@lucide/svelte/icons/settings';
-	import X from '@lucide/svelte/icons/x';
 	import { currentLocale, localePath, useT } from '#lib/i18n/use-t.svelte.ts';
 	import { cn } from '#lib/utils.ts';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import { NAV_LINKS } from './nav-links.ts';
+	import MobileMenu from './MobileMenu.svelte';
 	import StoreBadges from './StoreBadges.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
@@ -69,30 +69,11 @@
 					aria-label={t('toggleMenu')}
 					aria-expanded={menuOpen}
 				>
-					{#if menuOpen}<X class="w-5 h-5" />{:else}<Menu class="w-5 h-5" />{/if}
+					<Menu class="w-5 h-5" />
 				</button>
 			</div>
 		</div>
 	</div>
-
-	{#if menuOpen}
-		<div class="lg:hidden border-t border-border/60 bg-background">
-			<nav class="max-w-7xl mx-auto px-4 py-3 grid grid-cols-2 gap-1">
-				{#each NAV_LINKS as link (link.href)}
-					<a
-						href={localePath(link.href, locale)}
-						class={cn(
-							'px-3 py-3 rounded-lg text-lg font-medium transition-colors',
-							isActive(link.href) ? 'text-primary bg-primary/8 font-semibold' : 'text-foreground hover:bg-muted'
-						)}
-					>
-						{t(link.key)}
-					</a>
-				{/each}
-			</nav>
-			<div class="max-w-7xl mx-auto px-4 pb-3 pt-1 border-t border-border/60">
-				<StoreBadges variant="list" />
-			</div>
-		</div>
-	{/if}
 </header>
+
+<MobileMenu open={menuOpen} {isActive} onclose={() => (menuOpen = false)} />

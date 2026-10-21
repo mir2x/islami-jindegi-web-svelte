@@ -7,6 +7,7 @@
 	import Settings from '@lucide/svelte/icons/settings';
 	import Share2 from '@lucide/svelte/icons/share-2';
 	import X from '@lucide/svelte/icons/x';
+	import { page } from '$app/state';
 	import ChipSelect from '#lib/components/ui/ChipSelect.svelte';
 	import Overlay from '#lib/components/ui/Overlay.svelte';
 	import SizeStepper from '#lib/components/ui/SizeStepper.svelte';
@@ -25,6 +26,9 @@
 	const t = useT('TilawatReader');
 	const n = useNum();
 	const locale = $derived(currentLocale());
+	// Opened from the surah reader (`?from=surah`): the back arrow returns there, and next / previous keep that origin.
+	const fromSurah = $derived(page.url.searchParams.get('from') === 'surah');
+	const origin = $derived(fromSurah ? '?from=surah' : '');
 	let selectedAyah = $state<number | null>(null);
 	let tafsirAyah = $state<number | null>(null);
 	let settingsOpen = $state(false);
@@ -49,7 +53,7 @@
 
 <div class="flex flex-col bg-background h-full">
 	<div class="shrink-0 flex items-center gap-3 px-4 py-3 border-b border-border bg-background z-10">
-		<a href={localePath('/quran?mode=tilawat', locale)} aria-label="Quran" class={icon}><ArrowLeft class="w-5 h-5" /></a>
+		<a href={localePath(fromSurah ? `/quran/surah/${surah.surahNumber}` : '/quran?mode=tilawat', locale)} aria-label="Back" class={icon}><ArrowLeft class="w-5 h-5" /></a>
 		<div class="flex-1 min-w-0">
 			<h1 class="font-bold text-foreground text-base leading-tight truncate">{surah.nameBengali}</h1>
 			<p class="text-xs text-muted-foreground">{t('subtitle', { count: n(surah.totalAyahs) })}</p>
@@ -94,13 +98,13 @@
 			</p>
 		</div>
 		<div class="max-w-3xl mx-auto w-full px-4 pb-10 grid grid-cols-2 gap-3">
-			{#if prev}<a href={localePath(`/quran/tilawat/${prev.number}`, locale)} class={pager}
+			{#if prev}<a href={localePath(`/quran/tilawat/${prev.number}${origin}`, locale)} class={pager}
 					><div class="min-w-0">
 						<p class="text-xs text-muted-foreground">{t('prevSurah')}</p>
 						<p class="text-sm font-semibold truncate">{prev.nameBengali}</p>
 					</div></a
 				>{:else}<div></div>{/if}
-			{#if next}<a href={localePath(`/quran/tilawat/${next.number}`, locale)} class="{pager} justify-end"
+			{#if next}<a href={localePath(`/quran/tilawat/${next.number}${origin}`, locale)} class="{pager} justify-end"
 					><div class="min-w-0 text-right">
 						<p class="text-xs text-muted-foreground">{t('nextSurah')}</p>
 						<p class="text-sm font-semibold truncate">{next.nameBengali}</p>

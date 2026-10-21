@@ -3,6 +3,7 @@
 	import BookMarked from '@lucide/svelte/icons/book-marked';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import Menu from '@lucide/svelte/icons/menu';
 	import Search from '@lucide/svelte/icons/search';
 	import Settings from '@lucide/svelte/icons/settings';
 	import { tick } from 'svelte';
@@ -94,11 +95,7 @@
 		<a href={localePath(`/hadith/${book.slug}`, locale)} title={t('back')} aria-label={t('back')} class={icon}><ArrowLeft class="w-5 h-5" /></a>
 		<!-- One heading for the page; the two responsive title blocks below are presentational. -->
 		<h1 class="sr-only">{book.title} — {chapter.title}</h1>
-		<button type="button" onclick={() => (showNav = !showNav)} class="flex-1 min-w-0 text-left sm:hidden">
-			<p class="text-xs text-primary font-semibold truncate">{book.title}</p>
-			<p class="font-bold text-foreground text-base leading-tight truncate">{chapter.title}</p>
-		</button>
-		<div class="flex-1 min-w-0 hidden sm:block">
+		<div class="flex-1 min-w-0">
 			<p class="text-xs text-primary font-semibold truncate">{book.title}</p>
 			<p class="font-bold text-foreground text-base leading-tight truncate">{chapter.title}</p>
 		</div>
@@ -111,12 +108,27 @@
 			title={t('settings')}
 			aria-label={t('settings')}><Settings class="w-5 h-5" /></button
 		>
+		<!-- Phones: shows / hides the chapter sidebar. -->
+		<button
+			type="button"
+			onclick={() => (showNav = !showNav)}
+			aria-label="Menu"
+			aria-pressed={showNav}
+			class={cn('sm:hidden p-1.5 rounded-lg transition-colors', showNav ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}><Menu class="w-5 h-5" /></button
+		>
 	</div>
 
 	{#if showSettings}<ReaderSettings />{/if}
 
-	<div class="flex flex-1 min-h-0 overflow-hidden">
-		<div class={cn('w-full sm:w-80 shrink-0 border-r border-border flex-col min-h-0 overflow-hidden bg-background', showNav ? 'flex' : 'hidden sm:flex')}>
+	<div class="relative flex flex-1 min-h-0 overflow-hidden">
+		<!-- Phones: tap outside the sidebar to close it. -->
+		{#if showNav}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (showNav = false)} class="sm:hidden absolute inset-0 z-40 bg-black/50 cursor-default"></button>{/if}
+		<div
+			class={cn(
+				'w-72 max-w-[85vw] sm:w-80 shrink-0 border-r border-border flex-col min-h-0 overflow-hidden bg-background max-sm:absolute max-sm:inset-y-0 max-sm:left-0 max-sm:z-50 max-sm:shadow-2xl',
+				showNav ? 'flex' : 'hidden sm:flex'
+			)}
+		>
 			<div class="px-3 pt-3 pb-2 shrink-0 space-y-2 border-b border-border">
 				<JumpForm bookSlug={book.slug} />
 				<div class="relative">
@@ -133,14 +145,14 @@
 					<a
 						href={localePath(`/hadith/${book.slug}/chapter/${c.id}`, locale)}
 						class={cn('flex w-full items-start px-4 py-2.5 text-left hover:bg-muted transition-colors', c.id === chapter.id && 'bg-primary/10 text-primary')}
-						><span class="flex-1 min-w-0 text-lg font-semibold line-clamp-2">{c.title}</span></a
+						><span class="flex-1 min-w-0 text-lg line-clamp-2">{c.title}</span></a
 					>
 				{/each}
 				{#if filteredChapters.length === 0}<p class="text-center text-muted-foreground py-10">{t('noChapterFound')}</p>{/if}
 			</div>
 		</div>
 
-		<div bind:this={scroller} class={cn('flex-1 min-h-0 overflow-y-auto', showNav && 'hidden sm:block')}>
+		<div bind:this={scroller} class="flex-1 min-h-0 overflow-y-auto">
 			<div class="text-center px-4 py-8 border-b border-border/50">
 				{#if chapter.titleAr}<p class="text-3xl text-foreground mb-2" style="{arabicTitle}; line-height: 1.6">{chapter.titleAr}</p>{/if}
 				<p class="text-xl font-semibold text-foreground">{chapter.title}</p>

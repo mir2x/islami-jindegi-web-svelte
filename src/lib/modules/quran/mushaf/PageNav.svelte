@@ -33,10 +33,10 @@
 	const focusSelect = (el: HTMLInputElement) => el.select();
 </script>
 
-<!-- RTL: "next" is on the left and "previous" on the right. -->
-<div class="flex items-center gap-0.5 px-1.5 py-1.5 rounded-full bg-background/95 backdrop-blur-md border border-border shadow-xl">
-	<button type="button" onclick={onnext} disabled={page >= totalPages} class="{edge} pl-3 pr-3.5"><ChevronLeft class="w-4 h-4" />{t('nextPage')}</button>
-	<div class="w-px h-5 bg-border"></div>
+<!-- RTL: "next" is on the left and "previous" on the right. Hidden on phones: swipe turns pages, and the bookmark star is in the top bar. -->
+<div class="flex max-sm:hidden items-center gap-0.5 px-1.5 py-1.5 rounded-full bg-background/95 backdrop-blur-md border border-border shadow-xl">
+	<button type="button" onclick={onnext} disabled={page >= totalPages} class="{edge} pl-3 pr-3.5 max-sm:hidden"><ChevronLeft class="w-4 h-4" />{t('nextPage')}</button>
+	<div class="w-px h-5 bg-border max-sm:hidden"></div>
 
 	{#if editing}
 		<input
@@ -70,11 +70,11 @@
 		title={t('pageBookmark')}
 		aria-label={t('pageBookmark')}
 		class={cn(
-			'flex items-center justify-center w-8 h-8 rounded-full transition-colors',
+			'flex items-center justify-center w-8 h-8 rounded-full transition-colors max-sm:hidden',
 			bookmarked ? 'text-amber-500' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
 		)}><Star class={cn('w-4 h-4', bookmarked && 'fill-current')} /></button
 	>
 
-	<div class="w-px h-5 bg-border"></div>
-	<button type="button" onclick={onprev} disabled={page <= 1} class="{edge} pl-3.5 pr-3">{t('prevPage')}<ChevronRight class="w-4 h-4" /></button>
+	<div class="w-px h-5 bg-border max-sm:hidden"></div>
+	<button type="button" onclick={onprev} disabled={page <= 1} class="{edge} pl-3.5 pr-3 max-sm:hidden">{t('prevPage')}<ChevronRight class="w-4 h-4" /></button>
 </div>

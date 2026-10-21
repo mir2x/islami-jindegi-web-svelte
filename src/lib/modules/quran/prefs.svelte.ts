@@ -27,6 +27,8 @@ export const quranPrefs = {
 		return clamp(bengaliSizeStore.current, BENGALI_SIZE);
 	},
 	stepArabic: (dir: 1 | -1) => step(arabicSizeStore, ARABIC_SIZE, dir),
+	setArabicSize: (v: number) => arabicSizeStore.set(Math.min(ARABIC_SIZE.max, Math.max(ARABIC_SIZE.min, v))),
+	setBengaliSize: (v: number) => bengaliSizeStore.set(Math.min(BENGALI_SIZE.max, Math.max(BENGALI_SIZE.min, v))),
 	stepBengali: (dir: 1 | -1) => step(bengaliSizeStore, BENGALI_SIZE, dir),
 
 	/** The saved translators that still exist, else the default one (else the first available). */

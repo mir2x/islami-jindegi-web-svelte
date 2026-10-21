@@ -50,15 +50,11 @@
 			aria-label={t('playAyah', { number: n(ayah.number) })}
 			class={cn(
 				'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors shrink-0',
-				active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-primary/20 hover:text-primary'
+				'bg-primary text-primary-foreground hover:opacity-90',
+				active && 'ring-2 ring-primary/40 ring-offset-2 ring-offset-background'
 			)}>{n(ayah.number)}</button
 		>
 		<div class="flex items-center gap-0.5">
-			{#if active}
-				<div class="flex gap-0.5 items-end h-4 mr-2" aria-hidden="true">
-					{#each [60, 100, 40] as h, i (i)}<span class="w-0.5 bg-primary rounded-full animate-bounce" style:height="{h}%" style:animation-delay="{(i + 1) * 0.1}s"></span>{/each}
-				</div>
-			{/if}
 			<button type="button" onclick={onplaysingle} title={t('playThisAyah')} aria-label={t('playThisAyah')} class={tool(active)}><Play class="w-3.5 h-3.5" /></button>
 			<button type="button" onclick={copy} title={t('copy')} aria-label={t('copy')} class={tool(copied)}><Copy class="w-3.5 h-3.5" /></button>
 			<button type="button" onclick={share} title={t('share')} aria-label={t('share')} class={tool(false)}><Share2 class="w-3.5 h-3.5" /></button>
@@ -72,7 +68,7 @@
 	<p class="text-right leading-[2.2] text-foreground mb-5" style="font-family: var(--quran-arabic-font); direction: rtl; font-size: var(--quran-arabic-size)">{ayah.arabic}</p>
 
 	{#if showWords && ayah.words.length > 0}
-		<div class="flex flex-wrap gap-2 justify-end mb-4 p-3 rounded-xl bg-muted/40" dir="rtl">
+		<div class="flex flex-wrap gap-2 mb-4" dir="rtl">
 			{#each ayah.words as w (w.id)}
 				<div class="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg bg-muted border border-border">
 					<span class="text-base text-foreground" style="font-family: var(--quran-arabic-font)">{w.arabic}</span>
