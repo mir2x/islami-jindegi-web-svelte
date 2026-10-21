@@ -5,6 +5,7 @@
 	import MapPin from '@lucide/svelte/icons/map-pin';
 	import Mic from '@lucide/svelte/icons/mic';
 	import AudioPlayer from '#lib/components/media/AudioPlayer.svelte';
+	import AuthorLink from '#lib/components/shared/AuthorLink.svelte';
 	import CategoryChips from '#lib/components/shared/CategoryChips.svelte';
 	import { formatClock } from '#lib/audio.ts';
 	import { formatDate } from '#lib/format-date.ts';
@@ -25,7 +26,7 @@
 	<h1 class="text-2xl sm:text-3xl font-bold text-foreground leading-snug mb-1">{bayan.title}</h1>
 	<div class="flex items-center gap-2 text-sm text-muted-foreground mb-1">
 		<div class="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0"><Mic class="w-3.5 h-3.5" /></div>
-		<span class="font-medium text-foreground">{bayan.author.name}</span>
+		<span class="font-medium text-foreground"><AuthorLink id={bayan.author.id} name={bayan.author.name} /></span>
 	</div>
 
 	{#if bayan.excerpt}

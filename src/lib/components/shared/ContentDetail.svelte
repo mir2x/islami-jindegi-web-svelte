@@ -6,6 +6,7 @@
 	import User from '@lucide/svelte/icons/user';
 	import { formatDate } from '#lib/format-date.ts';
 	import { currentLocale, localePath, useT } from '#lib/i18n/use-t.svelte.ts';
+	import AuthorLink from './AuthorLink.svelte';
 	import DetailFrame from './DetailFrame.svelte';
 	import TopicLinks from './TopicLinks.svelte';
 
@@ -15,6 +16,8 @@
 		id: string;
 		title: string;
 		author?: string | null;
+		/** Links the author's name to their author page. */
+		authorId?: string | null;
 		/** ISO date shown in the meta row; omit to hide it. */
 		date?: string | null;
 		categories: { id: string; title: string }[];
@@ -29,7 +32,7 @@
 		shareHtml: string;
 		children: Snippet;
 	}
-	let { section, id, title, author, date, categories, audioUrl, audioNs = '', moreTitle, more, moreDates = false, shareHtml, children }: Props = $props();
+	let { section, id, title, author, authorId, date, categories, audioUrl, audioNs = '', moreTitle, more, moreDates = false, shareHtml, children }: Props = $props();
 
 	const tNav = useT('Nav');
 	const locale = $derived(currentLocale());
@@ -61,7 +64,9 @@
 
 	{#if author || date || categories.length > 0}
 		<div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6 pb-6 border-b border-border/50">
-			{#if author}<span class="flex items-center gap-1.5"><User class="w-3.5 h-3.5" />{author}</span>{/if}
+			{#if author}<span class="flex items-center gap-1.5"
+					><User class="w-3.5 h-3.5" />{#if authorId}<AuthorLink id={authorId} name={author} />{:else}{author}{/if}</span
+				>{/if}
 			{#if date}<span class="flex items-center gap-1.5"><Calendar class="w-3.5 h-3.5" />{formatDate(date, locale)}</span>{/if}
 			{#if categories.length > 0}<span class="flex items-center gap-1.5"><Tag class="w-3.5 h-3.5" /><TopicLinks {categories} /></span>{/if}
 		</div>

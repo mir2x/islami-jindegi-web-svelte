@@ -37,10 +37,11 @@
 	const shortDate = (iso: string) => formatDate(iso, locale, { month: 'short', year: false });
 
 	type Icon = Component<{ class?: string }>;
-	const SECTIONS: { key: string; sub: string; path: string; icon: Icon }[] = $derived([
+	const SECTIONS: { key: string; sub: string; path: string; icon?: Icon }[] = $derived([
 		{ key: 'quran', sub: t('subQuran'), path: '/quran', icon: BookMarked },
 		{ key: 'hadith', sub: t('subHadith'), path: '/hadith', icon: LibraryBig },
 		{ key: 'topics', sub: t('subTopics'), path: '/topics', icon: Tags },
+		{ key: 'authors', sub: t('subAuthors'), path: '/authors' },
 		{ key: 'books', sub: t('subBooks'), path: '/books', icon: BookOpen },
 		{ key: 'bayan', sub: t('subBayan'), path: '/bayan', icon: Mic },
 		{ key: 'malfuzat', sub: t('subMalfuzat'), path: '/malfuzat', icon: ScrollText },
@@ -82,9 +83,11 @@
 			<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
 				{#each SECTIONS as { key, sub, path, icon: SectionIcon } (path)}
 					<a href={href(path)} class="group flex flex-col gap-3 p-5 bg-card border border-border rounded-2xl hover:border-primary/40 hover:shadow-md transition-all duration-200">
-						<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
-							<SectionIcon class="w-5 h-5" />
-						</div>
+						{#if SectionIcon}
+							<div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/15 transition-colors">
+								<SectionIcon class="w-5 h-5" />
+							</div>
+						{/if}
 						<div>
 							<p class="font-bold text-[18px] text-foreground leading-tight">{tNav(key)}</p>
 							<p class="text-[13px] text-muted-foreground mt-1 leading-tight">{sub}</p>

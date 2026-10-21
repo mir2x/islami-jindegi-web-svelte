@@ -31,7 +31,9 @@ import type {
 	PagedResult,
 	PageDetail,
 	TopicDetail,
-	TopicIndex
+	TopicIndex,
+	AuthorBrowseDetail,
+	AuthorBrowseIndex
 } from '#lib/types.ts';
 import { MODULE_DEFAULT_SORT as SORT } from '#lib/modules.ts';
 import { DATED_FILTERS, listQuery, type ListFilter, type ListOpts } from '#lib/list-query.ts';
@@ -120,3 +122,7 @@ export const getPageBySlug = (slug: string) => get<PageDetail>(`/api/pages/by-sl
 export const getTopics = () => get<TopicIndex>('/api/topics', 600);
 /** One topic by slug or category id, with the first items of each module. */
 export const getTopic = (key: string) => get<TopicDetail>(`/api/topics/${encodeURIComponent(key)}`, 300);
+/** Authors index: every author with published content and per-module counts. */
+export const getAuthorBrowseIndex = () => get<AuthorBrowseIndex>('/api/authors/browse', 600);
+/** One author by slug or author id, with the first items of each module. */
+export const getAuthorBrowse = (key: string) => get<AuthorBrowseDetail>(`/api/authors/browse/${encodeURIComponent(key)}`, 300);

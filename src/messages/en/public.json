@@ -16,6 +16,7 @@
     "quran": "Quran",
     "hadith": "Hadith",
     "topics": "Topics",
+    "authors": "Authors/Speakers",
     "books": "Books",
     "bayan": "Bayan",
     "malfuzat": "Malfuzat",
@@ -287,6 +288,7 @@
     "subQuran": "Holy Quran",
     "subHadith": "Hadith Collections",
     "subTopics": "Content by Topic",
+    "subAuthors": "Content by Author",
     "subBooks": "Islamic Books",
     "subBayan": "Lectures & Speeches",
     "subMalfuzat": "Scholarly Sayings",
@@ -409,5 +411,17 @@
     "openInSection": "Open in {section} with filters",
     "backToTopics": "All topics",
     "otherTopics": "Other topics"
+  },
+  "AuthorsPage": {
+    "metaTitle": "Authors/Speakers",
+    "metaDescription": "Books, bayans, malfuzat, masail and articles, organised by author or speaker.",
+    "heading": "Authors/Speakers",
+    "subheading": "Pick an author or speaker to see all of their books, bayans, malfuzat, masail and articles in one place.",
+    "searchPlaceholder": "Search authors or speakers",
+    "empty": "No authors or speakers found",
+    "itemsCount": "{count} items",
+    "openInSection": "Open in {section} with filters",
+    "backToAuthors": "All authors/speakers",
+    "otherAuthors": "Others"
   }
 }

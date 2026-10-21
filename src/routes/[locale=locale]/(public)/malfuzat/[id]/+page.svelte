@@ -13,6 +13,7 @@
 	id={item.id}
 	title={item.title}
 	author={item.author?.name}
+	authorId={item.author?.id}
 	date={item.publishedAt ?? item.createdAt}
 	categories={item.categories}
 	audioUrl={item.audioUrl}

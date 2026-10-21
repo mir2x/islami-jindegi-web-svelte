@@ -16,6 +16,7 @@
     "quran": "কুরআন",
     "hadith": "হাদীস",
     "topics": "বিষয়ভিত্তিক",
+    "authors": "লেখক/বক্তা",
     "books": "কিতাব",
     "bayan": "বয়ান",
     "malfuzat": "মালফুযাত",
@@ -287,6 +288,7 @@
     "subQuran": "Holy Quran",
     "subHadith": "Hadith Collections",
     "subTopics": "Content by Topic",
+    "subAuthors": "Content by Author",
     "subBooks": "Islamic Books",
     "subBayan": "Lectures & Speeches",
     "subMalfuzat": "Scholarly Sayings",
@@ -409,5 +411,17 @@
     "openInSection": "{section} বিভাগে ফিল্টারসহ দেখুন",
     "backToTopics": "সব বিষয়",
     "otherTopics": "অন্যান্য বিষয়"
+  },
+  "AuthorsPage": {
+    "metaTitle": "লেখক/বক্তা",
+    "metaDescription": "লেখক ও বক্তা অনুযায়ী কিতাব, বয়ান, মালফুযাত, মাসাইল ও প্রবন্ধ এক জায়গায়।",
+    "heading": "লেখক/বক্তা",
+    "subheading": "একজন লেখক বা বক্তা বেছে নিন — তাঁর সব কিতাব, বয়ান, মালফুযাত, মাসাইল ও প্রবন্ধ এক জায়গায়।",
+    "searchPlaceholder": "লেখক বা বক্তা খুঁজুন",
+    "empty": "কোনো লেখক বা বক্তা পাওয়া যায়নি",
+    "itemsCount": "মোট {count}টি",
+    "openInSection": "{section} বিভাগে ফিল্টারসহ দেখুন",
+    "backToAuthors": "সব লেখক/বক্তা",
+    "otherAuthors": "অন্যান্য"
   }
 }

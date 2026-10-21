@@ -3,6 +3,7 @@ export const NAV_LINKS = [
 	{ key: 'quran', href: '/quran' },
 	{ key: 'hadith', href: '/hadith' },
 	{ key: 'topics', href: '/topics' },
+	{ key: 'authors', href: '/authors' },
 	{ key: 'books', href: '/books' },
 	{ key: 'bayan', href: '/bayan' },
 	{ key: 'malfuzat', href: '/malfuzat' },

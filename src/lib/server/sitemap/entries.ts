@@ -1,6 +1,6 @@
 import { getStrict as apiGet } from '../api.ts';
 import type { SitemapEntry } from './render.ts';
-import type { HadithBook, HadithBookDetail, MadrasahDetail, MadrasahListItem, NamazTimeListItem, PagedResult, TopicIndex } from '#lib/types.ts';
+import type { HadithBook, HadithBookDetail, MadrasahDetail, MadrasahListItem, NamazTimeListItem, PagedResult, TopicIndex, AuthorBrowseIndex } from '#lib/types.ts';
 
 /**
  * Sitemap data layer. The index at /sitemap.xml and the per-section files under
@@ -103,6 +103,7 @@ const STATIC_PATHS = [
 	'/madrasah',
 	'/news',
 	'/topics',
+	'/authors',
 	'/about',
 	'/contact',
 	'/donate',
@@ -116,8 +117,9 @@ async function pagesEntries(): Promise<SitemapEntry[]> {
 	const entries: SitemapEntry[] = STATIC_PATHS.map((path) => ({ path }));
 	for (let n = 1; n <= SURAH_COUNT; n++) entries.push({ path: `/quran/surah/${n}` });
 
-	const [topics, madrasahs, namazTimes] = await Promise.all([
+	const [topics, authors, madrasahs, namazTimes] = await Promise.all([
 		apiGet<TopicIndex>('/api/topics', true),
+		apiGet<AuthorBrowseIndex>('/api/authors/browse', true),
 		apiGet<PagedResult<MadrasahListItem>>('/api/madrasahs?page=1&pageSize=100'),
 		apiGet<PagedResult<NamazTimeListItem>>('/api/namaz-times?page=1&pageSize=100')
 	]);
@@ -125,6 +127,10 @@ async function pagesEntries(): Promise<SitemapEntry[]> {
 	// Topics are absent on API builds that predate them: skip, don't fail the file.
 	for (const t of topics ? [...topics.ungrouped, ...topics.groups.flatMap((g) => g.topics)] : []) {
 		if (t.slug) entries.push({ path: `/topics/${encodeURIComponent(t.slug)}` });
+	}
+	// Same for the authors index.
+	for (const a of authors ? [...authors.ungrouped, ...authors.groups.flatMap((g) => g.authors)] : []) {
+		if (a.slug) entries.push({ path: `/authors/${encodeURIComponent(a.slug)}` });
 	}
 	for (const m of namazTimes.data) entries.push({ path: `/namaz-times/${m.id}`, lastModified: toLastModified(m.updatedAt) });
 	for (const m of madrasahs.data) entries.push({ path: `/madrasah/${m.id}`, lastModified: toLastModified(m.updatedAt) });

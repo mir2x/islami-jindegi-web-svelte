@@ -24,7 +24,8 @@
 	const tMeta = useT('Metadata');
 	const locale = $derived(currentLocale());
 
-	const ICONS: Record<string, typeof BookOpen> = {
+	// /authors deliberately has no icon.
+	const ICONS: Record<string, typeof BookOpen | undefined> = {
 		'/quran': BookOpen,
 		'/hadith': BookOpenText,
 		'/topics': Tags,
@@ -64,12 +65,12 @@
 
 		<nav class="flex-1 overflow-y-auto px-3 py-2">
 			{#each LINKS as link (link.href)}
-				{@const Icon = ICONS[link.href] ?? BookOpen}
+				{@const Icon = ICONS[link.href]}
 				<a
 					href={localePath(link.href, locale)}
 					class={cn('flex items-center gap-4 px-3 py-3 rounded-lg text-lg transition-colors', isActive(link.href) ? 'text-primary bg-primary/10 font-semibold' : 'text-foreground hover:bg-muted')}
 				>
-					<Icon class="w-5 h-5 shrink-0" />
+					{#if Icon}<Icon class="w-5 h-5 shrink-0" />{/if}
 					{t(link.key)}
 				</a>
 			{/each}

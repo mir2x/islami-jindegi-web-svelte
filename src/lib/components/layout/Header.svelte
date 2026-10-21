@@ -41,6 +41,8 @@
 						href={localePath(link.href, locale)}
 						class={cn(
 							'px-1.5 2xl:px-3 py-2 rounded-md text-base 2xl:text-[17px] font-medium transition-colors whitespace-nowrap',
+							// No room for it next to the other 13 links on a 1024px header; it stays in the menu, footer and Explore.
+							link.href === '/authors' && 'hidden xl:block',
 							isActive(link.href) ? 'text-primary bg-primary/8 font-semibold' : 'text-foreground hover:text-foreground hover:bg-muted'
 						)}
 					>

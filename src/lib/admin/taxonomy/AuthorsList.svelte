@@ -105,7 +105,11 @@
 	totalPages={loader.totalPages}
 	onpage={(p) => (page = p)}
 >
-	{#snippet actions()}<Button variant="outline" href={localePath('/admin/authors/reorder')} class="gap-2"><ListOrdered class="w-4 h-4" /> Reorder</Button>{/snippet}
+	{#snippet actions()}<Button variant="outline" href={localePath('/admin/authors/browse')}>Author pages</Button><Button
+			variant="outline"
+			href={localePath('/admin/authors/reorder')}
+			class="gap-2"><ListOrdered class="w-4 h-4" /> Reorder</Button
+		>{/snippet}
 	{#snippet filters()}
 		<div class="relative max-w-sm w-full">
 			<Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
