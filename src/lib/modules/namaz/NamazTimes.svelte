@@ -96,7 +96,7 @@
 </script>
 
 <div class="flex flex-col lg:flex-row gap-6 lg:items-stretch lg:flex-1 lg:min-h-0">
-	<div class="w-full lg:max-w-md lg:shrink-0 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
+	<div class="w-full lg:max-w-md lg:shrink-0 lg:min-h-0 lg:overflow-hidden lg:flex lg:flex-col">
 		<NamazHero {hijri} {now} {location} {locating} />
 
 		{#if !slots}
@@ -105,13 +105,14 @@
 				<p class="text-base">{t('calculating')}</p>
 			</div>
 		{:else}
-			<div class="space-y-2">
+			<div class="space-y-2 lg:space-y-0 lg:flex-1 lg:min-h-0 lg:flex lg:flex-col lg:gap-[0.8vh]">
 				{#each slots as slot (slot.key)}
 					{@const detailId = linker(slot)}
 					{@const row = { slot, active: activeKey === slot.key, selected: desktop.current && !!detailId && effectiveId === detailId, linkable: !!detailId, now }}
 					{#if detailId}
 						<!-- Desktop has a detail pane right there: fill it in instead of navigating away. -->
 						<a
+							class="lg:flex-1 lg:min-h-0 lg:flex"
 							href={localePath(`/namaz-times/${detailId}`, locale)}
 							data-sveltekit-preload-data="off"
 							onclick={(e) => {
@@ -124,7 +125,7 @@
 							<PrayerRow {...row} />
 						</a>
 					{:else}
-						<div><PrayerRow {...row} /></div>
+						<div class="lg:flex-1 lg:min-h-0 lg:flex"><PrayerRow {...row} /></div>
 					{/if}
 				{/each}
 			</div>

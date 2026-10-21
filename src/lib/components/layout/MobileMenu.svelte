@@ -10,6 +10,7 @@
 	import Mic from '@lucide/svelte/icons/mic';
 	import Newspaper from '@lucide/svelte/icons/newspaper';
 	import Quote from '@lucide/svelte/icons/quote';
+	import Settings from '@lucide/svelte/icons/settings';
 	import School from '@lucide/svelte/icons/school';
 	import Tags from '@lucide/svelte/icons/tags';
 	import { currentLocale, localePath, useT } from '#lib/i18n/use-t.svelte.ts';
@@ -35,7 +36,8 @@
 		'/articles': FileText,
 		'/news': Newspaper,
 		'/madrasah': School,
-		'/namaz-times': Clock
+		'/namaz-times': Clock,
+		'/settings': Settings
 	};
 	const LINKS = NAV_LINKS.filter((l) => l.href !== '/donate');
 

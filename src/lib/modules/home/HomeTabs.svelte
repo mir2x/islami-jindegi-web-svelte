@@ -1,8 +1,10 @@
 <script lang="ts">
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Loader2 from '@lucide/svelte/icons/loader-circle';
 	import Mic from '@lucide/svelte/icons/mic';
 	import Newspaper from '@lucide/svelte/icons/newspaper';
 	import ScrollText from '@lucide/svelte/icons/scroll-text';
+	import Sparkles from '@lucide/svelte/icons/sparkles';
 	import type { Component } from 'svelte';
 	import { inView } from '#lib/actions.ts';
 	import Img from '#lib/components/ui/Img.svelte';
@@ -59,13 +61,16 @@
 			>
 		{/each}
 	</div>
-	<div class="flex items-center gap-3 shrink-0">
-		<a href={localePath(TABS.find((x) => x.key === tab)?.href ?? '/', locale)} class="text-base text-primary font-medium hover:underline whitespace-nowrap">{t('viewAllArrow')}</a>
-		<div class="w-px h-3 bg-border/60 hidden sm:block"></div>
+	<div class="flex items-center gap-2 shrink-0">
+		<a
+			href={localePath(TABS.find((x) => x.key === tab)?.href ?? '/', locale)}
+			class="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-border text-base font-medium text-foreground/80 hover:border-primary/50 hover:text-primary transition-colors whitespace-nowrap"
+			>{t('viewAllArrow').replace(/\s*→\s*$/, '')}<ArrowRight class="w-4 h-4 transition-transform group-hover:translate-x-0.5" /></a
+		>
 		<a
 			href={localePath('/explore', locale)}
-			class="group items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-base font-semibold hover:bg-primary/20 transition-colors hidden sm:flex whitespace-nowrap"
-			>{t('newLayoutLink')}</a
+			class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary text-primary-foreground text-base font-semibold shadow-sm hover:opacity-90 transition-opacity whitespace-nowrap"
+			><Sparkles class="w-4 h-4" />{t('newLayoutLink').replace(/\s*→\s*$/, '')}</a
 		>
 	</div>
 </div>

@@ -2,7 +2,6 @@
 	import AlignJustify from '@lucide/svelte/icons/align-justify';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import BookOpenText from '@lucide/svelte/icons/book-open-text';
-	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import Menu from '@lucide/svelte/icons/menu';
 	import Search from '@lucide/svelte/icons/search';
 	import Settings from '@lucide/svelte/icons/settings';
@@ -33,7 +32,6 @@
 	<button type="button" onclick={ontoggleNav} class="flex-1 min-w-0 text-left max-sm:pointer-events-none">
 		<div class="flex items-center gap-1">
 			<h1 class="font-bold text-foreground text-base leading-tight truncate">{surah.nameBengali}</h1>
-			<ChevronDown class={cn('w-4 h-4 text-muted-foreground transition-transform duration-200 shrink-0 max-sm:hidden', navOpen && 'rotate-180')} />
 		</div>
 		<p class="text-xs text-muted-foreground">{t('surahMeta', { ayahCount: n(surah.totalAyahs), revelation, para: n(surah.paraNumber) })}</p>
 	</button>
