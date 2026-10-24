@@ -1,6 +1,6 @@
 # Islami Jindegi: web (SvelteKit)
 
-The whole web app of **ইসলামী যিন্দেগী**, ported from the Next.js app in `../islami-jindegi-web`: the public site,
+The whole web app of **ইসলামী যিন্দেগী**, ported from the Next.js app in `../legacy/islami-jindegi-web`: the public site,
 the readers (books, hadith, Quran) and the admin dashboard. It is a drop-in replacement: same URLs, same
 environment variables, same API.
 
@@ -28,7 +28,7 @@ changing the API URL only needs a restart. Declared in `src/env.ts`.
 | ------------------------------ | --------------------------------------------------------------------------- |
 | `NEXT_PUBLIC_API_URL`          | API base URL                                                                |
 | `NEXT_PUBLIC_SITE_URL`         | canonical origin (sitemaps, canonical / Open Graph URLs)                    |
-| `NEXT_PUBLIC_NOINDEX`          | `1` on staging: robots, sitemap and meta all go noindex                     |
+| `NEXT_PUBLIC_NOINDEX`          | `1` to make robots, sitemap and meta all noindex (unset in production)                     |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Google OAuth client id of the admin sign-in button                          |
 | `COMPRESS`                     | `0` to skip in-process brotli/gzip when a reverse proxy already compresses |
 | `API_INTERNAL_URL`             | optional: API base for server-side calls on the host network (see below)    |
@@ -110,9 +110,8 @@ enforcement is the API's `[Authorize]`. Its code is in `src/lib/admin/`:
 
 ## Deploy
 
-`Dockerfile` (multi-stage, `node:22-alpine`, non-root) and `.github/workflows/build.yml` mirror the Next.js
-setup: `main` → `ghcr.io/<repo>:latest`, `staging` → `:staging` (noindex). The image needs only `sharp` and `adhan`
-in `node_modules` at runtime. Pass the variables above as container environment; the build args just set defaults.
+`Dockerfile` (multi-stage, `node:22-alpine`, non-root) and `.github/workflows/deploy.yml`: a push to `main` builds the image in
+GitHub Actions and deploys it to the VPS as `ij-web` (see `../islami-jindegi-rust-api/deploy/SERVER.md`, section 5). The image needs
+only `sharp` and `adhan` in `node_modules` at runtime. Pass the variables above as container environment; the build args just set defaults.
 
-This app serves **everything** (public, readers and `/{bn,en}/admin/*`), so the reverse proxy can send all traffic to
-it and the Next.js app can be retired.
+This app serves **everything** (public, readers and `/{bn,en}/admin/*`); nginx sends all web traffic to it.

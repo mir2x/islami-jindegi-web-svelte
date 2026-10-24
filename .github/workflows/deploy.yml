@@ -3,12 +3,12 @@ name: Deploy
 # Build the image in CI, copy it to the VPS, restart the Quadlet unit there. Same flow as petsocial-web-svelte.
 #
 #   main    -> production: unit ij-web,             port 3000, indexable
-#   staging -> test:       unit ij-web-svelte-test, port 3001, noindex, talks to the test API
+# (The staging environment was retired; only main deploys.)
 #
 # Secrets: VPS_HOST, VPS_USER, VPS_SSH_KEY (a dedicated deploy key, not your personal one).
 on:
   push:
-    branches: [main, staging]
+    branches: [main]
   workflow_dispatch:
 
 # One deploy per branch at a time; a newer push waits for the running one instead of cancelling it mid-restart.
@@ -29,23 +29,13 @@ jobs:
 
       - name: Pick environment
         run: |
-          if [ "${{ github.ref_name }}" = "main" ]; then
-            echo "TAG=prod" >> "$GITHUB_ENV"
-            echo "UNIT=ij-web.service" >> "$GITHUB_ENV"
-            echo "CONTAINER=ij-web" >> "$GITHUB_ENV"
-            echo "HOST_PORT=3000" >> "$GITHUB_ENV"
-            echo "API_URL=https://api.islamijindegi.com" >> "$GITHUB_ENV"
-            echo "SITE_URL=https://islamijindegi.com" >> "$GITHUB_ENV"
-            echo "NOINDEX=" >> "$GITHUB_ENV"
-          else
-            echo "TAG=staging" >> "$GITHUB_ENV"
-            echo "UNIT=ij-web-svelte-test.service" >> "$GITHUB_ENV"
-            echo "CONTAINER=ij-web-svelte-test" >> "$GITHUB_ENV"
-            echo "HOST_PORT=3001" >> "$GITHUB_ENV"
-            echo "API_URL=https://api-test.islamijindegi.com" >> "$GITHUB_ENV"
-            echo "SITE_URL=https://test.islamijindegi.com" >> "$GITHUB_ENV"
-            echo "NOINDEX=1" >> "$GITHUB_ENV"
-          fi
+          echo "TAG=prod" >> "$GITHUB_ENV"
+          echo "UNIT=ij-web.service" >> "$GITHUB_ENV"
+          echo "CONTAINER=ij-web" >> "$GITHUB_ENV"
+          echo "HOST_PORT=3000" >> "$GITHUB_ENV"
+          echo "API_URL=https://api.islamijindegi.com" >> "$GITHUB_ENV"
+          echo "SITE_URL=https://islamijindegi.com" >> "$GITHUB_ENV"
+          echo "NOINDEX=" >> "$GITHUB_ENV"
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3

@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 SvelteKit 3 port of the whole Islami Jindegi web app (public site, readers and admin dashboard). The Next.js app in
-`../islami-jindegi-web` is the reference. See README.md for the architecture.
+`../legacy/islami-jindegi-web` is the reference. See README.md for the architecture.
 
 ## Rules for this repo
 
