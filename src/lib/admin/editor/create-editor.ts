@@ -19,6 +19,10 @@ export function createEditor({ element, content, placeholder, onUpdate }: Option
 	return new Editor({
 		element,
 		content,
+		editorProps: {
+			// Word pastes fixed pt sizes and % line heights; drop them so text follows the editor and reader defaults.
+			transformPastedHTML: (html) => html.replace(/(?:font-size|line-height):\s*[^;"']+;?/gi, '')
+		},
 		extensions: [
 			StarterKit.configure({
 				heading: { levels: [1, 2, 3, 4] },
