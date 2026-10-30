@@ -6,7 +6,7 @@
 	import Pencil from '@lucide/svelte/icons/pencil';
 	import Trash2 from '@lucide/svelte/icons/trash-2';
 	import X from '@lucide/svelte/icons/x';
-	import type { MediaItem } from '#lib/types.ts';
+	import type { MediaItem, MediaUsage } from '#lib/types.ts';
 	import { api } from '../api.ts';
 	import { toast } from '../toast.svelte.ts';
 	import Button from '../ui/Button.svelte';
@@ -27,10 +27,16 @@
 	let url = $state('');
 	let saving = $state(false);
 
-	// A different file selected: leave edit mode.
+	let usages = $state<MediaUsage[] | null>(null);
+
+	// A different file selected: leave edit mode and load where it is used.
 	$effect(() => {
-		void item.id;
+		const id = item.id;
 		editing = false;
+		usages = null;
+		api.get<MediaUsage[]>(`/api/media/${id}/usages`)
+			.then((u) => id === item.id && (usages = u))
+			.catch(() => id === item.id && (usages = []));
 	});
 
 	function startEdit() {
@@ -102,6 +108,24 @@
 	<div>
 		<p class={label}>Uploaded</p>
 		<p class="text-sm">{new Date(item.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+	</div>
+	<div>
+		<p class={label}>Used by</p>
+		{#if usages === null}
+			<p class="text-sm text-muted-foreground">Loading...</p>
+		{:else if usages.length === 0}
+			<p class="text-sm text-muted-foreground">Not used anywhere</p>
+		{:else}
+			<ul class="text-sm space-y-1">
+				{#each usages as u (u.module + u.contentId + u.role)}
+					<li class="flex items-baseline gap-2">
+						<span class="shrink-0 rounded bg-muted px-1.5 py-0.5 text-xs capitalize">{u.module}</span>
+						<span class="break-words">{u.title || 'Deleted item'}</span>
+						<span class="ml-auto shrink-0 text-xs text-muted-foreground">{u.role}</span>
+					</li>
+				{/each}
+			</ul>
+		{/if}
 	</div>
 	<div>
 		<p class={label}>URL</p>

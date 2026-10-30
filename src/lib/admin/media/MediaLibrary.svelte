@@ -14,6 +14,7 @@
 	import DropOverlay from './DropOverlay.svelte';
 	import { ACCEPT_ATTR } from './files.ts';
 	import { fileDrop } from './file-drop.ts';
+	import MediaFilters from './MediaFilters.svelte';
 	import MediaDetail from './MediaDetail.svelte';
 	import MediaTile from './MediaTile.svelte';
 	import MediaToolbar from './MediaToolbar.svelte';
@@ -30,7 +31,7 @@
 	const queue = new UploadQueue({ onIdle: (uploaded) => uploaded.length > 0 && browser.reload() });
 
 	$effect(() => {
-		void [browser.page, browser.search, browser.type];
+		void [browser.page, browser.search, browser.type, browser.module, browser.authorId, browser.categoryId, browser.dateFrom, browser.dateTo, browser.unused];
 		browser.reload();
 	});
 
@@ -40,7 +41,7 @@
 		if (!deleting) return;
 		deleteBusy = true;
 		try {
-			await api.delete(`/api/media/${deleting.id}`);
+			await api.delete(`/api/media/${deleting.id}${deleting.usageCount > 0 ? '?force=true' : ''}`);
 			toast.success('Deleted');
 			if (selected?.id === deleting.id) selected = null;
 			deleting = null;
@@ -83,6 +84,7 @@
 				/>
 			</div>
 			<div class="flex flex-wrap items-center gap-3"><MediaToolbar {browser} /></div>
+			<div class="mt-3 flex flex-col gap-2"><MediaFilters {browser} /></div>
 		</div>
 
 		<div class="flex-1 overflow-y-auto px-4 sm:px-8 pb-6">
@@ -94,7 +96,7 @@
 				<div class="flex flex-col items-center justify-center h-64 gap-3 text-muted-foreground">
 					<div class="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center"><ImageIcon class="w-7 h-7 opacity-30" /></div>
 					<p class="font-medium">No files found</p>
-					<p class="text-sm">{browser.search ? 'Try a different search' : 'Upload your first file'}</p>
+					<p class="text-sm">{browser.search || browser.filtered ? 'Try a different search or filter' : 'Upload your first file'}</p>
 				</div>
 			{:else if result}
 				<div class={cn('grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3', browser.loader.loading && 'opacity-60')}>
@@ -128,7 +130,8 @@
 	</div>
 
 	<ConfirmDialog open={!!deleting} title="Delete file?" busy={deleteBusy} onconfirm={confirmDelete} oncancel={() => (deleting = null)}>
-		<strong>{deleting?.fileName}</strong> will be permanently deleted from storage and cannot be recovered. Any content still referencing this URL will show broken links.
+		<strong>{deleting?.fileName}</strong> will be permanently deleted from storage and cannot be recovered.
+		{#if deleting && deleting.usageCount > 0}<strong class="text-destructive">It is used by {deleting.usageCount} item(s)</strong>, which will show broken links.{:else}Any content still referencing this URL will show broken links.{/if}
 	</ConfirmDialog>
 	<UploadPanel {queue} />
 </div>

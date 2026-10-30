@@ -13,6 +13,15 @@ export interface MediaItem {
 	height: number | null;
 	createdAt: string;
 	updatedAt: string;
+	/** How many content items reference this file. */
+	usageCount: number;
+}
+
+export interface MediaUsage {
+	module: string;
+	contentId: string;
+	role: string;
+	title: string;
 }
 
 export interface Admin {
