@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_API_URL } from '$app/env/public';
+import { PUBLIC_API_URL } from '$app/env/public';
 import type { MediaItem, MediaType } from '#lib/types.ts';
 import { auth } from '../auth.svelte.ts';
 import { validateUpload } from './files.ts';
@@ -20,7 +20,7 @@ function uploadFile(file: File, onProgress: (pct: number) => void): Promise<Medi
 		const form = new FormData();
 		form.append('file', file);
 		const xhr = new XMLHttpRequest();
-		xhr.open('POST', `${NEXT_PUBLIC_API_URL}/api/media/upload`);
+		xhr.open('POST', `${PUBLIC_API_URL}/api/media/upload`);
 		const token = auth.peekToken();
 		if (token) xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 		xhr.upload.onprogress = (e) => e.lengthComputable && onProgress(Math.round((e.loaded / e.total) * 100));

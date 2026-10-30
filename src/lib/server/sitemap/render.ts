@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_SITE_URL as SITE_URL } from '$app/env/public';
+import { PUBLIC_SITE_URL as SITE_URL } from '$app/env/public';
 import { DEFAULT_LOCALE, LOCALES, type Locale } from '#lib/i18n/index.ts';
 import { isTranslatedPath } from '#lib/seo.ts';
 

@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_SITE_URL as SITE } from '$app/env/public';
+import { PUBLIC_SITE_URL as SITE } from '$app/env/public';
 import { canonicalPath, htmlToPlainText } from './seo.ts';
 import type { Locale } from '#lib/i18n/index.ts';
 

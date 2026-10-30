@@ -1,5 +1,5 @@
 // Backend-driven Hijri date, mirroring the app's adjusted_hijri_date.dart 1:1:
-//  1. Ask the dotnet API (/api/hijri/date) for today's and tomorrow's Hijri date —
+//  1. Ask the API (/api/hijri/date) for today's and tomorrow's Hijri date —
 //     sighting-aware, country-specific — and cache both in localStorage.
 //  2. The Islamic day begins at Maghrib: after it, display tomorrow's date
 //     (never today's as a stand-in for tomorrow).
@@ -13,7 +13,7 @@ import { HIJRI_MONTHS_EN, toHijri } from './calendar.ts';
 import { calcPrayerSlots } from './prayer-times.ts';
 import { getSettings } from './settings.ts';
 
-import { NEXT_PUBLIC_API_URL as API_BASE } from '$app/env/public';
+import { PUBLIC_API_URL as API_BASE } from '$app/env/public';
 const CACHE_KEY = 'ij_hijri_cache';
 
 export interface HijriDisplayDate {

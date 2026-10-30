@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { NEXT_PUBLIC_NOINDEX, NEXT_PUBLIC_SITE_URL as SITE } from '$app/env/public';
+	import { PUBLIC_NOINDEX, PUBLIC_SITE_URL as SITE } from '$app/env/public';
 	import type { SeoData } from '#lib/seo.ts';
 
 	let { seo }: { seo: SeoData } = $props();
 
 	const abs = (path: string) => (path.startsWith('http') ? path : `${SITE}${path}`);
-	const noindex = NEXT_PUBLIC_NOINDEX === '1';
+	const noindex = PUBLIC_NOINDEX === '1';
 	// JSON-LD sits inside a <script>, so `<` is escaped: the data can contain CMS text.
 	const ld = (block: Record<string, unknown>) => `<script type="application/ld+json">${JSON.stringify(block).replace(/</g, '\\u003c')}<\/script>`;
 </script>

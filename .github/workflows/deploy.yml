@@ -48,10 +48,10 @@ jobs:
           load: true
           tags: ${{ env.IMAGE }}:${{ env.TAG }}
           build-args: |
-            NEXT_PUBLIC_API_URL=${{ env.API_URL }}
-            NEXT_PUBLIC_SITE_URL=${{ env.SITE_URL }}
-            NEXT_PUBLIC_NOINDEX=${{ env.NOINDEX }}
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ env.GOOGLE_CLIENT_ID }}
+            PUBLIC_API_URL=${{ env.API_URL }}
+            PUBLIC_SITE_URL=${{ env.SITE_URL }}
+            PUBLIC_NOINDEX=${{ env.NOINDEX }}
+            PUBLIC_GOOGLE_CLIENT_ID=${{ env.GOOGLE_CLIENT_ID }}
           cache-from: type=gha,scope=${{ github.ref_name }}
           cache-to: type=gha,mode=max,scope=${{ github.ref_name }}
 

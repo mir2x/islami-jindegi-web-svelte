@@ -3,8 +3,8 @@ import { getSettings } from './settings.ts';
 
 // ── Hijri date ────────────────────────────────────────────────────────────────
 const HIJRI_MONTHS_BN = [
-	// Canonical Bangla spellings, shared 1:1 with the dotnet API's
-	// HijriService.MonthNames and the app's l10n — keep all three in sync.
+	// Canonical Bangla spellings, shared 1:1 with the API's
+	// Hijri month names and the app's l10n — keep all three in sync.
 	'মুহাররম',
 	'সফর',
 	'রবিউল আউয়াল',
@@ -35,7 +35,7 @@ export const HIJRI_MONTHS_EN = [
 
 export function toHijri(date: Date): { day: number; month: number; year: number; monthBn: string; monthEn: string } {
 	// Umm al-Qura shifted one day back — Bangladesh's default relationship to the
-	// Saudi calendar (mirrors the dotnet API's default_offset=+1 on month starts) —
+	// Saudi calendar (mirrors the API's default_offset=+1 on month starts) —
 	// plus the user's manual adjustment. This is the instant-render/offline value;
 	// the sighting-aware backend date (src/lib/hijri.ts) replaces it when available,
 	// and matches it exactly whenever no per-month override exists.

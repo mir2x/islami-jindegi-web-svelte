@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_API_URL } from '$app/env/public';
+import { PUBLIC_API_URL } from '$app/env/public';
 import { auth } from './auth.svelte.ts';
 
 /** Carries the HTTP status so callers can act on it; 409 in particular means a duplicate title. */
@@ -14,7 +14,7 @@ export class ApiError extends Error {
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
 	const token = auth.peekToken();
-	const res = await fetch(`${NEXT_PUBLIC_API_URL}${path}`, {
+	const res = await fetch(`${PUBLIC_API_URL}${path}`, {
 		cache: 'no-store',
 		...options,
 		headers: { ...(options?.body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) }

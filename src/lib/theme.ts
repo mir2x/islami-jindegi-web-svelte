@@ -1,7 +1,7 @@
 /**
  * Light/dark switching. The initial class is set by an inline script in app.html (before first
- * paint), so this only has to flip the class and remember the choice. The key matches the old
- * next-themes one ('ij-theme') so visitors keep their preference.
+ * paint), so this only has to flip the class and remember the choice. The choice is stored
+ * under 'ij-theme'.
  */
 const KEY = 'ij-theme';
 

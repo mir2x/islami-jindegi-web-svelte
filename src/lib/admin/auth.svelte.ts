@@ -1,6 +1,6 @@
 import { StoredValue } from '#lib/storage/stored.svelte.ts';
 
-/** Same key and shape (zustand `persist`) as the Next.js dashboard, so an existing sign-in carries over. */
+/** Persisted under `ij-admin-auth` in this shape (zustand-style `persist`), so an existing sign-in carries over. */
 interface Persisted {
 	state: { token: string | null; email: string | null };
 	version: number;

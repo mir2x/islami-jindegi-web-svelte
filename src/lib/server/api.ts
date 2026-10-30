@@ -1,12 +1,12 @@
 import { API_INTERNAL_URL } from '$app/env/private';
-import { NEXT_PUBLIC_API_URL } from '$app/env/public';
+import { PUBLIC_API_URL } from '$app/env/public';
 import { cached } from './cache.ts';
 import { currentVisitorIp } from './client-ip.ts';
 
 const TIMEOUT_MS = 8000;
 
 /** Server-side base URL: the internal one when configured, so API calls skip the public edge. */
-export const apiUrl = (path: string) => `${API_INTERNAL_URL || NEXT_PUBLIC_API_URL}${path}`;
+export const apiUrl = (path: string) => `${API_INTERNAL_URL || PUBLIC_API_URL}${path}`;
 
 /**
  * Over the internal URL the API sees the web server as the caller, so every visitor would share one

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { NEXT_PUBLIC_API_URL, NEXT_PUBLIC_GOOGLE_CLIENT_ID as CLIENT_ID } from '$app/env/public';
+	import { PUBLIC_API_URL, PUBLIC_GOOGLE_CLIENT_ID as CLIENT_ID } from '$app/env/public';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { localePath, useT } from '#lib/i18n/use-t.svelte.ts';
@@ -16,7 +16,7 @@
 
 	async function onCredential(response: { credential: string }) {
 		try {
-			const res = await fetch(`${NEXT_PUBLIC_API_URL}/api/auth/google`, {
+			const res = await fetch(`${PUBLIC_API_URL}/api/auth/google`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ idToken: response.credential })
@@ -32,7 +32,7 @@
 	}
 
 	onMount(() => {
-		if (!CLIENT_ID) return console.error('NEXT_PUBLIC_GOOGLE_CLIENT_ID is not set');
+		if (!CLIENT_ID) return console.error('PUBLIC_GOOGLE_CLIENT_ID is not set');
 		const init = () => {
 			const google = (window as unknown as { google?: { accounts: { id: GoogleId } } }).google;
 			if (!google || !button) return;

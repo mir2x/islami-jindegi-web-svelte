@@ -1,4 +1,4 @@
-import { NEXT_PUBLIC_API_URL } from '$app/env/public';
+import { PUBLIC_API_URL } from '$app/env/public';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -16,5 +16,5 @@ export function buildDownloadFilename(title: string, authorName: string, fileUrl
 }
 
 export function downloadUrl(fileUrl: string, filename: string) {
-	return `${NEXT_PUBLIC_API_URL}/api/download?url=${encodeURIComponent(fileUrl)}&name=${encodeURIComponent(filename)}`;
+	return `${PUBLIC_API_URL}/api/download?url=${encodeURIComponent(fileUrl)}&name=${encodeURIComponent(filename)}`;
 }

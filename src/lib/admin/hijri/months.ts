@@ -1,4 +1,4 @@
-// Bangla spellings are the canonical set shared 1:1 with the dotnet API's HijriService.MonthNames and the app's l10n: keep all three in sync.
+// Bangla spellings are the canonical set shared 1:1 with the API's Hijri month names and the app's l10n: keep all three in sync.
 export const HIJRI_MONTHS = [
 	{ value: 1, en: 'Muharram', bn: 'মুহাররম' },
 	{ value: 2, en: 'Safar', bn: 'সফর' },

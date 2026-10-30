@@ -1,8 +1,7 @@
-# Islami Jindegi: web (SvelteKit)
+# Islami Jindegi: web
 
-The whole web app of **ইসলামী যিন্দেগী**, ported from the Next.js app in `../legacy/islami-jindegi-web`: the public site,
-the readers (books, hadith, Quran) and the admin dashboard. It is a drop-in replacement: same URLs, same
-environment variables, same API.
+The web app of **ইসলামী যিন্দেগী**: the public site, the readers (books, hadith, Quran) and the admin dashboard.
+It talks to the Rust API (`../islami-jindegi-rust-api`).
 
 SvelteKit 3 · Svelte 5 (runes) · Tailwind CSS 4 · `adapter-node` · pnpm.
 
@@ -10,38 +9,36 @@ SvelteKit 3 · Svelte 5 (runes) · Tailwind CSS 4 · `adapter-node` · pnpm.
 
 ```bash
 pnpm install
-cp .env.example .env     # NEXT_PUBLIC_API_URL etc.
+cp .env.example .env     # PUBLIC_API_URL etc.
 pnpm dev                 # http://localhost:5173
 pnpm check               # svelte-check (types + a11y)
 pnpm build && pnpm start # production server on :3000 (PORT / HOST to change)
 ```
 
-The API's CORS list allows `localhost:3000`, so run the production server on 3000 (not `pnpm dev`) when testing
-pages whose browser code calls the API directly (list filters, infinite scroll, audio, the whole admin).
+The API's CORS list allows `localhost:3000`, so test pages whose browser code calls the API directly (list filters,
+infinite scroll, audio, the whole admin) on the production server at port 3000, not on `pnpm dev`.
 
 ## Configuration
 
-Same variable names as the Next.js app, but read **when the server starts**, not baked in at build time:
-changing the API URL only needs a restart. Declared in `src/env.ts`.
+Read **when the server starts**, not baked in at build time: changing one only needs a restart. Declared in `src/env.ts`.
 
-| Variable                       | Purpose                                                                     |
-| ------------------------------ | --------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_API_URL`          | API base URL                                                                |
-| `NEXT_PUBLIC_SITE_URL`         | canonical origin (sitemaps, canonical / Open Graph URLs)                    |
-| `NEXT_PUBLIC_NOINDEX`          | `1` to make robots, sitemap and meta all noindex (unset in production)                     |
-| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Google OAuth client id of the admin sign-in button                          |
-| `COMPRESS`                     | `0` to skip in-process brotli/gzip when a reverse proxy already compresses |
-| `API_INTERNAL_URL`             | optional: API base for server-side calls on the host network (see below)    |
+| Variable                  | Purpose                                                                       |
+| ------------------------- | ----------------------------------------------------------------------------- |
+| `PUBLIC_API_URL`          | API base URL (what browsers call)                                             |
+| `PUBLIC_SITE_URL`         | canonical origin (sitemaps, canonical / Open Graph URLs)                      |
+| `PUBLIC_NOINDEX`          | `1` to make robots, sitemap and meta all noindex (unset in production)        |
+| `PUBLIC_GOOGLE_CLIENT_ID` | Google OAuth client id of the admin sign-in button                            |
+| `COMPRESS`                | `0` to skip in-process brotli/gzip when a reverse proxy already compresses    |
+| `API_INTERNAL_URL`        | optional: API base for server-side calls on the host network (see below)      |
 
-`API_INTERNAL_URL` (e.g. `http://ij-backend:8080`) lets the server reach the API without going out through the public
-edge. Each server-side call then carries the visitor's IP as `x-client-ip`, so the API rate-limits per visitor and not
-per web server. Unset, the server uses `NEXT_PUBLIC_API_URL`.
+`API_INTERNAL_URL` (e.g. `http://ij-backend:8080`) lets the server reach the API over the container network without
+going out through the public edge. Each server-side call then carries the visitor's IP as `x-client-ip`, so the API
+rate-limits per visitor and not per web server. Unset, the server uses `PUBLIC_API_URL`. Browsers always use
+`PUBLIC_API_URL`, because the container network is not reachable from outside.
 
-## URLs and SEO parity
+## URLs and SEO
 
-URLs are identical to the Next.js app: `/bn|/en` prefix, same paths, same `?page=N` / filter query params.
-
-- `/` and any un-prefixed path → `308 /bn/...` (no `Accept-Language` sniffing); old Ember URLs (`/duas`, `/bayans`,
+- `/` and any un-prefixed path → `308 /bn/...` (no `Accept-Language` sniffing); the old Ember URLs (`/duas`, `/bayans`,
   `/contact-us`, `/donation`, `/madrasahs`) redirect too (`src/lib/server/redirects.ts`, applied in `hooks.server.ts`).
 - Head metadata is returned as `seo` from each `load` (`buildSeo` in `src/lib/seo.ts`) and rendered once by
   `src/lib/components/Seo.svelte`: title, description, canonical, hreflang (only for the two translated paths),
@@ -55,7 +52,7 @@ URLs are identical to the Next.js app: `/bn|/en` prefix, same paths, same `?page
 ```
 src/
   env.ts, params.ts, hooks.server.ts   env vars, [locale]/[staticpage]/[section] matchers, redirects/headers/compression
-  messages/{bn,en}/*.json              copied unchanged from the Next.js app
+  messages/{bn,en}/*.json              UI strings per namespace
   routes/[locale=locale]/
     (public)/…                         pages with header + footer
     (reader)/…                         full-height readers (books, hadith, Quran): header only
@@ -69,8 +66,6 @@ src/
     admin/                             everything of the dashboard (never imported by public code, except AdminEditButton)
 ```
 
-Conventions worth knowing:
-
 - **i18n**: `+page.server.ts` returns `msgs: loadMessages(locale, 'Namespace')`; components call `useT('Namespace')`.
   The header/footer namespaces come from the layout (`chrome`). Links are built with `localePath()`. ICU `{n, plural, …}`
   and `{n, number}` are supported by `interpolate` (`src/lib/i18n/index.ts`).
@@ -79,18 +74,16 @@ Conventions worth knowing:
   row/detail snippets. Filters update the URL in place (shallow routing) and refetch from the API; every page of
   the catalogue is also a real server-rendered URL with a crawlable pager. `snapshot` restores the loaded list when
   navigating back.
-- **Data caching**: `src/lib/server/cache.ts` is an in-process stale-while-revalidate cache (the stand-in for
-  Next's `revalidate`); repeat requests take a few milliseconds.
-- **Images**: `/api/img?url=&w=` resizes CMS images to WebP with `sharp` (host allow-list, in-memory LRU,
-  immutable cache headers); `<Img>` builds the `srcset`. This replaces `next/image`.
+- **Data caching**: `src/lib/server/cache.ts` is an in-process stale-while-revalidate cache; repeat requests take a few
+  milliseconds.
+- **Images**: `/api/img?url=&w=` resizes CMS images to WebP with `sharp` (host allow-list, in-memory LRU, immutable cache
+  headers); `<Img>` builds the `srcset`.
 - **PDF reader**: `pdfjs-dist` directly (canvas + text layer), loaded on demand. PDFs go through `/api/pdf`.
-- No file exceeds 300 lines; run `pnpm format` before committing.
 
 ### Admin dashboard
 
 `routes/[locale=locale]/admin/**` is a client-only app (`+layout.ts`: `ssr = false`). The Google sign-in token lives in
-`localStorage['ij-admin-auth']` (same key and shape as the Next dashboard, so a signed-in session carries over); real
-enforcement is the API's `[Authorize]`. Its code is in `src/lib/admin/`:
+`localStorage['ij-admin-auth']`; real enforcement is the API's admin check. Its code is in `src/lib/admin/`:
 
 - `api.ts` (fetch wrapper with the token, `ApiError`), `auth.svelte.ts`, `toast.svelte.ts`, `lookups.svelte.ts`
   (authors / categories / books shared by pickers and filters).
@@ -101,17 +94,19 @@ enforcement is the API's `[Authorize]`. Its code is in `src/lib/admin/`:
   `ContentEdit` render any of them. Routes are `admin/[section=content]/…` (the `content` matcher lists the slugs).
 - `list/` (`ListPage`, `DataTable`, `SimpleList`, `PagedLoader`: a stale response can never overwrite a newer one),
   `taxonomy/` (authors + categories: list, form, merge, delete-with-usage, reorder), `books/`, `notifications/`,
-  `media/` (library, picker, upload queue with progress), `topics/`, `madrasah/`, `pages/`, `hijri/`, `offline/`,
-  `admins/`.
-- `editor/`: the rich-text editor on `@tiptap/core` (no React wrapper). tiptap is imported lazily, so it is only
-  downloaded on screens that show an editor.
+  `media/` (library with module / author / category / date / unused filters and a "used by" list, picker, upload
+  queue with progress), `topics/`, `madrasah/`, `pages/`, `hijri/`, `offline/`, `admins/`.
+- `editor/`: the rich-text editor on `@tiptap/core` (no React wrapper), imported lazily so it is only downloaded on
+  screens that show an editor.
 - The dashboard has its own light/dark preference (`ij-admin-theme`) and sidebar state (`ij-admin-sidebar`).
 - Public detail pages show a floating "Edit" button (`components/shared/AdminEditButton.svelte`) to signed-in admins.
 
 ## Deploy
 
-`Dockerfile` (multi-stage, `node:22-alpine`, non-root) and `.github/workflows/deploy.yml`: a push to `main` builds the image in
-GitHub Actions and deploys it to the VPS as `ij-web` (see `../islami-jindegi-rust-api/deploy/SERVER.md`, section 5). The image needs
-only `sharp` and `adhan` in `node_modules` at runtime. Pass the variables above as container environment; the build args just set defaults.
+A push to `main` runs `.github/workflows/deploy.yml`: it builds the image from the `Dockerfile` (multi-stage,
+`node:22-alpine`, non-root) in GitHub Actions, copies it to the VPS and restarts the `ij-web` unit, then health-checks it
+and rolls back to the previous image on failure. The server runbook is
+`../islami-jindegi-rust-api/deploy/SERVER.md`. The image needs only `sharp` and `adhan` in `node_modules` at runtime.
+Pass the variables above as container environment; the build args only set defaults.
 
 This app serves **everything** (public, readers and `/{bn,en}/admin/*`); nginx sends all web traffic to it.

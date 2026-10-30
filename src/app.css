@@ -97,8 +97,7 @@
 	--sidebar-ring: oklch(0.62 0.172 163);
 }
 
-/* Public site dark theme — Islami Jindegi's brand teal, carried over from the
-   legacy site's palette (islamic-jindegi-web/app/styles/settings/colors.css). */
+/* Public site dark theme — Islami Jindegi's brand teal. */
 .dark {
 	--background: #163f4f;
 	--foreground: #ebebeb;

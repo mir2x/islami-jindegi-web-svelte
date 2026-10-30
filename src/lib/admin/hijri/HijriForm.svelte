@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goBack } from '../navigate.ts';
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
-	import { NEXT_PUBLIC_API_URL } from '$app/env/public';
+	import { PUBLIC_API_URL } from '$app/env/public';
 	import { onMount } from 'svelte';
 	import type { HijriMonthSighting } from '#lib/types.ts';
 	import { toast } from '../toast.svelte.ts';
@@ -29,7 +29,7 @@
 	onMount(async () => {
 		if (item) return;
 		try {
-			const res = await fetch(`${NEXT_PUBLIC_API_URL}/api/hijri/date?country-code=BD`);
+			const res = await fetch(`${PUBLIC_API_URL}/api/hijri/date?country-code=BD`);
 			const { data } = (await res.json()) as { data: { hijriYear: number; hijriMonth: number } };
 			hijriYear = String(data.hijriYear);
 			hijriMonth = String(data.hijriMonth);

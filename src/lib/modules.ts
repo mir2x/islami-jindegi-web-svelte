@@ -36,7 +36,7 @@ export const moduleLabel = (key: string) => CONTENT_MODULES.find((m) => m.key ==
  *
  * Membership used to be implied by "has content", so every picker listed all ~88 categories
  * regardless of module. `category_modules` makes it explicit, and carries the per-module
- * position recovered from the legacy system.
+ * position.
  *
  * Falls back to the full list when no category reports membership: during a deploy the API may
  * still be the older build that does not send `modules`, and empty pickers would be worse than
@@ -62,9 +62,7 @@ export const AUTHOR_MODULES = CONTENT_MODULES.filter((m) => m.key !== 'dua');
 /**
  * The authors a module actually uses, in that module's own order.
  *
- * The old system had five separate author tables, each with its own position; unifying them
- * collapsed those into one column holding the books ordering. `author_modules` restores the
- * per-module position recovered from the legacy tables.
+ * `author_modules` holds each author's position per module.
  *
  * Falls back to the full list when no author reports membership: during a deploy the API may
  * still be the older build that does not send `modules`, and empty pickers would be worse than

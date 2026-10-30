@@ -1,11 +1,11 @@
 import { COMPRESS } from '$app/env/private';
-import { NEXT_PUBLIC_NOINDEX } from '$app/env/public';
+import { PUBLIC_NOINDEX } from '$app/env/public';
 import type { Handle } from '@sveltejs/kit/hooks';
 import { withVisitorIp } from '#lib/server/client-ip.ts';
 import { compress } from '#lib/server/compress.ts';
 import { resolveRedirect } from '#lib/server/redirects.ts';
 
-const NOINDEX = NEXT_PUBLIC_NOINDEX === '1';
+const NOINDEX = PUBLIC_NOINDEX === '1';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const { pathname, search } = event.url;
