@@ -24,7 +24,6 @@
 
 	let editing = $state(false);
 	let name = $state('');
-	let url = $state('');
 	let saving = $state(false);
 
 	let usages = $state<MediaUsage[] | null>(null);
@@ -41,14 +40,13 @@
 
 	function startEdit() {
 		name = item.fileName;
-		url = item.url;
 		editing = true;
 	}
 
 	async function save() {
 		saving = true;
 		try {
-			const updated = await api.patch<MediaItem>(`/api/media/${item.id}`, { fileName: name, url });
+			const updated = await api.patch<MediaItem>(`/api/media/${item.id}`, { fileName: name });
 			editing = false;
 			toast.success('Saved');
 			onsaved(updated);
@@ -129,9 +127,7 @@
 	</div>
 	<div>
 		<p class={label}>URL</p>
-		{#if editing}<input bind:value={url} class={inp('text-xs font-mono')} />{:else}<p class="text-xs text-muted-foreground break-all bg-muted rounded-md px-2 py-1.5 font-mono">
-				{item.url}
-			</p>{/if}
+		<p class="text-xs text-muted-foreground break-all bg-muted rounded-md px-2 py-1.5 font-mono">{item.url}</p>
 	</div>
 </div>
 
