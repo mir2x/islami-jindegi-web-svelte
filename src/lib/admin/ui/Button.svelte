@@ -12,10 +12,11 @@
 		/** Renders an anchor instead of a button. */
 		href?: string;
 		target?: string;
+		rel?: string;
 		children: Snippet;
 	}
 
-	let { variant = 'default', size = 'default', href, class: className, children, ...rest }: Props = $props();
+	let { variant = 'default', size = 'default', href, target, rel, class: className, children, ...rest }: Props = $props();
 
 	const variants: Record<Variant, string> = {
 		default: 'bg-primary text-primary-foreground hover:bg-primary/80',
@@ -38,7 +39,7 @@
 </script>
 
 {#if href}
-	<a {href} target={rest.target as string | undefined} class={cls}>{@render children()}</a>
+	<a {href} {target} {rel} class={cls}>{@render children()}</a>
 {:else}
 	<button type="button" {...rest} class={cls}>{@render children()}</button>
 {/if}

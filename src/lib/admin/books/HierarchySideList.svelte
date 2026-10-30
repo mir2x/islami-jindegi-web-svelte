@@ -59,7 +59,7 @@
 
 	// Open the path down to the item being edited.
 	$effect(() => {
-		if (subs.length === 0 && chapters.length === 0) return;
+		if (!currentId || (subs.length === 0 && chapters.length === 0)) return;
 		const open: Record<string, boolean> = {};
 		if (currentType === 'chapter') open[currentId] = true;
 		else {
