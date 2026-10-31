@@ -7,7 +7,6 @@
 	import type { DateRange } from '#lib/filters.ts';
 	import { currentLocale } from '#lib/i18n/use-t.svelte.ts';
 	import { cn } from '#lib/utils.ts';
-	import DateTextInput from './DateTextInput.svelte';
 
 	type Preset = 'all' | 'today' | 'yesterday' | 'last7days' | 'lastMonth' | 'lastYear' | 'custom';
 
@@ -19,8 +18,29 @@
 
 	// Falls back to "any date" when the range is cleared from outside.
 	$effect(() => {
-		if (!value.from && !value.to && preset !== 'custom') preset = 'all';
+		if (!value.from && !value.to) {
+			if (preset !== 'custom') preset = 'all';
+			fromYear = fromMonth = toYear = toMonth = '';
+		}
 	});
+
+	// Custom range: a year and an optional month for each end. "From" alone means that month (or year) only.
+	const FIRST_YEAR = 2000;
+	const thisYear = new Date().getFullYear();
+	const years = Array.from({ length: thisYear - FIRST_YEAR + 1 }, (_, i) => String(thisYear - i));
+	const months = $derived(Array.from({ length: 12 }, (_, i) => new Intl.DateTimeFormat(isBn ? 'bn' : 'en', { month: 'long' }).format(new Date(2000, i, 1))));
+	const part = (iso: string, from: number, to: number) => (iso ? String(+iso.slice(from, to)) : '');
+	let fromYear = $state(untrack(() => part(value.from, 0, 4)));
+	let fromMonth = $state(untrack(() => part(value.from, 5, 7)));
+	let toYear = $state('');
+	let toMonth = $state('');
+
+	const pad = (n: number) => String(n).padStart(2, '0');
+	const firstDay = (y: string, m: string) => (y ? `${y}-${pad(m ? +m : 1)}-01` : '');
+	const lastDay = (y: string, m: string) => (y ? `${y}-${pad(m ? +m : 12)}-${pad(new Date(+y, m ? +m : 12, 0).getDate())}` : '');
+	function applyCustom() {
+		onchange({ from: firstDay(fromYear, fromMonth), to: toYear ? lastDay(toYear, toMonth) : lastDay(fromYear, fromMonth) });
+	}
 
 	const iso = (d: Date) => new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 
@@ -64,8 +84,11 @@
 		onchange(next === 'custom' ? value : rangeFor(next));
 		if (next !== 'custom') open = false;
 	}
+	const selectCls = 'h-9 min-w-0 flex-1 rounded-lg border border-border bg-muted px-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring';
+
 	function clear() {
 		preset = 'all';
+		fromYear = fromMonth = toYear = toMonth = '';
 		onchange({ from: '', to: '' });
 		open = false;
 	}
@@ -98,8 +121,29 @@
 	</div>
 	{#if preset === 'custom'}
 		<div class="mt-3 space-y-2 border-t border-border pt-3">
-			<DateTextInput label={isBn ? 'শুরুর তারিখ' : 'Start date'} value={value.from} onchange={(from) => onchange({ ...value, from })} />
-			<DateTextInput label={isBn ? 'শেষ তারিখ' : 'End date'} value={value.to} onchange={(to) => onchange({ ...value, to })} />
+			{#each [{ label: isBn ? 'শুরু' : 'From', end: false }, { label: isBn ? 'শেষ' : 'To', end: true }] as row (row.label)}
+				<div class="flex items-center gap-2">
+					<span class="w-10 shrink-0 text-xs text-muted-foreground">{row.label}</span>
+					<select
+						aria-label="{row.label} {isBn ? 'বছর' : 'year'}"
+						value={row.end ? toYear : fromYear}
+						onchange={(e) => (row.end ? (toYear = e.currentTarget.value) : (fromYear = e.currentTarget.value), applyCustom())}
+						class={selectCls}
+					>
+						<option value="">{isBn ? 'বছর' : 'Year'}</option>
+						{#each years as y (y)}<option value={y}>{y}</option>{/each}
+					</select>
+					<select
+						aria-label="{row.label} {isBn ? 'মাস' : 'month'}"
+						value={row.end ? toMonth : fromMonth}
+						onchange={(e) => (row.end ? (toMonth = e.currentTarget.value) : (fromMonth = e.currentTarget.value), applyCustom())}
+						class={selectCls}
+					>
+						<option value="">{isBn ? 'মাস' : 'Month'}</option>
+						{#each months as m, i (i)}<option value={String(i + 1)}>{m}</option>{/each}
+					</select>
+				</div>
+			{/each}
 		</div>
 	{/if}
 	{#if value.from || value.to}
