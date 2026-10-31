@@ -61,6 +61,7 @@
 			authorId: s.authorId,
 			categoryId: s.categoryId,
 			published: s.published,
+			hasAudio: s.audio,
 			offlineAvailable: s.offline || undefined,
 			sort: s.sort
 		});

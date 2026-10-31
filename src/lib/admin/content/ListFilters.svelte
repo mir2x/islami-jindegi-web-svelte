@@ -79,6 +79,20 @@
 	onchange={(v) => apply({ published: v })}
 />
 
+{#if config.audioFilter}
+	<Select
+		class="w-32"
+		filter
+		value={s.audio}
+		options={[
+			{ value: '', label: 'All types' },
+			{ value: 'true', label: 'Audio' },
+			{ value: 'false', label: 'Text only' }
+		]}
+		onchange={(v) => apply({ audio: v })}
+	/>
+{/if}
+
 {#if config.hasOffline}
 	<label class="flex h-9 items-center gap-2 rounded-md border bg-card px-3 text-sm text-muted-foreground">
 		<Switch checked={s.offline} label={t('offlineFilterLabel')} onchange={(v) => apply({ offline: v })} />

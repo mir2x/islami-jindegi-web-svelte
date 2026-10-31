@@ -70,6 +70,8 @@ export interface ContentConfig {
 	module?: ModuleKey;
 	hasAuthor: boolean;
 	hasOffline: boolean;
+	/** Shows the all / audio / text filter (modules whose items may carry an audio file). */
+	audioFilter?: boolean;
 	defaultSort: string;
 	columns: Column[];
 	/** Empty-state icon name, see EmptyIcon. */

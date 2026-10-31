@@ -4,6 +4,8 @@ export interface ListMemory {
 	authorId: string;
 	categoryId: string;
 	published: string;
+	/** '' (all), 'true' (audio) or 'false' (text only). */
+	audio: string;
 	offline: boolean;
 	page: number;
 	sort: string;
@@ -12,5 +14,5 @@ export interface ListMemory {
 const memory = new Map<string, ListMemory>();
 
 export const recall = (key: string, defaultSort: string): ListMemory =>
-	memory.get(key) ?? { search: '', authorId: '', categoryId: '', published: '', offline: false, page: 1, sort: defaultSort };
+	memory.get(key) ?? { search: '', authorId: '', categoryId: '', published: '', audio: '', offline: false, page: 1, sort: defaultSort };
 export const remember = (key: string, state: ListMemory) => void memory.set(key, state);
