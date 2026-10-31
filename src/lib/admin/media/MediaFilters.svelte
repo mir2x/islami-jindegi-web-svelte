@@ -23,10 +23,45 @@
 		{ value: 'madrasah', label: 'Madrasah' }
 	];
 
+	const MONTHS = [
+		{ value: '', label: 'Month' },
+		...['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((label, i) => ({
+			value: String(i + 1),
+			label
+		}))
+	];
+	const FIRST_YEAR = 2000;
+	const thisYear = new Date().getFullYear();
+	const yearOptions = [{ value: '', label: 'Year' }, ...Array.from({ length: thisYear - FIRST_YEAR + 1 }, (_, i) => String(thisYear - i))];
+
+	let fromYear = $state('');
+	let fromMonth = $state('');
+	let toYear = $state('');
+	let toMonth = $state('');
+
+	const pad = (n: number) => String(n).padStart(2, '0');
+	// First and last day of a year, or of one month when the month is chosen.
+	const firstDay = (y: string, m: string) => (y ? `${y}-${pad(m ? +m : 1)}-01` : '');
+	const lastDay = (y: string, m: string) => (y ? `${y}-${pad(m ? +m : 12)}-${pad(new Date(+y, m ? +m : 12, 0).getDate())}` : '');
+
+	// Only a "from" period means just that month (or year); a "to" period extends the range to its end.
+	function apply() {
+		const dateFrom = firstDay(fromYear, fromMonth);
+		const dateTo = toYear ? lastDay(toYear, toMonth) : lastDay(fromYear, fromMonth);
+		browser.setFilter({ dateFrom, dateTo });
+	}
+
+	// "Clear filters" empties the dates; the selects follow.
+	$effect(() => {
+		if (!browser.dateFrom && !browser.dateTo) fromYear = fromMonth = toYear = toMonth = '';
+	});
+
 	onMount(() => void lookups.ensureAll());
 
 	const authors = $derived<ComboOption[]>(lookups.authors.map((a) => ({ id: a.id, label: a.name })));
-	const categories = $derived<ComboOption[]>(lookups.categories.flatMap((c) => [{ id: c.id, label: c.title }, ...(c.children ?? []).map((k) => ({ id: k.id, label: k.title, child: true }))]));
+	const categories = $derived<ComboOption[]>(
+		lookups.categories.flatMap((c) => [{ id: c.id, label: c.title }, ...(c.children ?? []).map((k) => ({ id: k.id, label: k.title, child: true }))])
+	);
 	// Pages and madrasahs have no author or category, so those filters can never match them.
 	const noTaxonomy = $derived(browser.module === 'page' || browser.module === 'madrasah');
 </script>
@@ -53,12 +88,16 @@
 		class="w-48"
 		onchange={(v) => browser.setFilter({ categoryId: v as string })}
 	/>
-	<label class="flex items-center gap-1.5 text-xs text-muted-foreground">
-		From <input type="date" value={browser.dateFrom} max={browser.dateTo || undefined} onchange={(e) => browser.setFilter({ dateFrom: e.currentTarget.value })} class={inp('w-36 bg-card')} />
-	</label>
-	<label class="flex items-center gap-1.5 text-xs text-muted-foreground">
-		To <input type="date" value={browser.dateTo} min={browser.dateFrom || undefined} onchange={(e) => browser.setFilter({ dateTo: e.currentTarget.value })} class={inp('w-36 bg-card')} />
-	</label>
+	<div class="flex items-center gap-1.5 text-xs text-muted-foreground">
+		From
+		<Select value={fromYear} options={yearOptions} filter class="w-24" onchange={(v) => ((fromYear = v), apply())} />
+		<Select value={fromMonth} options={MONTHS} filter class="w-32" onchange={(v) => ((fromMonth = v), apply())} />
+	</div>
+	<div class="flex items-center gap-1.5 text-xs text-muted-foreground">
+		To
+		<Select value={toYear} options={yearOptions} filter class="w-24" onchange={(v) => ((toYear = v), apply())} />
+		<Select value={toMonth} options={MONTHS} filter class="w-32" onchange={(v) => ((toMonth = v), apply())} />
+	</div>
 	<label class="flex items-center gap-1.5 text-sm">
 		<input type="checkbox" checked={browser.unused} onchange={(e) => browser.setFilter({ unused: e.currentTarget.checked })} /> Unused only
 	</label>
