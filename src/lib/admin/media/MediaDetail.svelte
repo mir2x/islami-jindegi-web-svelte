@@ -33,7 +33,8 @@
 		const id = item.id;
 		editing = false;
 		usages = null;
-		api.get<MediaUsage[]>(`/api/media/${id}/usages`)
+		api
+			.get<MediaUsage[]>(`/api/media/${id}/usages`)
 			.then((u) => id === item.id && (usages = u))
 			.catch(() => id === item.id && (usages = []));
 	});
@@ -62,12 +63,21 @@
 		toast.success('URL copied');
 	}
 
+	function onkeydown(e: KeyboardEvent) {
+		// Not while typing in the name field or while the delete dialog is open.
+		if (e.key === 'Escape' && !editing && !document.querySelector('[role="dialog"], [role="alertdialog"]')) onclose();
+	}
+
 	const label = 'text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1';
 </script>
 
-<div class="sm:hidden flex items-center justify-between px-4 py-3 border-b shrink-0">
+<svelte:window {onkeydown} />
+
+<div class="flex items-center justify-between px-4 py-3 border-b shrink-0">
 	<span class="text-sm font-semibold">File details</span>
-	<button type="button" aria-label="Close" onclick={onclose} class="text-muted-foreground hover:text-foreground transition-colors"><X class="w-5 h-5" /></button>
+	<button type="button" aria-label="Close" title="Close (Esc)" onclick={onclose} class="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+		><X class="w-5 h-5" /></button
+	>
 </div>
 
 <div class="aspect-video bg-muted flex items-center justify-center overflow-hidden shrink-0">
@@ -140,8 +150,11 @@
 	{:else}
 		<Button variant="outline" size="sm" class="gap-1.5 w-full" onclick={startEdit}><Pencil class="w-3.5 h-3.5" /> Edit</Button>
 		<Button variant="outline" size="sm" class="gap-1.5 w-full" onclick={copyUrl}><Copy class="w-3.5 h-3.5" /> Copy URL</Button>
-		<Button variant="outline" size="sm" class="gap-1.5 w-full text-destructive hover:text-destructive hover:border-destructive/50" onclick={ondelete}
-			><Trash2 class="w-3.5 h-3.5" /> Delete file</Button
+		<Button
+			variant="outline"
+			size="sm"
+			class="gap-1.5 w-full border-red-600/40 text-red-600 hover:bg-red-600/10 hover:text-red-600 dark:border-red-400/40 dark:text-red-400 dark:hover:bg-red-400/10 dark:hover:text-red-300"
+			onclick={ondelete}><Trash2 class="w-3.5 h-3.5" /> Delete file</Button
 		>
 	{/if}
 </div>
