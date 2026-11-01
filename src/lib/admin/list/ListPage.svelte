@@ -3,7 +3,7 @@
 	import type { Snippet } from 'svelte';
 	import { localePath } from '#lib/i18n/use-t.svelte.ts';
 	import Button from '../ui/Button.svelte';
-	import Pagination from '../ui/Pagination.svelte';
+	import InfiniteSentinel from '../ui/InfiniteSentinel.svelte';
 
 	interface Props {
 		title: string;
@@ -19,7 +19,9 @@
 		addLabel?: string;
 		page: number;
 		totalPages: number;
+		/** Asks for page `page`: called with the next page when the end of the list scrolls into view. */
 		onpage: (page: number) => void;
+		loading?: boolean;
 		/** Extra buttons next to "Add". */
 		actions?: Snippet;
 		filters?: Snippet;
@@ -42,6 +44,7 @@
 		page,
 		totalPages,
 		onpage,
+		loading = false,
 		actions,
 		filters,
 		tabs,
@@ -51,7 +54,7 @@
 	}: Props = $props();
 </script>
 
-<!-- No inner scroll container: the admin <main> is the only scroller, so the page never shows a nested scrollbar. The pagination sticks to the viewport bottom instead. -->
+<!-- No inner scroll container: the admin <main> is the only scroller, so the page never shows a nested scrollbar. Rows load as the end of the list scrolls into view. -->
 <div class="min-h-full flex flex-col">
 	<div class="shrink-0 px-4 sm:px-8 pt-8 bg-background {tabs ? '' : 'pb-4'}">
 		<div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6">
@@ -77,10 +80,6 @@
 
 	<div class="flex-1 px-4 sm:px-8 pb-4">{@render children()}</div>
 
-	{#if totalPages > 1}
-		<div class="sticky bottom-0 z-20 mt-auto shrink-0 border-t border-border bg-background/95 px-4 sm:px-8 py-2.5 backdrop-blur-sm">
-			<Pagination {page} {totalPages} onchange={onpage} />
-		</div>
-	{/if}
+	<InfiniteSentinel hasMore={page < totalPages} {loading} onmore={() => onpage(page + 1)} />
 	{@render after?.()}
 </div>

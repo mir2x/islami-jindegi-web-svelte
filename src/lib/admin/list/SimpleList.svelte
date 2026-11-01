@@ -159,7 +159,7 @@
 	{/if}
 {/snippet}
 
-<ListPage filters={bar} {title} total={result?.total ?? null} {unit} addHref="/admin/{slug}/new" {addLabel} {page} totalPages={loader.totalPages} onpage={(p) => (page = p)}>
+<ListPage filters={bar} {title} total={result?.total ?? null} {unit} addHref="/admin/{slug}/new" {addLabel} {page} totalPages={loader.totalPages} onpage={(p) => (page = p)} loading={loader.loading}>
 	<DataTable fixed={false} widths={[...cols.map((c) => c.width ?? ''), 'w-24']} {minWidth}>
 		{#snippet head()}
 			{#each cols as c (c.label)}<th class="text-left px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">{c.label}</th>{/each}

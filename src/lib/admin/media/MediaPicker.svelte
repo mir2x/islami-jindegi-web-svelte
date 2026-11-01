@@ -5,7 +5,7 @@
 	import Modal from '#lib/components/ui/Modal.svelte';
 	import type { MediaItem, MediaType } from '#lib/types.ts';
 	import Button from '../ui/Button.svelte';
-	import Pagination from '../ui/Pagination.svelte';
+	import InfiniteSentinel from '../ui/InfiniteSentinel.svelte';
 	import { toast } from '../toast.svelte.ts';
 	import { MediaBrowser } from './browser.svelte.ts';
 	import DropOverlay from './DropOverlay.svelte';
@@ -74,11 +74,6 @@
 
 		<div class="flex flex-wrap items-center gap-3 px-4 sm:px-6 py-3 border-b shrink-0 bg-muted/30">
 			<MediaToolbar {browser} only={accept} tabClass="px-3 py-1.5" inputClass="h-9" />
-			{#if result && browser.loader.totalPages > 1}
-				<div class="order-5 w-full sm:order-none sm:w-auto sm:flex-1 flex justify-center min-w-0 overflow-x-auto">
-					<Pagination page={browser.page} totalPages={browser.loader.totalPages} siblings={1} onchange={(p) => (browser.page = p)} />
-				</div>
-			{/if}
 			<div class="ml-auto flex items-center gap-2">
 				<Button size="sm" class="gap-1.5" onclick={() => fileInput?.click()}>
 					{#if queue.active > 0}<Loader2 class="w-4 h-4 animate-spin" />Uploading {queue.active}…{:else}<Plus class="w-4 h-4" />Upload new{/if}
@@ -117,6 +112,7 @@
 					{/each}
 				</div>
 			{/if}
+			<InfiniteSentinel hasMore={browser.page < browser.loader.totalPages} loading={browser.loader.loading} onmore={() => (browser.page += 1)} />
 		</div>
 
 		<div class="px-4 sm:px-6 py-4 border-t shrink-0 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-muted/20 rounded-b-2xl">

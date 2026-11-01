@@ -8,7 +8,7 @@
 	import { toast } from '../toast.svelte.ts';
 	import Button from '../ui/Button.svelte';
 	import ConfirmDialog from '../ui/ConfirmDialog.svelte';
-	import Pagination from '../ui/Pagination.svelte';
+	import InfiniteSentinel from '../ui/InfiniteSentinel.svelte';
 	import Skeleton from '../ui/Skeleton.svelte';
 	import { MediaBrowser } from './browser.svelte.ts';
 	import DropOverlay from './DropOverlay.svelte';
@@ -105,7 +105,7 @@
 					{/each}
 				</div>
 			{/if}
-			<div class="my-10"><Pagination page={browser.page} totalPages={browser.loader.totalPages} onchange={(p) => (browser.page = p)} /></div>
+			<InfiniteSentinel hasMore={browser.page < browser.loader.totalPages} loading={browser.loader.loading} onmore={() => (browser.page += 1)} />
 		</div>
 	</div>
 

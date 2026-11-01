@@ -104,6 +104,7 @@
 	{page}
 	totalPages={loader.totalPages}
 	onpage={(p) => (page = p)}
+	loading={loader.loading}
 >
 	{#snippet actions()}<Button variant="outline" href={localePath('/admin/authors/browse')}>Author pages</Button><Button
 			variant="outline"

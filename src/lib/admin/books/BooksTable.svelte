@@ -50,8 +50,6 @@
 	$effect(() => {
 		remember('books', { ...s });
 		load();
-		// A new page replaces the rows in place: start it from the top.
-		document.querySelector('main')?.scrollTo({ top: 0 });
 	});
 
 	const apply = (patch: Partial<typeof s>) => Object.assign(s, patch, { page: 1 });
@@ -92,6 +90,7 @@
 	page={s.page}
 	totalPages={loader.totalPages}
 	onpage={(p) => (s.page = p)}
+	loading={loader.loading}
 	{tabs}
 >
 	{#snippet filters()}

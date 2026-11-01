@@ -107,6 +107,7 @@
 	{page}
 	totalPages={loader.totalPages}
 	onpage={(p) => (page = p)}
+	loading={loader.loading}
 >
 	{#snippet actions()}<Button variant="outline" href={localePath('/admin/categories/reorder')} class="gap-2"><ListOrdered class="w-4 h-4" /> Reorder</Button>{/snippet}
 	{#snippet filters()}

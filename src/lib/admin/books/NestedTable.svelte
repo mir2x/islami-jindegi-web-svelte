@@ -61,7 +61,6 @@
 	onMount(() => void lookups.ensureBooks());
 	$effect(() => {
 		load();
-		document.querySelector('main')?.scrollTo({ top: 0 });
 	});
 
 	async function remove() {
@@ -89,6 +88,7 @@
 	{page}
 	totalPages={loader.totalPages}
 	onpage={(p) => (page = p)}
+	loading={loader.loading}
 	{tabs}
 >
 	{#snippet filters()}

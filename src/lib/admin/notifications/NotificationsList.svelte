@@ -99,6 +99,7 @@
 	page={s.page}
 	totalPages={loader.totalPages}
 	onpage={(p) => (s.page = p)}
+	loading={loader.loading}
 >
 	{#snippet filters()}
 		<div class="relative flex-1 min-w-56 max-w-sm">

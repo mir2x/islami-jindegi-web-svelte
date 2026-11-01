@@ -109,6 +109,7 @@
 	page={s.page}
 	totalPages={loader.totalPages}
 	onpage={(p) => (s.page = p)}
+	loading={loader.loading}
 >
 	{#snippet filters()}<ListFilters {config} bind:state={s} />{/snippet}
 
