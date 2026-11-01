@@ -17,6 +17,7 @@ import ShieldCheck from '@lucide/svelte/icons/shield-check';
 import CloudDownload from '@lucide/svelte/icons/cloud-download';
 import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 import Bell from '@lucide/svelte/icons/bell';
+import CalendarDays from '@lucide/svelte/icons/calendar-days';
 
 /** Sidebar entries; `key` is the AdminNav message key. */
 export const NAV = [
@@ -37,6 +38,7 @@ export const NAV = [
 	{ key: 'pages', href: '/admin/pages', icon: FileText },
 	{ key: 'hijri', href: '/admin/hijri', icon: Moon },
 	{ key: 'notifications', href: '/admin/notifications', icon: Bell },
+	{ key: 'popup', href: '/admin/popup', icon: CalendarDays },
 	{ key: 'offlineSync', href: '/admin/offline-sync', icon: CloudDownload },
 	{ key: 'admins', href: '/admin/admins', icon: ShieldCheck }
 ] as const;

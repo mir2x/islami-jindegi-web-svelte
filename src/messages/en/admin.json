@@ -30,7 +30,8 @@
     "signOut": "Sign out",
     "offlineSync": "Offline Sync",
     "topics": "Topics",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "popup": "Daily Popup"
   },
   "BooksAdmin": {
     "selectChapterPrompt": "Select a chapter or subchapter from the hierarchy, or add a new one.",

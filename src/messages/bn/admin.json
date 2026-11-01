@@ -30,7 +30,8 @@
     "signOut": "সাইন আউট",
     "offlineSync": "অফলাইন সিঙ্ক",
     "topics": "বিষয়ভিত্তিক",
-    "notifications": "নোটিফিকেশন"
+    "notifications": "নোটিফিকেশন",
+    "popup": "দৈনিক পপআপ"
   },
   "BooksAdmin": {
     "selectChapterPrompt": "হায়ারার্কি থেকে একটি অধ্যায় বা উপ-অধ্যায় নির্বাচন করুন, অথবা নতুন যোগ করুন।",
