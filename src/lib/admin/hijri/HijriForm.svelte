@@ -83,7 +83,7 @@
 					<Select class="w-40" bind:value={countryCode} options={FORM_COUNTRIES} />
 					<input value={countryCode} oninput={(e) => (countryCode = e.currentTarget.value.toUpperCase().slice(0, 10))} placeholder="Custom (e.g. TR)" class={inp('flex-1')} />
 				</div>
-				<p class="text-xs text-muted-foreground">ISO 3166-1 alpha-2 country code. BD, SA, PK, IN, AU use a default +1 day offset if no override exists.</p>
+				<p class="text-xs text-muted-foreground">ISO 3166-1 alpha-2 country code. A month with no sighting uses the country's default offset (see Country Offsets).</p>
 			</Field>
 			<Field label="Hijri Year" class="space-y-2"><input type="number" bind:value={hijriYear} placeholder="e.g. 1447" min="1300" max="1600" class={inputCls} /></Field>
 			<Field label="Hijri Month" class="space-y-2">

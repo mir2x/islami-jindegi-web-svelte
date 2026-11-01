@@ -92,6 +92,13 @@ export interface HijriMonthSighting {
 	updatedAt: string;
 }
 
+/** `GET /api/hijri/offsets`: days a country's months start after the Saudi calendar. */
+export interface HijriCountryOffset {
+	countryCode: string;
+	offsetDays: number;
+	updatedAt: string;
+}
+
 /** `GET /api/admin/offline/status`: one row per app offline database. */
 export interface OfflineSnapshotInfo {
 	url: string;
