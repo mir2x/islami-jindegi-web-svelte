@@ -4,9 +4,13 @@
 	import { onMount, untrack } from 'svelte';
 	import type { PagedResult } from '#lib/types.ts';
 	import { ApiError, api, qs } from '../api.ts';
+	import X from '@lucide/svelte/icons/x';
+	import { lookups } from '../lookups.svelte.ts';
 	import { toast } from '../toast.svelte.ts';
 	import Button from '../ui/Button.svelte';
 	import Card from '../ui/Card.svelte';
+	import Combobox, { type ComboOption } from '../ui/Combobox.svelte';
+	import Select from '../ui/Select.svelte';
 	import Tabs from '../ui/Tabs.svelte';
 	import { inp } from '../ui/classes.ts';
 	import { POPUP_MODULES, type PopupModule, type ScheduleRow, addDays, dateKey, isShowable, monthGrid, monthLabel, moduleMeta, parseKey } from './popup-calendar.ts';
@@ -14,7 +18,21 @@
 	interface Candidate {
 		id: string;
 		title: string;
+		/** `yyyy-MM-dd`, when the item has a publication date. */
+		date: string;
 	}
+
+	const PAGE_SIZE = 15;
+	const MONTHS = [
+		{ value: '', label: 'Month' },
+		...['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((label, i) => ({
+			value: String(i + 1),
+			label
+		}))
+	];
+	const FIRST_YEAR = 2000;
+	const thisYear = new Date().getFullYear();
+	const YEARS = [{ value: '', label: 'Year' }, ...Array.from({ length: thisYear - FIRST_YEAR + 1 }, (_, i) => String(thisYear - i))];
 
 	const todayKey = dateKey(new Date());
 	const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -30,7 +48,32 @@
 	let query = $state('');
 	let candidates = $state<Candidate[]>([]);
 	let searching = $state(false);
-	let picked = $state<Candidate | null>(null);
+	let loadingMore = $state(false);
+	let total = $state(0);
+	let picked = $state<{ id: string; title: string } | null>(null);
+
+	// Narrow the list: by category and by publication date (a year and optional month at each end).
+	let categoryId = $state('');
+	let fromYear = $state('');
+	let fromMonth = $state('');
+	let toYear = $state('');
+	let toMonth = $state('');
+
+	const pad = (n: number) => String(n).padStart(2, '0');
+	const firstDay = (y: string, m: string) => (y ? `${y}-${pad(m ? +m : 1)}-01` : '');
+	const lastDay = (y: string, m: string) => (y ? `${y}-${pad(m ? +m : 12)}-${pad(new Date(+y, m ? +m : 12, 0).getDate())}` : '');
+	// Only a "from" period means just that month (or year); a "to" period extends the range to its end.
+	const dateFrom = $derived(firstDay(fromYear, fromMonth));
+	const dateTo = $derived(toYear ? lastDay(toYear, toMonth) : lastDay(fromYear, fromMonth));
+	const filtered = $derived(!!(categoryId || dateFrom || dateTo));
+
+	const categories = $derived<ComboOption[]>(
+		lookups.categories.flatMap((c) => [{ id: c.id, label: c.title }, ...(c.children ?? []).map((k) => ({ id: k.id, label: k.title, child: true }))])
+	);
+
+	function clearFilters() {
+		categoryId = fromYear = fromMonth = toYear = toMonth = '';
+	}
 
 	const grid = $derived(monthGrid(cursor.year, cursor.month));
 	const current = $derived(rows[selected]);
@@ -75,27 +118,65 @@
 
 	let searchTimer: ReturnType<typeof setTimeout> | undefined;
 	let searchSeq = 0;
-	$effect(() => {
-		const kind = tab;
-		const text = query.trim();
-		clearTimeout(searchTimer);
-		searchTimer = setTimeout(async () => {
-			const seq = ++searchSeq;
+	let nextPage = 1;
+
+	async function fetchPage(reset: boolean) {
+		const seq = reset ? ++searchSeq : searchSeq;
+		if (reset) {
+			nextPage = 1;
 			searching = true;
-			try {
-				const path = moduleMeta(kind).path;
-				const res = await api.get<PagedResult<Candidate>>(`${path}?${qs({ search: text, pageSize: 8, published: true, sort: 'position_desc' })}`);
-				if (seq === searchSeq) candidates = res.data.map((c) => ({ id: c.id, title: c.title }));
-			} catch {
-				if (seq === searchSeq) candidates = [];
-			} finally {
-				if (seq === searchSeq) searching = false;
+		} else {
+			loadingMore = true;
+		}
+		try {
+			const params = { search: query.trim(), pageSize: PAGE_SIZE, page: nextPage, published: true, sort: 'position_desc', categoryId, dateFrom, dateTo };
+			const res = await api.get<PagedResult<{ id: string; title: string; publishedAt?: string | null }>>(`${moduleMeta(tab).path}?${qs(params)}`);
+			if (seq !== searchSeq) return;
+			const rowsIn = res.data.map((c) => ({ id: c.id, title: c.title, date: (c.publishedAt ?? '').slice(0, 10) }));
+			// A page can overlap the last when items were added meanwhile; each id may appear once (the list is keyed by it).
+			const seen = new Set(reset ? [] : candidates.map((c) => c.id));
+			candidates = reset ? rowsIn : [...candidates, ...rowsIn.filter((c) => !seen.has(c.id))];
+			total = res.total;
+			nextPage += 1;
+		} catch {
+			if (seq === searchSeq && reset) {
+				candidates = [];
+				total = 0;
 			}
-		}, 250);
+		} finally {
+			if (seq === searchSeq) {
+				searching = false;
+				loadingMore = false;
+			}
+		}
+	}
+
+	// A new kind, search text or filter restarts the list from its first page.
+	$effect(() => {
+		void [tab, query, categoryId, dateFrom, dateTo];
+		clearTimeout(searchTimer);
+		searchTimer = setTimeout(() => void fetchPage(true), 250);
 		return () => clearTimeout(searchTimer);
 	});
 
-	onMount(() => () => clearTimeout(searchTimer));
+	const hasMore = $derived(candidates.length < total);
+
+	/** Loads the next page when scrolled into view; re-created after each page so a still-visible end keeps loading. */
+	function endOfList(node: HTMLElement) {
+		const io = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting && !searching && !loadingMore) void fetchPage(false);
+			},
+			{ root: node.parentElement, rootMargin: '60px' }
+		);
+		io.observe(node);
+		return { destroy: () => io.disconnect() };
+	}
+
+	onMount(() => {
+		void lookups.ensureCategories();
+		return () => clearTimeout(searchTimer);
+	});
 
 	function shiftMonth(by: number) {
 		const d = new Date(cursor.year, cursor.month + by, 1);
@@ -205,21 +286,45 @@
 			<Tabs tabs={POPUP_MODULES} value={tab} onchange={(id) => (tab = id as PopupModule)} />
 			<input bind:value={query} placeholder="Search {moduleMeta(tab).label}…" class={inp('w-full')} />
 
-			<ul class="max-h-64 divide-y divide-border overflow-y-auto rounded-lg border" class:opacity-60={searching}>
+			<div class="space-y-2">
+				<Combobox options={categories} bind:value={categoryId} placeholder="All categories" searchPlaceholder="Search categories..." clearable filter class="w-full" />
+				<div class="flex items-center gap-1.5 text-xs text-muted-foreground">
+					<span class="w-9 shrink-0">From</span>
+					<Select value={fromYear} options={YEARS} filter class="w-24" onchange={(v) => (fromYear = v)} />
+					<Select value={fromMonth} options={MONTHS} filter class="flex-1" onchange={(v) => (fromMonth = v)} />
+				</div>
+				<div class="flex items-center gap-1.5 text-xs text-muted-foreground">
+					<span class="w-9 shrink-0">To</span>
+					<Select value={toYear} options={YEARS} filter class="w-24" onchange={(v) => (toYear = v)} />
+					<Select value={toMonth} options={MONTHS} filter class="flex-1" onchange={(v) => (toMonth = v)} />
+				</div>
+				{#if filtered}
+					<Button variant="ghost" size="sm" class="gap-1" onclick={clearFilters}><X class="h-3.5 w-3.5" /> Clear filters</Button>
+				{/if}
+			</div>
+
+			<ul class="max-h-72 divide-y divide-border overflow-y-auto rounded-lg border" class:opacity-60={searching}>
 				{#each candidates as c (c.id)}
 					<li>
 						<button
 							type="button"
 							onclick={() => (picked = c)}
-							class="w-full px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60 {picked?.id === c.id ? 'bg-primary/10 font-semibold' : ''}"
+							class="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60 {picked?.id === c.id ? 'bg-primary/10 font-semibold' : ''}"
 						>
-							{c.title || 'Untitled'}
+							<span>{c.title || 'Untitled'}</span>
+							{#if c.date}<span class="shrink-0 text-[11px] font-normal text-muted-foreground">{c.date}</span>{/if}
 						</button>
 					</li>
-				{:else}
-					<li class="px-3 py-4 text-center text-sm text-muted-foreground">{searching ? 'Searching…' : 'Nothing found.'}</li>
 				{/each}
+				{#if hasMore}
+					{#key candidates.length}
+						<li use:endOfList class="px-3 py-3 text-center text-xs text-muted-foreground">Loading more…</li>
+					{/key}
+				{:else if candidates.length === 0}
+					<li class="px-3 py-4 text-center text-sm text-muted-foreground">{searching ? 'Searching…' : 'Nothing found.'}</li>
+				{/if}
 			</ul>
+			{#if total > 0}<p class="-mt-2 text-right text-[11px] text-muted-foreground">{candidates.length} of {total}</p>{/if}
 
 			{#if picked}
 				<p class="text-sm"><span class="text-muted-foreground">Chosen:</span> <span class="font-semibold">{picked.title || 'Untitled'}</span> <span class="text-xs text-muted-foreground">({moduleMeta(pickedKind).label})</span></p>
