@@ -4,6 +4,7 @@
 	import { lookups } from '../lookups.svelte.ts';
 	import RichEditor from '../editor/RichEditor.svelte';
 	import MediaField from '../media/MediaField.svelte';
+	import ArabicAudioField from './ArabicAudioField.svelte';
 	import Checkbox from '../ui/Checkbox.svelte';
 	import { inputCls, textareaCls } from '../ui/classes.ts';
 	import Combobox, { type ComboOption } from '../ui/Combobox.svelte';
@@ -65,6 +66,8 @@
 					emptyText="No categories found."
 					fallbackLabel={(id) => known.find((c) => c.id === id)?.title}
 				/>
+			{:else if f.kind === 'arabicAudio'}
+				<ArabicAudioField bind:value={values[f.key]} body={values.body} />
 			{:else if f.kind === 'media'}
 				<MediaField accept={f.accept} bind:value={values[f.key]} placeholder={f.placeholder} />
 			{/if}

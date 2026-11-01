@@ -37,7 +37,9 @@ export type FieldDef =
 	| (Base & { kind: 'categories' })
 	| (Base & { kind: 'checkbox'; fallback: boolean })
 	| (Base & { kind: 'rich'; placeholder: string; height: string; nullable?: boolean; trim?: boolean })
-	| (Base & { kind: 'media'; accept: MediaType; placeholder: string });
+	| (Base & { kind: 'media'; accept: MediaType; placeholder: string })
+	/** Per-Arabic-block recitations of the dua body (the value is JSON text). */
+	| (Base & { kind: 'arabicAudio' });
 
 /** One card of fields. An array entry renders its fields side by side. */
 export interface Section {

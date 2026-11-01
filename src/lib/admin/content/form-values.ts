@@ -49,6 +49,7 @@ function toPayload(f: FieldDef, v: unknown): unknown {
 			return f.required ? String(v).trim() : f.nullable ? v || null : v;
 		case 'textarea':
 		case 'media':
+		case 'arabicAudio':
 			return v || null;
 		case 'language':
 		case 'checkbox':

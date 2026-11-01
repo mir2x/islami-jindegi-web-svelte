@@ -194,6 +194,16 @@ export const dua: ContentConfig = {
 			label: 'Content',
 			sections: [{ title: 'Dua Text', requiredMark: true, rows: [rich('body', 'Write dua text...', 'h-[500px]', { required: 'Body is required' })] }]
 		},
+		{
+			id: 'recitation',
+			label: 'Arabic Audio',
+			sections: [
+				{
+					title: 'Arabic Recitations',
+					rows: [{ kind: 'arabicAudio', key: 'arabicAudios', hint: 'One recitation per Arabic paragraph, so readers can hear the pronunciation' }]
+				}
+			]
+		},
 		media(audioFile, documentFile())
 	]
 };
