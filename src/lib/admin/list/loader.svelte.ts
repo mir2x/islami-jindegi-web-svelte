@@ -1,3 +1,4 @@
+import { untrack } from 'svelte';
 import type { PagedResult } from '#lib/types.ts';
 import { api, qs } from '../api.ts';
 import { toast } from '../toast.svelte.ts';
@@ -35,7 +36,10 @@ export class PagedLoader<T> {
 		const { page: asked, ...rest } = params;
 		const size = Number(params.pageSize) || 20;
 		const query = JSON.stringify(rest);
-		const same = !!this.result && query === this.#query;
+		// Untracked: callers run `load` inside an `$effect`, and reading `result` there would re-run
+		// the effect every time a load finishes, forever.
+		const current = untrack(() => this.result);
+		const same = !!current && query === this.#query;
 		const append = same && Number(asked ?? 1) > this.#pages;
 		const refresh = same && !append && this.#pages > 1;
 		const request = append ? { ...rest, page: this.#pages + 1 } : refresh ? { ...rest, page: 1, pageSize: size * this.#pages } : { ...rest, page: 1 };
@@ -46,7 +50,7 @@ export class PagedLoader<T> {
 			this.#size = size;
 			this.#query = query;
 			this.#pages = append ? this.#pages + 1 : refresh ? this.#pages : 1;
-			this.result = append && this.result ? { ...res, data: [...this.result.data, ...res.data] } : res;
+			this.result = append && current ? { ...res, data: [...current.data, ...res.data] } : res;
 		} catch (e) {
 			if (seq === this.#seq && !(e instanceof DOMException && e.name === 'AbortError')) toast.error(e instanceof Error ? e.message : 'Failed to load');
 		} finally {
