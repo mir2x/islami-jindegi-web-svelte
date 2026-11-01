@@ -22,7 +22,7 @@
 </script>
 
 {#if blocks.length === 0}
-	<p class="text-sm text-muted-foreground">No Arabic text found. Mark a paragraph of the dua text as right-to-left (RTL) and it will appear here, ready for a recitation.</p>
+	<p class="text-sm text-muted-foreground">No Arabic text found. Paragraphs written in Arabic, or marked right-to-left (RTL), appear here ready for a recitation.</p>
 {:else}
 	<div class="space-y-3">
 		{#each blocks as block (block.number)}

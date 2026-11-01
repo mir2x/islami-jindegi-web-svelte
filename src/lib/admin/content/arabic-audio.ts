@@ -1,4 +1,4 @@
-/** One Arabic block of a dua body: a top-level `dir="rtl"` element, numbered from 1. */
+/** One Arabic block of a dua body: a top-level element marked `dir="rtl"` or written mostly in Arabic script, numbered from 1. */
 export interface ArabicBlock {
 	number: number;
 	text: string;
@@ -23,14 +23,23 @@ export function blockHash(text: string): string {
 	return h.toString(16).padStart(8, '0');
 }
 
+const LETTER = /[\p{L}\p{M}]/gu;
+const ARABIC = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/g;
+
+/** At least half of the letters are Arabic script. Older duas have their Arabic as plain paragraphs, without `dir="rtl"`. The app uses the same test. */
+export function isMostlyArabic(text: string): boolean {
+	const letters = text.match(LETTER)?.length ?? 0;
+	return letters > 0 && (text.match(ARABIC)?.length ?? 0) * 2 >= letters;
+}
+
 /** The Arabic blocks of [html], in order. The app splits the body by the same rule. */
 export function arabicBlocks(html: string): ArabicBlock[] {
-	if (typeof DOMParser === 'undefined' || !html.includes('rtl')) return [];
+	if (typeof DOMParser === 'undefined') return [];
 	const doc = new DOMParser().parseFromString(html, 'text/html');
 	const out: ArabicBlock[] = [];
 	for (const el of Array.from(doc.body.children)) {
-		if (el.getAttribute('dir') !== 'rtl') continue;
 		const text = el.textContent ?? '';
+		if (el.getAttribute('dir') !== 'rtl' && !isMostlyArabic(text)) continue;
 		out.push({ number: out.length + 1, text, hash: blockHash(text) });
 	}
 	return out;
