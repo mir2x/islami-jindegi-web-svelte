@@ -4,6 +4,9 @@
 	import { formatNum } from '#lib/calendar.ts';
 	import { currentLocale, useT } from '#lib/i18n/use-t.svelte.ts';
 	import { loc } from '#lib/location.svelte.ts';
+	import { onDestroy } from 'svelte';
+	import Navigation from '@lucide/svelte/icons/navigation';
+	import { createCompass } from './compass.svelte.ts';
 
 	const t = useT('QiblaPage');
 	const locale = $derived(currentLocale());
@@ -20,6 +23,14 @@
 	});
 	const points = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'] as const;
 	const compass = $derived(points[Math.round(bearing / 45) % 8]);
+	const live = createCompass();
+	onDestroy(live.stop);
+	/** Degrees the Qibla is to the right (+) or left (-) of where the phone points. */
+	const delta = $derived(live.heading === null ? null : ((bearing - live.heading + 540) % 360) - 180);
+	const aligned = $derived(delta !== null && Math.abs(delta) <= 4);
+	$effect(() => {
+		if (aligned) navigator.vibrate?.(60);
+	});
 	const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
 </script>
 
@@ -30,28 +41,52 @@
 	</div>
 
 	<div class="rounded-3xl border border-border bg-card p-6 sm:p-8 text-center">
-		<svg viewBox="-126 -126 252 252" class="w-full max-w-72 mx-auto" role="img" aria-label={t('diagramLabel', { degrees: bearing })}>
-			<circle r="104" class="fill-muted/40 stroke-border" stroke-width="1" />
-			{#each ticks as a (a)}
-				<line y1="-100" y2={a % 45 === 0 ? -90 : -96} transform="rotate({a})" class="stroke-muted-foreground/60" stroke-width={a % 90 === 0 ? 2 : 1} />
-			{/each}
-			{#each [['N', 0], ['E', 90], ['S', 180], ['W', 270]] as [name, a] (name)}
-				<text
-					x={Math.round(115 * Math.sin(rad(Number(a))))}
-					y={Math.round(-115 * Math.cos(rad(Number(a))))}
-					text-anchor="middle"
-					dominant-baseline="middle"
-					class="fill-muted-foreground text-[12px] font-semibold">{name}</text
-				>
-			{/each}
-			<g transform="rotate({bearing})">
-				<line y1="8" y2="-72" class="stroke-primary" stroke-width="4" stroke-linecap="round" />
-				<polygon points="0,-88 -9,-68 9,-68" class="fill-primary" />
+		<svg viewBox="-136 -136 272 272" class="w-full max-w-72 mx-auto" role="img" aria-label={t('diagramLabel', { degrees: bearing })}>
+			<polygon points="0,-122 -7,-136 7,-136" class={aligned ? 'fill-primary' : 'fill-foreground'} />
+			<g transform="rotate({-(live.angle ?? 0)})">
+				<circle r="104" class="fill-muted/40 stroke-border" stroke-width="1" />
+				{#each ticks as a (a)}
+					<line y1="-100" y2={a % 45 === 0 ? -90 : -96} transform="rotate({a})" class="stroke-muted-foreground/60" stroke-width={a % 90 === 0 ? 2 : 1} />
+				{/each}
+				{#each [['N', 0], ['E', 90], ['S', 180], ['W', 270]] as [name, a] (name)}
+					<text
+						x={Math.round(115 * Math.sin(rad(Number(a))))}
+						y={Math.round(-115 * Math.cos(rad(Number(a))))}
+						text-anchor="middle"
+						dominant-baseline="middle"
+						class="fill-muted-foreground text-[12px] font-semibold">{name}</text
+					>
+				{/each}
+				<g transform="rotate({bearing})">
+					<line y1="8" y2="-72" class="stroke-primary" stroke-width="4" stroke-linecap="round" />
+					<polygon points="0,-88 -9,-68 9,-68" class="fill-primary" />
+				</g>
 			</g>
 			<circle r="6" class="fill-primary" />
 		</svg>
 
-		<p class="mt-6 text-5xl font-bold tabular-nums text-foreground">{formatNum(bearing, locale)}°</p>
+		<div class="mt-5 min-h-12" aria-live="polite">
+			{#if live.status === 'live'}
+				<p class="text-base font-semibold {aligned ? 'text-primary' : 'text-muted-foreground'}">
+					{#if aligned}{t('facing')}{:else if delta !== null}{t(delta > 0 ? 'turnRight' : 'turnLeft', { degrees: formatNum(Math.round(Math.abs(delta)), locale) })}{/if}
+				</p>
+			{:else if live.status === 'denied'}
+				<p class="text-sm text-destructive">{t('compassDenied')}</p>
+			{:else if live.status === 'unsupported'}
+				<p class="text-sm text-muted-foreground">{t('compassUnsupported')}</p>
+			{:else}
+				<button
+					type="button"
+					onclick={live.start}
+					disabled={live.status === 'starting'}
+					class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
+				>
+					<Navigation class="w-4 h-4" />{t('useCompass')}
+				</button>
+			{/if}
+		</div>
+
+		<p class="mt-4 text-5xl font-bold tabular-nums text-foreground">{formatNum(bearing, locale)}°</p>
 		<p class="mt-1 text-base text-muted-foreground">{t('fromNorth', { direction: t(`dir_${compass}`) })}</p>
 		<p class="mt-4 text-sm text-muted-foreground">{t('distance', { km: formatNum(km, locale) })}</p>
 	</div>

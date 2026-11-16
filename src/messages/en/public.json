@@ -465,7 +465,7 @@
     "diagramLabel": "The Qibla is {degrees} degrees clockwise from north",
     "fromNorth": "clockwise from north, towards {direction}",
     "distance": "About {km} km to the Kaaba in Makkah",
-    "tip1": "Hold your phone flat with the top pointing north, then face the way the arrow points. Use a compass app to find north.",
+    "tip1": "Tap the compass button on a phone and turn until the arrow at the top turns green. Without a sensor, hold your phone flat and face the direction shown, using a compass app to find north.",
     "tip2": "Magnets, metal and phone cases can throw a compass off; this page shows the exact direction for your chosen place.",
     "dir_n": "north",
     "dir_ne": "north-east",
@@ -474,7 +474,13 @@
     "dir_s": "south",
     "dir_sw": "south-west",
     "dir_w": "west",
-    "dir_nw": "north-west"
+    "dir_nw": "north-west",
+    "useCompass": "Use my phone's compass",
+    "facing": "You are facing the Qibla",
+    "turnRight": "Turn right {degrees}°",
+    "turnLeft": "Turn left {degrees}°",
+    "compassDenied": "Compass access was refused. Allow motion and orientation access for this site in your browser settings, then reload.",
+    "compassUnsupported": "This device has no compass sensor (or the browser blocks it). Use the fixed direction below."
   },
   "MosquesPage": {
     "metaTitle": "Nearby mosques",
