@@ -15,7 +15,7 @@ pnpm build && PORT=3000 pnpm start
 
 Test client-side fetches on the production server at **port 3000**: the API's CORS allows `localhost:3000` and not
 the dev server's port. Env vars are `PUBLIC_API_URL`, `PUBLIC_SITE_URL`, `PUBLIC_GOOGLE_CLIENT_ID`, `PUBLIC_NOINDEX`,
-`COMPRESS`, `API_INTERNAL_URL`, `SLOW_PAGE_MS` (`src/env.ts`, `.env.example`).
+`COMPRESS`, `API_INTERNAL_URL`, `SLOW_PAGE_MS`, `O2_URL` / `O2_USER` / `O2_PASS` (admin Insights page, OpenObserve; `src/env.ts`, `.env.example`).
 
 ## Rules for this repo
 

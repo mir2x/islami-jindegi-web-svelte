@@ -15,6 +15,18 @@ export const variables = defineEnvVars({
 		description: 'Responses at least this slow (milliseconds) get a `web.slow` log line saying how much of the time was API calls. 0 turns it off. Default 1000.',
 		schema: (value) => (value === undefined || value === '' || Number.isNaN(Number(value)) ? 1000 : Number(value))
 	},
+	O2_URL: {
+		description: 'OpenObserve base URL for the admin Insights page, e.g. http://ij-openobserve:5080. Unset: the page says analytics are not connected.',
+		schema: (value) => (value ?? '').replace(/\/$/, '')
+	},
+	O2_USER: {
+		description: 'OpenObserve login (email) the Insights page queries with. Server-side only; never sent to a browser.',
+		schema: (value) => value ?? ''
+	},
+	O2_PASS: {
+		description: 'OpenObserve password for O2_USER.',
+		schema: (value) => value ?? ''
+	},
 	PUBLIC_API_URL: {
 		public: true,
 		description: 'Base URL of the Islami Jindegi API, e.g. https://api.islamijindegi.com',

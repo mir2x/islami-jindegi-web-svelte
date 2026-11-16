@@ -3,7 +3,7 @@ import { loadMessages } from '#lib/server/i18n.ts';
 import type { LayoutServerLoad } from './$types';
 
 /** Every admin namespace, once: the dashboard navigates client-side and never refetches them. */
-const ADMIN_NAMESPACES = ['AdminNav', 'BooksAdmin', 'BookForm', 'ChapterForm', 'SubChapterForm', 'OfflineSync', 'Notifications'];
+const ADMIN_NAMESPACES = ['AdminNav', 'BooksAdmin', 'BookForm', 'ChapterForm', 'SubChapterForm', 'OfflineSync', 'Notifications', 'Insights'];
 
 export const load: LayoutServerLoad = ({ params }) => ({
 	msgs: loadMessages(params.locale, ...ADMIN_NAMESPACES),
