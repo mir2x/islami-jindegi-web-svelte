@@ -260,7 +260,9 @@
     "download": "ডাউনলোড করুন",
     "audioDuration": "অডিও সময়",
     "audioDurationValue": "{minutes, number} মিনিট",
-    "audioSize": "অডিও সাইজ"
+    "audioSize": "অডিও সাইজ",
+    "askPrompt": "আপনার প্রশ্নের উত্তর খুঁজে পাচ্ছেন না?",
+    "askLink": "প্রশ্ন করুন"
   },
   "MasailDetail": {
     "audioLabel": "অডিও",

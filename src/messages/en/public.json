@@ -260,7 +260,9 @@
     "download": "Download",
     "audioDuration": "Audio duration",
     "audioDurationValue": "{minutes, number} min",
-    "audioSize": "Audio size"
+    "audioSize": "Audio size",
+    "askPrompt": "Can't find your answer?",
+    "askLink": "Ask a question"
   },
   "MasailDetail": {
     "audioLabel": "Audio",
