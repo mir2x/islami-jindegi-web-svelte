@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	return {
 		namazTimes: await getNamazTimes(),
 		heading: t('metaTitle'),
-		msgs: loadMessages(params.locale, 'NamazTimesPage', 'NamazTimesDetail', 'Home'),
+		msgs: loadMessages(params.locale, 'NamazTimesPage', 'NamazTimesDetail', 'Home', 'Location'),
 		seo: buildSeo({ locale: params.locale, title: t('metaTitle'), description: t('metaDescription'), path: '/namaz-times' })
 	};
 };

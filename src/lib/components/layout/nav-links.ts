@@ -14,5 +14,7 @@ export const NAV_LINKS = [
 	{ key: 'madrasah', href: '/madrasah' },
 	{ key: 'donate', href: '/donate' },
 	{ key: 'namazTimes', href: '/namaz-times' },
+	{ key: 'qibla', href: '/qibla' },
+	{ key: 'mosques', href: '/mosques' },
 	{ key: 'settings', href: '/settings' }
 ] as const;
