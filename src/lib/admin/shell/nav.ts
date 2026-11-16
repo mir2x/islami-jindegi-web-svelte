@@ -18,6 +18,7 @@ import CloudDownload from '@lucide/svelte/icons/cloud-download';
 import LayoutGrid from '@lucide/svelte/icons/layout-grid';
 import Bell from '@lucide/svelte/icons/bell';
 import CalendarDays from '@lucide/svelte/icons/calendar-days';
+import MessageCircleQuestion from '@lucide/svelte/icons/message-circle-question';
 
 /** Sidebar entries; `key` is the AdminNav message key. */
 export const NAV = [
@@ -29,6 +30,7 @@ export const NAV = [
 	{ key: 'topics', href: '/admin/topics', icon: LayoutGrid },
 	{ key: 'malfuzat', href: '/admin/malfuzat', icon: ScrollText },
 	{ key: 'masail', href: '/admin/masail', icon: HelpCircle },
+	{ key: 'questions', href: '/admin/questions', icon: MessageCircleQuestion },
 	{ key: 'dua', href: '/admin/dua', icon: Sparkles },
 	{ key: 'bayan', href: '/admin/bayan', icon: Mic },
 	{ key: 'articles', href: '/admin/articles', icon: Newspaper },

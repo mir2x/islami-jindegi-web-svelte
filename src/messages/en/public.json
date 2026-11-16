@@ -409,7 +409,20 @@
     "metaTitle": "Ask Question",
     "metaDescription": "Ask an Islamic question — send us your query to find the answer to a masalah.",
     "heading": "Ask Question",
-    "unavailable": "This information is currently unavailable. Please try again later."
+    "unavailable": "This information is currently unavailable. Please try again later.",
+    "emailLabel": "Your email",
+    "emailHint": "We use it only to send you the answer.",
+    "questionLabel": "Your question",
+    "questionPlaceholder": "Write your question clearly, with the details that matter.",
+    "send": "Send question",
+    "sending": "Sending…",
+    "sentTitle": "Your question was sent",
+    "sentBody": "The answer will be emailed to {email} once our scholars have replied.",
+    "askAnother": "Ask another question",
+    "errShort": "Please write at least {min} characters.",
+    "errInvalid": "Please check your email address and question.",
+    "errRate": "You have sent several questions already. Please try again later.",
+    "errGeneric": "Your question could not be sent. Please try again in a little while."
   },
   "TopicsPage": {
     "metaTitle": "Topics",

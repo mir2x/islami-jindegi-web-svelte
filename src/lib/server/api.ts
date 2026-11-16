@@ -89,3 +89,20 @@ export async function getStrict<T>(path: string, allowMissing?: boolean): Promis
 	if (!res.ok) throw new Error(`${path} responded ${res.status}`);
 	return res.json() as Promise<T>;
 }
+
+/** A write on behalf of a visitor (never cached). Resolves to the API's status, or `null` when it could not be reached. */
+export async function postJson(path: string, body: unknown): Promise<{ status: number } | null> {
+	try {
+		const res = await fetch(apiUrl(path), {
+			method: 'POST',
+			headers: { ...apiHeaders(), 'content-type': 'application/json' },
+			body: JSON.stringify(body),
+			signal: AbortSignal.timeout(TIMEOUT_MS)
+		});
+		apiCalls.inc([res.status >= 500 ? 'error' : res.status >= 400 ? 'rejected' : 'ok']);
+		return { status: res.status };
+	} catch {
+		apiCalls.inc(['unreachable']);
+		return null;
+	}
+}
