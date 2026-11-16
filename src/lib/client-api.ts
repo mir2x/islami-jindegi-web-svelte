@@ -1,12 +1,16 @@
 import { PUBLIC_API_URL } from '$app/env/public';
 import type { FilterOption } from './filters.ts';
+import { reportApiFailure } from './telemetry.ts';
 
 /** Browser-side GET against the API. Resolves to null on any failure; callers degrade to an empty state. */
 export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T | null> {
 	try {
 		const res = await fetch(`${PUBLIC_API_URL}${path}`, { signal });
+		if (!res.ok) reportApiFailure('GET', path, res);
 		return res.ok ? ((await res.json()) as T) : null;
-	} catch {
+	} catch (e) {
+		// A cancelled request (the visitor typed on, or left) is not a failure.
+		if ((e as Error)?.name !== 'AbortError') reportApiFailure('GET', path, null);
 		return null;
 	}
 }
@@ -23,8 +27,10 @@ export async function fetchOptions(path: string, search: string, label: 'name' |
 export async function apiPost<T>(path: string, body: unknown): Promise<T | null> {
 	try {
 		const res = await fetch(`${PUBLIC_API_URL}${path}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+		if (!res.ok) reportApiFailure('POST', path, res);
 		return res.ok ? ((await res.json()) as T) : null;
 	} catch {
+		reportApiFailure('POST', path, null);
 		return null;
 	}
 }

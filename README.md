@@ -30,6 +30,7 @@ Read **when the server starts**, not baked in at build time: changing one only n
 | `PUBLIC_GOOGLE_CLIENT_ID` | Google OAuth client id of the admin sign-in button                            |
 | `COMPRESS`                | `0` to skip in-process brotli/gzip when a reverse proxy already compresses    |
 | `API_INTERNAL_URL`        | optional: API base for server-side calls on the host network (see below)      |
+| `SLOW_PAGE_MS`            | responses at least this slow (ms) get a `web.slow` log line; default 1000, 0 off |
 
 `API_INTERNAL_URL` (e.g. `http://ij-backend:8080`) lets the server reach the API over the container network without
 going out through the public edge. Each server-side call then carries the visitor's IP as `x-client-ip`, so the API
@@ -100,6 +101,24 @@ src/
   screens that show an editor.
 - The dashboard has its own light/dark preference (`ij-admin-theme`) and sidebar state (`ij-admin-sidebar`).
 - Public detail pages show a floating "Edit" button (`components/shared/AdminEditButton.svelte`) to signed-in admins.
+
+## Logs, metrics and browser reports
+
+No third-party service and no visitor id: everything goes to this server's own log and metrics.
+
+- **Request id.** nginx's `X-Request-Id` (one is generated without it) is kept for the whole request
+  (`src/lib/server/request-context.ts`), sent on to the API, which logs it as its `TraceId`, and shown as "Reference" on the
+  error page. Server log lines are one JSON object each (`src/lib/server/log.ts`): `web.error` (an unhandled error),
+  `web.api` (an API call that failed or took over a second), `web.slow` (a response slower than `SLOW_PAGE_MS`, with how
+  much of it was API time) and `web.client` (below).
+- **`/api/metrics`** (`src/lib/server/metrics.ts`) serves Prometheus text: responses and render time by route, API calls,
+  the data cache, event loop lag, memory. It answers 404 to anything that came through nginx.
+- **Browsers** (`src/lib/telemetry.ts`, started from `src/hooks.client.ts`) post to `/api/log`: uncaught errors, API calls
+  that failed (with the API's request id), and Core Web Vitals for the landing page (TTFB, FCP, LCP, INP, CLS). Errors
+  become `web.client` log lines; timings become histograms by route, plus a log line when a page was poor for someone.
+  The endpoint caps body size, events per body, field lengths and reports per address.
+
+The dashboards and alerts that read all this are in `../islami-jindegi-rust-api/deploy/monitoring/`.
 
 ## Deploy
 

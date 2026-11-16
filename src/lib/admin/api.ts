@@ -1,4 +1,5 @@
 import { PUBLIC_API_URL } from '$app/env/public';
+import { reportApiFailure } from '#lib/telemetry.ts';
 import { auth } from './auth.svelte.ts';
 
 /** Carries the HTTP status so callers can act on it; 409 in particular means a duplicate title. */
@@ -14,11 +15,16 @@ export class ApiError extends Error {
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
 	const token = auth.peekToken();
+	const method = options?.method ?? 'GET';
 	const res = await fetch(`${PUBLIC_API_URL}${path}`, {
 		cache: 'no-store',
 		...options,
 		headers: { ...(options?.body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) }
+	}).catch((e) => {
+		if ((e as Error)?.name !== 'AbortError') reportApiFailure(method, path, null);
+		throw e;
 	});
+	if (res.status >= 500) reportApiFailure(method, path, res);
 	if (res.status === 401) auth.clear();
 	// A successful write: have the public site drop its cached copy so the change shows straight away.
 	if (res.ok && options?.method && options.method !== 'GET' && token) {

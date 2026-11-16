@@ -1,3 +1,5 @@
+import { cacheLookups } from './metrics.ts';
+
 /**
  * In-process stale-while-revalidate cache, the SvelteKit stand-in for Next's `fetch(..., { next: { revalidate } })`.
  *
@@ -45,13 +47,20 @@ export async function cached<T>(key: string, ttlSeconds: number, load: () => Pro
 	const ttlMs = ttlSeconds * 1000;
 	const hit = store.get(key) as (Entry<T> & { staleUntil: number }) | undefined;
 	const now = Date.now();
-	if (hit && now < hit.freshUntil) return hit.value;
+	if (hit && now < hit.freshUntil) {
+		cacheLookups.inc(['hit']);
+		return hit.value;
+	}
 	if (hit && now < hit.staleUntil) {
+		cacheLookups.inc(['stale']);
 		void refresh(key, ttlMs, load);
 		return hit.value;
 	}
+	cacheLookups.inc(['miss']);
 	return refresh(key, ttlMs, load);
 }
+
+export const cacheSize = () => store.size;
 
 /** Drops every cached value (and any in-flight load), so the next request reads the API afresh. */
 export function clearCache() {
