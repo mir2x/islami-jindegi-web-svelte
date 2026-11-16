@@ -1,14 +1,16 @@
 <script lang="ts">
+	import CalendarDays from '@lucide/svelte/icons/calendar-days';
 	import Clock from '@lucide/svelte/icons/clock';
 	import Loader2 from '@lucide/svelte/icons/loader-circle';
 	import { MediaQuery } from 'svelte/reactivity';
 	import { onMount } from 'svelte';
 	import { apiGet } from '#lib/client-api.ts';
 	import { toHijri } from '#lib/calendar.ts';
-	import { getHijriToday, type HijriDisplayDate } from '#lib/hijri.ts';
+	import { getHijriForDate, getHijriToday, type HijriDisplayDate } from '#lib/hijri.ts';
 	import { currentLocale, localePath, useT } from '#lib/i18n/use-t.svelte.ts';
 	import { calcPrayerSlots, findActiveSlot } from '#lib/prayer-times.ts';
 	import type { NamazTimeDetail, NamazTimeListItem } from '#lib/types.ts';
+	import DatePicker from './DatePicker.svelte';
 	import NamazDetailPanel from './NamazDetailPanel.svelte';
 	import NamazHero from './NamazHero.svelte';
 	import PrayerRow from './PrayerRow.svelte';
@@ -37,13 +39,18 @@
 	let location = $state(t('defaultLocation'));
 	let geoDone = $state(false);
 	let hijriState = $state<HijriDisplayDate | null>(null);
+	// A day chosen in the calendar replaces the live clock for the date and the times; today's countdown stops.
+	let picked = $state<Date | null>(null);
+	let pickedHijri = $state<HijriDisplayDate | null>(null);
+	let pickerOpen = $state(false);
 	let selectedId = $state<string | null>(null);
 	let fetched = $state<{ id: string; data: NamazTimeDetail | null } | null>(null);
 
-	const slots = $derived(mounted ? calcPrayerSlots(coords.lat, coords.lng, now) : null);
-	const activeKey = $derived(slots ? findActiveSlot(slots, now) : null);
+	const viewDate = $derived(picked ?? now);
+	const slots = $derived(mounted ? calcPrayerSlots(coords.lat, coords.lng, viewDate) : null);
+	const activeKey = $derived(slots && !picked ? findActiveSlot(slots, now) : null);
 	const locating = $derived(!geoDone && (!mounted || 'geolocation' in navigator));
-	const hijri = $derived<HijriDisplayDate>(hijriState ?? { ...toHijri(now), source: 'local' });
+	const hijri = $derived<HijriDisplayDate>(picked ? (pickedHijri ?? { ...toHijri(picked), source: 'local' }) : (hijriState ?? { ...toHijri(now), source: 'local' }));
 
 	// Default selection on desktop (where a panel is waiting): the running slot's page, else the first linkable one.
 	const defaultId = $derived.by(() => {
@@ -53,6 +60,15 @@
 	const effectiveId = $derived(selectedId ?? (desktop.current ? defaultId : null));
 	const detail = $derived(fetched && fetched.id === effectiveId ? fetched.data : null);
 	const detailLoading = $derived(effectiveId !== null && fetched?.id !== effectiveId);
+
+	/** A geolocated fix carries no country; the last one resolved is remembered (Bangladesh when none). */
+	function countryOf(_: Coords) {
+		try {
+			return localStorage.getItem('ij_country_code') || 'BD';
+		} catch {
+			return 'BD';
+		}
+	}
 
 	onMount(() => {
 		mounted = true;
@@ -87,6 +103,15 @@
 	});
 
 	$effect(() => {
+		const day = picked;
+		pickedHijri = null;
+		if (!day) return;
+		let cancelled = false;
+		getHijriForDate(day, coords.country ?? countryOf(coords)).then((h) => !cancelled && (pickedHijri = h));
+		return () => (cancelled = true);
+	});
+
+	$effect(() => {
 		const id = effectiveId;
 		if (!id) return;
 		const ac = new AbortController();
@@ -97,7 +122,30 @@
 
 <div class="flex flex-col lg:flex-row gap-6 lg:items-stretch lg:flex-1 lg:min-h-0">
 	<div class="w-full lg:max-w-md lg:shrink-0 lg:min-h-0 lg:overflow-hidden lg:flex lg:flex-col">
-		<NamazHero {hijri} {now} {location} {locating} />
+		<div class="relative">
+			<NamazHero {hijri} now={viewDate} {location} {locating} />
+			<button
+				type="button"
+				class="absolute right-3 bottom-7 lg:bottom-[calc(1.4vh+0.75rem)] inline-flex items-center gap-1.5 rounded-full bg-white/15 hover:bg-white/25 px-3 py-1.5 text-sm font-semibold text-primary-foreground dark:text-foreground transition-colors"
+				aria-expanded={pickerOpen}
+				onclick={() => (pickerOpen = !pickerOpen)}
+			>
+				<CalendarDays class="w-4 h-4" />{picked ? t('anotherDay') : t('pickDate')}
+			</button>
+			{#if pickerOpen}
+				<div class="absolute right-0 top-full z-30 -mt-2">
+					<DatePicker
+						value={viewDate}
+						country={coords.country ?? countryOf(coords)}
+						onpick={(d) => {
+							const today = new Date();
+							picked = d.toDateString() === today.toDateString() ? null : d;
+							pickerOpen = false;
+						}}
+					/>
+				</div>
+			{/if}
+		</div>
 
 		{#if !slots}
 			<div class="flex flex-col items-center py-20 gap-3 text-muted-foreground">

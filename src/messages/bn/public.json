@@ -184,7 +184,16 @@
     "defaultLocation": "ঢাকা, বাংলাদেশ",
     "countdownHM": "{hours} ঘণ্টা {minutes} মিনিট বাকি",
     "countdownM": "{minutes} মিনিট বাকি",
-    "selectPrompt": "মাসাইল দেখতে একটি নামাযের সময় নির্বাচন করুন"
+    "selectPrompt": "মাসাইল দেখতে একটি নামাযের সময় নির্বাচন করুন",
+    "gregorian": "ইংরেজি",
+    "pickDate": "তারিখ বাছাই",
+    "anotherDay": "অন্য দিন",
+    "today": "আজ",
+    "prevMonth": "আগের মাস",
+    "nextMonth": "পরের মাস",
+    "prevYear": "আগের বছর",
+    "nextYear": "পরের বছর",
+    "monthUnavailable": "এই মাসের তথ্য আনা যায়নি।"
   },
   "NamazTimesDetail": {
     "backToList": "নামাযের সময়",

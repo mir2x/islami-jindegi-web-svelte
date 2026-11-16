@@ -184,7 +184,16 @@
     "defaultLocation": "Dhaka, Bangladesh",
     "countdownHM": "{hours}h {minutes}m left",
     "countdownM": "{minutes}m left",
-    "selectPrompt": "Select a prayer time to view its masail"
+    "selectPrompt": "Select a prayer time to view its masail",
+    "gregorian": "Gregorian",
+    "pickDate": "Choose a date",
+    "anotherDay": "Another day",
+    "today": "Today",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "prevYear": "Previous year",
+    "nextYear": "Next year",
+    "monthUnavailable": "This month could not be loaded."
   },
   "NamazTimesDetail": {
     "backToList": "Prayer Times",

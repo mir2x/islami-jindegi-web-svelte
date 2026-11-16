@@ -140,3 +140,29 @@ export async function getHijriToday(lat: number, lng: number, country?: string):
 	const fallback = toHijri(new Date(now.getFullYear(), now.getMonth(), now.getDate() + (pastMaghrib ? 1 : 0)));
 	return { ...fallback, source: 'local' };
 }
+
+/** The Hijri date of one chosen civil day, applying the visitor's own day adjustment. `null` when the API cannot say. */
+export async function getHijriForDate(date: Date, countryCode: string): Promise<HijriDisplayDate | null> {
+	const q = new Date(date.getFullYear(), date.getMonth(), date.getDate() + getSettings().hijriAdjustment);
+	const day = await fetchDay(dateStr(q), countryCode);
+	if (!day) return null;
+	return { day: day.hijriDay, month: day.hijriMonth, year: day.hijriYear, monthBn: day.monthNameBn, monthEn: HIJRI_MONTHS_EN[day.hijriMonth - 1] ?? '', source: 'backend' };
+}
+
+export interface HijriMonth {
+	monthLength: number;
+	monthNameBn: string;
+	/** First civil day of the month, `YYYY-MM-DD` (sighting-aware, before the visitor's adjustment). */
+	gregorianStartDate: string;
+}
+
+/** One Hijri month as the API reckons it for a country (moon sighting where known); `null` when unavailable. */
+export async function getHijriMonth(year: number, month: number, countryCode: string): Promise<HijriMonth | null> {
+	try {
+		const res = await fetch(`${API_BASE}/api/hijri/month?country-code=${countryCode}&hijri-year=${year}&hijri-month=${month}`);
+		if (!res.ok) return null;
+		return (await res.json())?.data ?? null;
+	} catch {
+		return null;
+	}
+}
