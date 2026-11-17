@@ -149,11 +149,33 @@
     "download": "Download",
     "audioDuration": "Audio duration",
     "audioDurationValue": "{minutes, number} min",
-    "audioSize": "Audio size"
+    "audioSize": "Audio size",
+    "arabicAudioPlay": "Listen to the pronunciation",
+    "arabicAudioUnavailable": "The recitation for this part isn't available yet. Please wait.",
+    "arabicAudioPart": "Part {number}",
+    "arabicAudioPrevious": "Previous",
+    "arabicAudioNext": "Next",
+    "arabicAudioRepeat": "Repeat this part",
+    "arabicAudioStop": "Stop",
+    "arabicAudioPause": "Pause",
+    "arabicAudioResume": "Play",
+    "arabicAudioSpeed": "Speed",
+    "arabicAudioError": "The audio could not be loaded."
   },
   "DuaDetail": {
     "audioLabel": "Audio",
-    "moreItems": "More dua"
+    "moreItems": "More dua",
+    "arabicAudioPlay": "Listen to the pronunciation",
+    "arabicAudioUnavailable": "The recitation for this part isn't available yet. Please wait.",
+    "arabicAudioPart": "Part {number}",
+    "arabicAudioPrevious": "Previous",
+    "arabicAudioNext": "Next",
+    "arabicAudioRepeat": "Repeat this part",
+    "arabicAudioStop": "Stop",
+    "arabicAudioPause": "Pause",
+    "arabicAudioResume": "Play",
+    "arabicAudioSpeed": "Speed",
+    "arabicAudioError": "The audio could not be loaded."
   },
   "MadrasahPage": {
     "metaTitle": "Madrasah",

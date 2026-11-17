@@ -118,6 +118,8 @@ export interface DuaListItem {
 export interface DuaDetail extends DuaListItem {
 	body: string;
 	documentUrl: string | null;
+	/** JSON array of `{ n, hash, url }`: a recitation per Arabic block of the body. */
+	arabicAudios?: string | null;
 }
 
 export interface DuaCategoryOption {

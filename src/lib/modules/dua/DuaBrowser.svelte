@@ -13,6 +13,7 @@
 	import { useT } from '#lib/i18n/use-t.svelte.ts';
 	import type { DuaDetail, DuaListItem } from '#lib/types.ts';
 	import { DUA } from './config.ts';
+	import DuaArabicAudio from './DuaArabicAudio.svelte';
 
 	let { initial, categories }: { initial: InitialList<DuaListItem>; categories: FilterOption[] } = $props();
 	const t = useT('DuaPage');
@@ -34,10 +35,14 @@
 		</ListRow>
 	{/snippet}
 	{#snippet body(d: DuaDetail)}
-		{#if d.audioUrl}
-			<AudioDetail html={d.body} excerpt={d.excerpt} audioUrl={d.audioUrl} ns="DuaPage" categories={d.categories} />
-		{:else}
-			<ContentBody html={d.body} fallback={d.excerpt ?? t('noDetail')} categories={d.categories} />
-		{/if}
+		{#key d.id}
+			<DuaArabicAudio audios={d.arabicAudios} html={d.body} ns="DuaPage">
+				{#if d.audioUrl}
+					<AudioDetail html={d.body} excerpt={d.excerpt} audioUrl={d.audioUrl} ns="DuaPage" categories={d.categories} />
+				{:else}
+					<ContentBody html={d.body} fallback={d.excerpt ?? t('noDetail')} categories={d.categories} />
+				{/if}
+			</DuaArabicAudio>
+		{/key}
 	{/snippet}
 </ListBrowser>

@@ -149,11 +149,33 @@
     "download": "ডাউনলোড করুন",
     "audioDuration": "অডিও সময়",
     "audioDurationValue": "{minutes, number} মিনিট",
-    "audioSize": "অডিও সাইজ"
+    "audioSize": "অডিও সাইজ",
+    "arabicAudioPlay": "উচ্চারণ শুনুন",
+    "arabicAudioUnavailable": "এই অংশের তিলাওয়াত এখনো পাওয়া যায়নি। অনুগ্রহ করে অপেক্ষা করুন।",
+    "arabicAudioPart": "অংশ {number}",
+    "arabicAudioPrevious": "আগেরটি",
+    "arabicAudioNext": "পরেরটি",
+    "arabicAudioRepeat": "এই অংশ বারবার শুনুন",
+    "arabicAudioStop": "বন্ধ করুন",
+    "arabicAudioPause": "বিরতি",
+    "arabicAudioResume": "চালু করুন",
+    "arabicAudioSpeed": "গতি",
+    "arabicAudioError": "অডিও লোড করা যায়নি।"
   },
   "DuaDetail": {
     "audioLabel": "অডিও",
-    "moreItems": "আরও দু'আ"
+    "moreItems": "আরও দু'আ",
+    "arabicAudioPlay": "উচ্চারণ শুনুন",
+    "arabicAudioUnavailable": "এই অংশের তিলাওয়াত এখনো পাওয়া যায়নি। অনুগ্রহ করে অপেক্ষা করুন।",
+    "arabicAudioPart": "অংশ {number}",
+    "arabicAudioPrevious": "আগেরটি",
+    "arabicAudioNext": "পরেরটি",
+    "arabicAudioRepeat": "এই অংশ বারবার শুনুন",
+    "arabicAudioStop": "বন্ধ করুন",
+    "arabicAudioPause": "বিরতি",
+    "arabicAudioResume": "চালু করুন",
+    "arabicAudioSpeed": "গতি",
+    "arabicAudioError": "অডিও লোড করা যায়নি।"
   },
   "MadrasahPage": {
     "metaTitle": "মাদ্রাসা",
