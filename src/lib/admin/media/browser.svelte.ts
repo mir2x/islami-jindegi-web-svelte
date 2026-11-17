@@ -11,6 +11,12 @@ export class MediaBrowser {
 	categoryId = $state('');
 	dateFrom = $state('');
 	dateTo = $state('');
+	/**
+	 * What the date range is matched against: the date of the content using the file (a 2013 bayan whose audio was
+	 * uploaded in 2022 is found under 2013), or the file's upload date. Unused files have no content, so with
+	 * `unused` the range is always the upload date.
+	 */
+	dateBy = $state<'content' | 'upload'>('content');
 	/** Only files no content references. */
 	unused = $state(false);
 	page = $state(1);
@@ -39,10 +45,16 @@ export class MediaBrowser {
 			categoryId: this.categoryId,
 			dateFrom: this.dateFrom,
 			dateTo: this.dateTo,
+			dateBy: this.contentDates ? 'content' : undefined,
 			unused: this.unused || undefined
 		});
 
-	setFilter(patch: Partial<Pick<MediaBrowser, 'module' | 'authorId' | 'categoryId' | 'dateFrom' | 'dateTo' | 'unused'>>) {
+	/** The date range is applied to the content's date. */
+	get contentDates(): boolean {
+		return this.dateBy === 'content' && !this.unused && !!(this.dateFrom || this.dateTo);
+	}
+
+	setFilter(patch: Partial<Pick<MediaBrowser, 'module' | 'authorId' | 'categoryId' | 'dateFrom' | 'dateTo' | 'dateBy' | 'unused'>>) {
 		Object.assign(this, patch);
 		this.page = 1;
 	}

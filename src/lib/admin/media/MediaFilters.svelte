@@ -30,6 +30,10 @@
 			label
 		}))
 	];
+	const DATE_BY = [
+		{ value: 'content', label: 'Content date' },
+		{ value: 'upload', label: 'Upload date' }
+	];
 	const FIRST_YEAR = 2000;
 	const thisYear = new Date().getFullYear();
 	const yearOptions = [{ value: '', label: 'Year' }, ...Array.from({ length: thisYear - FIRST_YEAR + 1 }, (_, i) => String(thisYear - i))];
@@ -88,6 +92,12 @@
 		class="w-48"
 		onchange={(v) => browser.setFilter({ categoryId: v as string })}
 	/>
+	<!-- Which date From/To match: the content using the file, or the upload. Unused files have no content. -->
+	{#if browser.unused}
+		<span class="text-xs text-muted-foreground" title="Unused files belong to no content, so the dates are upload dates">Upload date</span>
+	{:else}
+		<Select value={browser.dateBy} options={DATE_BY} class="w-36" onchange={(v) => browser.setFilter({ dateBy: v as 'content' | 'upload' })} />
+	{/if}
 	<div class="flex items-center gap-1.5 text-xs text-muted-foreground">
 		From
 		<Select value={fromYear} options={yearOptions} filter class="w-24" onchange={(v) => ((fromYear = v), apply())} />
