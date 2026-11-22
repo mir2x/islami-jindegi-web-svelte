@@ -131,7 +131,8 @@
 
 	<ConfirmDialog open={!!deleting} title="Delete file?" busy={deleteBusy} onconfirm={confirmDelete} oncancel={() => (deleting = null)}>
 		<strong>{deleting?.fileName}</strong> will be permanently deleted from storage and cannot be recovered.
-		{#if deleting && deleting.usageCount > 0}<strong class="text-destructive">It is used by {deleting.usageCount} item(s)</strong>, which will show broken links.{:else}Any content still referencing this URL will show broken links.{/if}
+		{#if deleting && deleting.usageCount > 0}<strong class="text-destructive">It is used by {deleting.usageCount} item(s)</strong>, which will show broken links.{:else}Any content
+			still referencing this URL will show broken links.{/if}
 	</ConfirmDialog>
 	<UploadPanel {queue} />
 </div>

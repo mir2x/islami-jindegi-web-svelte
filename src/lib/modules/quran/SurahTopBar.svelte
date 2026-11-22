@@ -36,16 +36,27 @@
 		<p class="text-xs text-muted-foreground">{t('surahMeta', { ayahCount: n(surah.totalAyahs), revelation, para: n(surah.paraNumber) })}</p>
 	</button>
 	<p class="max-sm:hidden text-2xl text-muted-foreground" style="font-family: var(--quran-arabic-font); direction: rtl">{surah.nameArabic}</p>
-	<a href={localePath(`/quran/tilawat/${surah.surahNumber}?from=surah`, locale)} title={t('tilawatMode')} aria-label={t('tilawatMode')} class={icon}><AlignJustify class="max-sm:hidden w-5 h-5" /><BookOpenText class="sm:hidden w-5 h-5" /></a>
+	<a href={localePath(`/quran/tilawat/${surah.surahNumber}?from=surah`, locale)} title={t('tilawatMode')} aria-label={t('tilawatMode')} class={icon}
+		><AlignJustify class="max-sm:hidden w-5 h-5" /><BookOpenText class="sm:hidden w-5 h-5" /></a
+	>
 	<button type="button" onclick={onsearch} title={t('searchQuran')} aria-label={t('searchQuran')} class={icon}><Search class="w-5 h-5" /></button>
 	<!-- Phones: toggles the surah / ayah / para / bookmark sidebar. -->
-	<button type="button" onclick={ontoggleNav} aria-label="Menu" aria-pressed={navOpen} class={cn('sm:hidden p-1.5 rounded-lg transition-colors', navOpen ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}><Menu class="w-5 h-5" /></button>
+	<button
+		type="button"
+		onclick={ontoggleNav}
+		aria-label="Menu"
+		aria-pressed={navOpen}
+		class={cn('sm:hidden p-1.5 rounded-lg transition-colors', navOpen ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}
+		><Menu class="w-5 h-5" /></button
+	>
 	<button
 		type="button"
 		onclick={ontoggleSettings}
 		title={t('settings')}
 		aria-label={t('settings')}
-		class={cn('max-sm:hidden p-1.5 rounded-lg transition-colors', settingsOpen ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}
-		><Settings class="w-5 h-5" /></button
+		class={cn(
+			'max-sm:hidden p-1.5 rounded-lg transition-colors',
+			settingsOpen ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+		)}><Settings class="w-5 h-5" /></button
 	>
 </div>

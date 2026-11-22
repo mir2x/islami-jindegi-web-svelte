@@ -166,69 +166,86 @@
 
 <!-- The navigation panel is a docked column on desktop (always shown) and a slide-in drawer on phones. -->
 <div class="relative flex h-full w-full overflow-hidden">
-<!-- Full-width bar over both the panel and the page. -->
-<MushafTopBar
-	title={edition.title}
-	sura={currentSura}
-	visible={barsVisible}
-	{drawerOpen}
-	{scale}
-	{spread}
-	ontoggleDrawer={toggleDrawer}
-	onlisten={openTilawat}
-	onzoom={(d) => (scale = Math.min(3, Math.max(0.75, +(scale + d * 0.25).toFixed(2))))}
-	onspread={() => spreadStore.set(spread ? '0' : '1')}
-/>
+	<!-- Full-width bar over both the panel and the page. -->
+	<MushafTopBar
+		title={edition.title}
+		sura={currentSura}
+		visible={barsVisible}
+		{drawerOpen}
+		{scale}
+		{spread}
+		ontoggleDrawer={toggleDrawer}
+		onlisten={openTilawat}
+		onzoom={(d) => (scale = Math.min(3, Math.max(0.75, +(scale + d * 0.25).toFixed(2))))}
+		onspread={() => spreadStore.set(spread ? '0' : '1')}
+	/>
 
-<!-- Phones: tap outside the drawer to close it. -->
-{#if drawerOpen}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (drawerOpen = false)} class="lg:hidden absolute inset-x-0 top-[60px] bottom-14 sm:bottom-0 z-[45] bg-black/50 cursor-default"></button>{/if}
+	<!-- Phones: tap outside the drawer to close it. -->
+	{#if drawerOpen}<button
+			type="button"
+			tabindex="-1"
+			aria-label="Close"
+			onclick={() => (drawerOpen = false)}
+			class="lg:hidden absolute inset-x-0 top-[60px] bottom-14 sm:bottom-0 z-[45] bg-black/50 cursor-default"
+		></button>{/if}
 
-<MushafDrawer
-	open={drawerOpen}
-	title={edition.title}
-	{index}
-	editionId={edition.id}
-	{navSurah}
-	{navPara}
-	currentAyah={selected}
-	visiblePages={leftPage !== null ? [rightPage, leftPage] : [rightPage]}
-	onsurah={(s) => (navSurah = s)}
-	onpara={(p) => (navPara = p)}
-	ongoAyah={goToAyah}
-	ongoPage={goTo}
-/>
+	<MushafDrawer
+		open={drawerOpen}
+		title={edition.title}
+		{index}
+		editionId={edition.id}
+		{navSurah}
+		{navPara}
+		currentAyah={selected}
+		visiblePages={leftPage !== null ? [rightPage, leftPage] : [rightPage]}
+		onsurah={(s) => (navSurah = s)}
+		onpara={(p) => (navPara = p)}
+		ongoAyah={goToAyah}
+		ongoPage={goTo}
+	/>
 
-<div
-	role="application"
-	bind:clientWidth={width}
-	bind:clientHeight={height}
-	ontouchstart={(e) => (touchX = e.touches[0].clientX)}
-	ontouchend={touchEnd}
-	class="relative h-full flex-1 min-w-0 overflow-hidden select-none bg-gradient-to-b from-neutral-200 via-neutral-300 to-neutral-400 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950"
->
-	{#if bounds}
-		<div
-			class="absolute transition-transform duration-200"
-			style:left="{bounds.x}px"
-			style:top="{bounds.y}px"
-			style:width="{bounds.w}px"
-			style:height="{bounds.h}px"
-			style:transform="scale({scale})"
-			style:transform-origin="center center"
-		>
-			{#if bounds.showSpread && leftPage !== null}
-				<div class="flex w-full h-full">
+	<div
+		role="application"
+		bind:clientWidth={width}
+		bind:clientHeight={height}
+		ontouchstart={(e) => (touchX = e.touches[0].clientX)}
+		ontouchend={touchEnd}
+		class="relative h-full flex-1 min-w-0 overflow-hidden select-none bg-gradient-to-b from-neutral-200 via-neutral-300 to-neutral-400 dark:from-neutral-800 dark:via-neutral-900 dark:to-neutral-950"
+	>
+		{#if bounds}
+			<div
+				class="absolute transition-transform duration-200"
+				style:left="{bounds.x}px"
+				style:top="{bounds.y}px"
+				style:width="{bounds.w}px"
+				style:height="{bounds.h}px"
+				style:transform="scale({scale})"
+				style:transform-origin="center center"
+			>
+				{#if bounds.showSpread && leftPage !== null}
+					<div class="flex w-full h-full">
+						<PageFace
+							class="w-1/2 h-full order-1"
+							pageNum={leftPage}
+							url={url(leftPage)}
+							highlight={highlightFor(leftBoxes)}
+							editionWidth={edition.width}
+							editionHeight={edition.height}
+							onclick={(e) => tap(e, leftBoxes)}
+						/>
+						<PageFace
+							class="w-1/2 h-full order-2"
+							pageNum={rightPage}
+							url={url(rightPage)}
+							highlight={highlightFor(rightBoxes)}
+							editionWidth={edition.width}
+							editionHeight={edition.height}
+							onclick={(e) => tap(e, rightBoxes)}
+						/>
+					</div>
+				{:else}
 					<PageFace
-						class="w-1/2 h-full order-1"
-						pageNum={leftPage}
-						url={url(leftPage)}
-						highlight={highlightFor(leftBoxes)}
-						editionWidth={edition.width}
-						editionHeight={edition.height}
-						onclick={(e) => tap(e, leftBoxes)}
-					/>
-					<PageFace
-						class="w-1/2 h-full order-2"
+						class="w-full h-full"
 						pageNum={rightPage}
 						url={url(rightPage)}
 						highlight={highlightFor(rightBoxes)}
@@ -236,104 +253,93 @@
 						editionHeight={edition.height}
 						onclick={(e) => tap(e, rightBoxes)}
 					/>
-				</div>
-			{:else}
-				<PageFace
-					class="w-full h-full"
-					pageNum={rightPage}
-					url={url(rightPage)}
-					highlight={highlightFor(rightBoxes)}
-					editionWidth={edition.width}
-					editionHeight={edition.height}
-					onclick={(e) => tap(e, rightBoxes)}
-				/>
-			{/if}
-		</div>
-	{/if}
+				{/if}
+			</div>
+		{/if}
 
-	<div
-		class={cn(
-			'absolute bottom-4 max-sm:bottom-[68px] inset-x-0 z-30 flex items-center justify-center flex-wrap gap-3 px-3 transition-all duration-300',
-			barsVisible ? 'opacity-100' : 'opacity-0 pointer-events-none translate-y-2'
-		)}
-	>
-		<AudioPill {audio} onrange={openTilawat} />
-		<PageNav
+		<div
+			class={cn(
+				'absolute bottom-4 max-sm:bottom-[68px] inset-x-0 z-30 flex items-center justify-center flex-wrap gap-3 px-3 transition-all duration-300',
+				barsVisible ? 'opacity-100' : 'opacity-0 pointer-events-none translate-y-2'
+			)}
+		>
+			<AudioPill {audio} onrange={openTilawat} />
+			<PageNav
+				{page}
+				{rightPage}
+				{leftPage}
+				totalPages={edition.totalPages}
+				bookmarked={mushafBookmarks.all.some((b) => b.editionId === edition.id && b.page === rightPage)}
+				onprev={prev}
+				onnext={next}
+				ongoto={goTo}
+				onbookmark={toggleBookmark}
+			/>
+		</div>
+
+		<PhoneBar
+			visible={barsVisible}
+			{audio}
+			{reciters}
+			{reciterId}
 			{page}
 			{rightPage}
 			{leftPage}
 			totalPages={edition.totalPages}
 			bookmarked={mushafBookmarks.all.some((b) => b.editionId === edition.id && b.page === rightPage)}
-			onprev={prev}
-			onnext={next}
+			onplay={barPlay}
+			onreciter={prefs.setReciter}
 			ongoto={goTo}
 			onbookmark={toggleBookmark}
 		/>
+
+		{#if !barsVisible}
+			<button
+				type="button"
+				onclick={() => (barsVisible = true)}
+				title={t('exitFullscreen')}
+				aria-label={t('exitFullscreen')}
+				class="absolute bottom-4 right-4 z-30 flex items-center justify-center w-11 h-11 rounded-full bg-background/95 backdrop-blur-md border border-border shadow-xl text-foreground hover:bg-muted transition-colors"
+				><Minimize class="w-4.5 h-4.5" /></button
+			>
+		{/if}
+
+		{#if selected && menu}
+			<AyahMenu
+				sura={selected.sura}
+				ayah={selected.ayah}
+				top={menu.top}
+				left={menu.left}
+				playing={same && audio.playing}
+				onplay={() => {
+					const s = selected!;
+					selected = null;
+					audio.playSingle(s.sura, s.ayah);
+				}}
+				onfullscreen={() => {
+					barsVisible = false;
+					selected = null;
+					drawerOpen = false;
+				}}
+				ondone={() => (selected = null)}
+			/>
+		{/if}
+
+		{#if tilawatOpen}
+			<TilawatDialog
+				onclose={() => (tilawatOpen = false)}
+				surahNumber={tilawatSura}
+				totalAyahs={AYAH_COUNTS[tilawatSura - 1]}
+				defaultEnd="all"
+				defaultStart={tilawatStart}
+				allSurahs={SURA_NAMES.map((name, i) => ({ number: i + 1, nameBengali: name, totalAyahs: AYAH_COUNTS[i] }) as QuranSurah)}
+				{reciters}
+				{reciterId}
+				loading={audio.loading}
+				onsurah={(n) => (tilawatSura = n)}
+				onreciter={prefs.setReciter}
+				onstart={(s, e, r) => audio.startRange(tilawatSura, s, e, r)}
+			/>
+		{/if}
 	</div>
-
-	<PhoneBar
-		visible={barsVisible}
-		{audio}
-		{reciters}
-		{reciterId}
-		{page}
-		{rightPage}
-		{leftPage}
-		totalPages={edition.totalPages}
-		bookmarked={mushafBookmarks.all.some((b) => b.editionId === edition.id && b.page === rightPage)}
-		onplay={barPlay}
-		onreciter={prefs.setReciter}
-		ongoto={goTo}
-		onbookmark={toggleBookmark}
-	/>
-
-	{#if !barsVisible}
-		<button
-			type="button"
-			onclick={() => (barsVisible = true)}
-			title={t('exitFullscreen')}
-			aria-label={t('exitFullscreen')}
-			class="absolute bottom-4 right-4 z-30 flex items-center justify-center w-11 h-11 rounded-full bg-background/95 backdrop-blur-md border border-border shadow-xl text-foreground hover:bg-muted transition-colors"
-			><Minimize class="w-4.5 h-4.5" /></button
-		>
-	{/if}
-
-	{#if selected && menu}
-		<AyahMenu
-			sura={selected.sura}
-			ayah={selected.ayah}
-			top={menu.top}
-			left={menu.left}
-			playing={same && audio.playing}
-			onplay={() => {
-				const s = selected!;
-				selected = null;
-				audio.playSingle(s.sura, s.ayah);
-			}}
-			onfullscreen={() => {
-				barsVisible = false;
-				selected = null;
-				drawerOpen = false;
-			}}
-			ondone={() => (selected = null)}
-		/>
-	{/if}
-
-	{#if tilawatOpen}
-		<TilawatDialog
-			onclose={() => (tilawatOpen = false)}
-			surahNumber={tilawatSura}
-			totalAyahs={AYAH_COUNTS[tilawatSura - 1]}
-			defaultEnd="all"
-			defaultStart={tilawatStart}
-			allSurahs={SURA_NAMES.map((name, i) => ({ number: i + 1, nameBengali: name, totalAyahs: AYAH_COUNTS[i] }) as QuranSurah)}
-			{reciters}
-			{reciterId}
-			loading={audio.loading}
-			onsurah={(n) => (tilawatSura = n)}
-			onreciter={prefs.setReciter}
-			onstart={(s, e, r) => audio.startRange(tilawatSura, s, e, r)}
-		/>
-	{/if}
-</div>
 </div>

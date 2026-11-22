@@ -32,9 +32,7 @@
 	const content = $derived(nav.content);
 	// Inline px/pt font sizes from the CMS scale with the reader's font size; Word's percentage line-heights (already stored) are dropped; the editor's own unitless ones stay.
 	const body = $derived(
-		content.body
-			?.replace(/font-size:\s*(\d+(?:\.\d+)?)(px|pt)/g, 'font-size: calc($1$2 * var(--text-scale))')
-			.replace(/line-height:\s*[\d.]+%;?/g, '') ?? null
+		content.body?.replace(/font-size:\s*(\d+(?:\.\d+)?)(px|pt)/g, 'font-size: calc($1$2 * var(--text-scale))').replace(/line-height:\s*[\d.]+%;?/g, '') ?? null
 	);
 	const navBtn = 'flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors max-w-[45%]';
 	const stepBtn = 'p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded';

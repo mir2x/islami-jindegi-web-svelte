@@ -114,7 +114,8 @@
 			onclick={() => (showNav = !showNav)}
 			aria-label="Menu"
 			aria-pressed={showNav}
-			class={cn('sm:hidden p-1.5 rounded-lg transition-colors', showNav ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}><Menu class="w-5 h-5" /></button
+			class={cn('sm:hidden p-1.5 rounded-lg transition-colors', showNav ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}
+			><Menu class="w-5 h-5" /></button
 		>
 	</div>
 
@@ -122,7 +123,8 @@
 
 	<div class="relative flex flex-1 min-h-0 overflow-hidden">
 		<!-- Phones: tap outside the sidebar to close it. -->
-		{#if showNav}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (showNav = false)} class="sm:hidden absolute inset-0 z-40 bg-black/50 cursor-default"></button>{/if}
+		{#if showNav}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (showNav = false)} class="sm:hidden absolute inset-0 z-40 bg-black/50 cursor-default"
+			></button>{/if}
 		<div
 			class={cn(
 				'w-72 max-w-[85vw] sm:w-80 shrink-0 border-r border-border flex-col min-h-0 overflow-hidden bg-background max-sm:absolute max-sm:inset-y-0 max-sm:left-0 max-sm:z-50 max-sm:shadow-2xl',

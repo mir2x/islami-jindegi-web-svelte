@@ -78,7 +78,10 @@
 									onreciter(r.id);
 									menuOpen = false;
 								}}
-								class={cn('w-full flex items-center justify-between gap-2 px-3 py-2.5 text-sm text-left transition-colors hover:bg-muted', r.id === reciterId ? 'text-primary font-semibold' : 'text-foreground')}
+								class={cn(
+									'w-full flex items-center justify-between gap-2 px-3 py-2.5 text-sm text-left transition-colors hover:bg-muted',
+									r.id === reciterId ? 'text-primary font-semibold' : 'text-foreground'
+								)}
 							>
 								<span class="truncate">{r.name}</span>
 								{#if r.id === reciterId}<Check class="w-4 h-4 shrink-0" />{/if}
@@ -119,6 +122,7 @@
 		type="button"
 		onclick={onbookmark}
 		aria-label={t('pageBookmark')}
-		class={cn(round, bookmarked ? 'text-amber-500' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}><Star class={cn('w-5 h-5', bookmarked && 'fill-current')} /></button
+		class={cn(round, bookmarked ? 'text-amber-500' : 'text-muted-foreground hover:text-foreground hover:bg-muted')}
+		><Star class={cn('w-5 h-5', bookmarked && 'fill-current')} /></button
 	>
 </div>

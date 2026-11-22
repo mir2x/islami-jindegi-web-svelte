@@ -38,7 +38,9 @@
 				</div>
 				<MediaField accept="audio" compact bind:value={() => entry?.url ?? '', (url) => set(block, url)} placeholder="Choose recitation" />
 				{#if state === 'stale'}
-					<p class="text-xs text-muted-foreground">This text was edited after the audio was added, so the app won't play it. Upload a new recording, or confirm the old one still fits.</p>
+					<p class="text-xs text-muted-foreground">
+						This text was edited after the audio was added, so the app won't play it. Upload a new recording, or confirm the old one still fits.
+					</p>
 					<Button variant="outline" size="sm" onclick={() => set(block, entry!.url)}>Audio still matches</Button>
 				{/if}
 			</div>

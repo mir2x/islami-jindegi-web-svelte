@@ -30,19 +30,48 @@
 
 <!-- Phones only: a bottom bar (more items to come). -->
 <div class="sm:hidden shrink-0 h-14 grid grid-cols-4 border-t border-border bg-background">
-	<button type="button" onclick={() => { onopen(); open = !open; }} aria-pressed={open} class={cn('flex flex-col items-center gap-1 py-2 transition-colors', open ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}>
+	<button
+		type="button"
+		onclick={() => {
+			onopen();
+			open = !open;
+		}}
+		aria-pressed={open}
+		class={cn('flex flex-col items-center gap-1 py-2 transition-colors', open ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}
+	>
 		<BookOpenText class="w-6 h-6" />
 		<span class="text-xs">{t('translationShort')}</span>
 	</button>
-	<button type="button" onclick={onwords} aria-pressed={showWords} class={cn('flex flex-col items-center gap-1 py-2 transition-colors', showWords ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}>
+	<button
+		type="button"
+		onclick={onwords}
+		aria-pressed={showWords}
+		class={cn('flex flex-col items-center gap-1 py-2 transition-colors', showWords ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}
+	>
 		<WordByWordIcon class="w-6 h-6" />
 		<span class="text-xs">{t('wordByWordShort')}</span>
 	</button>
-	<button type="button" onclick={() => { open = false; onlisten(); }} aria-pressed={listenOpen} class={cn('flex flex-col items-center gap-1 py-2 transition-colors', listenOpen ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}>
+	<button
+		type="button"
+		onclick={() => {
+			open = false;
+			onlisten();
+		}}
+		aria-pressed={listenOpen}
+		class={cn('flex flex-col items-center gap-1 py-2 transition-colors', listenOpen ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}
+	>
 		<Play class="w-6 h-6" />
 		<span class="text-xs">{t('listenAudio')}</span>
 	</button>
-	<button type="button" onclick={() => { open = false; onsettings(); }} aria-pressed={settingsOpen} class={cn('flex flex-col items-center gap-1 py-2 transition-colors', settingsOpen ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}>
+	<button
+		type="button"
+		onclick={() => {
+			open = false;
+			onsettings();
+		}}
+		aria-pressed={settingsOpen}
+		class={cn('flex flex-col items-center gap-1 py-2 transition-colors', settingsOpen ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}
+	>
 		<Settings class="w-6 h-6" />
 		<span class="text-xs">{t('settings')}</span>
 	</button>
@@ -68,7 +97,10 @@
 							type="button"
 							onclick={() => ontoggle(name)}
 							aria-pressed={on}
-							class={cn('px-4 py-2.5 rounded-full text-[15px] font-medium border transition-colors', on ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted/40 text-foreground border-border hover:bg-muted')}
+							class={cn(
+								'px-4 py-2.5 rounded-full text-[15px] font-medium border transition-colors',
+								on ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted/40 text-foreground border-border hover:bg-muted'
+							)}
 						>
 							{name}
 						</button>

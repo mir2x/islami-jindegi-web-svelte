@@ -81,7 +81,8 @@
 
 <Card title="Country Offsets">
 	<p class="text-sm text-muted-foreground">
-		Days a country's Hijri months start after the Saudi (Umm al-Qura) calendar when no sighting is recorded for that month. A country with no row follows Saudi exactly. The app keeps a copy and refreshes it daily.
+		Days a country's Hijri months start after the Saudi (Umm al-Qura) calendar when no sighting is recorded for that month. A country with no row follows Saudi exactly. The app
+		keeps a copy and refreshes it daily.
 	</p>
 
 	{#if loading}
@@ -128,7 +129,7 @@
 	{/if}
 </Card>
 
-<ConfirmDialog open={removing !== null} title="Remove offset" busy={busy} confirmLabel="Remove" busyLabel="Removing..." onconfirm={remove} oncancel={() => (removing = null)}>
+<ConfirmDialog open={removing !== null} title="Remove offset" {busy} confirmLabel="Remove" busyLabel="Removing..." onconfirm={remove} oncancel={() => (removing = null)}>
 	{#if removing}
 		{removing.countryCode} will follow the Saudi calendar for months with no recorded sighting.
 	{/if}

@@ -23,7 +23,17 @@ interface Options {
 }
 
 /** POST or PUT a form, toast the result and navigate away. Resolves true on success. */
-export async function saveForm({ apiPath, id, payload, name, redirect, fallback = '/admin', failMessage = 'Something went wrong', conflictMessage, stay }: Options): Promise<boolean> {
+export async function saveForm({
+	apiPath,
+	id,
+	payload,
+	name,
+	redirect,
+	fallback = '/admin',
+	failMessage = 'Something went wrong',
+	conflictMessage,
+	stay
+}: Options): Promise<boolean> {
 	try {
 		let created: { id: string } | undefined;
 		if (id) await api.put(`${apiPath}/${id}`, payload);

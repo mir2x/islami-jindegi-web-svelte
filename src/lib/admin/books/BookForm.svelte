@@ -159,10 +159,16 @@
 					{@const subs = book.chapters.reduce((sum, c) => sum + c.subChapters.length, 0)}
 					<Card variant="compact" title={t('chaptersHeading')} class="border-primary/50 bg-primary/5">
 						<p class="text-xs text-muted-foreground">{t('chapterCount', { count: book.chapters.length })} · {t('subchapterCount', { count: subs })}</p>
-						<Button href={localePath(first ? `/admin/chapters/${first.id}/edit` : `/admin/chapters/new?bookId=${book.id}`)} class="w-full">{first ? t('manageChapters') : t('addChapter')}</Button>
+						<Button href={localePath(first ? `/admin/chapters/${first.id}/edit` : `/admin/chapters/new?bookId=${book.id}`)} class="w-full"
+							>{first ? t('manageChapters') : t('addChapter')}</Button
+						>
 						<div class="grid grid-cols-2 gap-2">
-							<Button variant="outline" size="sm" href={localePath(`/admin/chapters/new?bookId=${book.id}`)} class="gap-1 text-xs"><Plus class="w-3.5 h-3.5" /> {t('addChapter')}</Button>
-							<Button variant="outline" size="sm" href={localePath(`/admin/subchapters/new?bookId=${book.id}`)} class="gap-1 text-xs"><Plus class="w-3.5 h-3.5" /> {t('addSubchapter')}</Button>
+							<Button variant="outline" size="sm" href={localePath(`/admin/chapters/new?bookId=${book.id}`)} class="gap-1 text-xs"
+								><Plus class="w-3.5 h-3.5" /> {t('addChapter')}</Button
+							>
+							<Button variant="outline" size="sm" href={localePath(`/admin/subchapters/new?bookId=${book.id}`)} class="gap-1 text-xs"
+								><Plus class="w-3.5 h-3.5" /> {t('addSubchapter')}</Button
+							>
 						</div>
 					</Card>
 				{/if}

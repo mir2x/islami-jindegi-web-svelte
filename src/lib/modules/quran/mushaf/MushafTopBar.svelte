@@ -40,7 +40,9 @@
 	<a href={localePath('/quran', locale)} aria-label={t('back')} class="{btn} shrink-0"><ArrowLeft class="w-5 h-5" /></a>
 	<button type="button" onclick={ontoggleDrawer} class="flex-1 min-w-0 flex items-center gap-1 text-left max-sm:pointer-events-none lg:pointer-events-none">
 		<div class="min-w-0">
-			<p class="text-foreground font-semibold text-sm truncate"><span class="sm:hidden">{title.split(/\s+/).slice(0, 2).join(' ')}</span><span class="hidden sm:inline">{title}</span></p>
+			<p class="text-foreground font-semibold text-sm truncate">
+				<span class="sm:hidden">{title.split(/\s+/).slice(0, 2).join(' ')}</span><span class="hidden sm:inline">{title}</span>
+			</p>
 			{#if sura}<p class="text-muted-foreground text-xs truncate">{SURA_NAMES[sura - 1]}</p>{/if}
 		</div>
 		<ChevronDown class={cn('w-4 h-4 text-muted-foreground transition-transform duration-200 shrink-0 max-sm:hidden lg:hidden', drawerOpen && 'rotate-180')} />

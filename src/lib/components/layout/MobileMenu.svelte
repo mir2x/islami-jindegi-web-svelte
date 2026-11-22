@@ -54,8 +54,19 @@
 
 <!-- Outside the header: its backdrop blur would otherwise trap this fixed element. -->
 <div class={cn('lg:hidden fixed inset-0 z-[60] print:hidden', !open && 'pointer-events-none')} aria-hidden={!open}>
-	<button type="button" tabindex="-1" aria-label={t('toggleMenu')} onclick={onclose} class={cn('absolute inset-0 bg-black/55 transition-opacity duration-200', open ? 'opacity-100' : 'opacity-0')}></button>
-	<aside class={cn('absolute left-0 top-0 h-full w-[82%] max-w-sm bg-background border-r border-border shadow-2xl flex flex-col transition-transform duration-200', open ? 'translate-x-0' : '-translate-x-full')}>
+	<button
+		type="button"
+		tabindex="-1"
+		aria-label={t('toggleMenu')}
+		onclick={onclose}
+		class={cn('absolute inset-0 bg-black/55 transition-opacity duration-200', open ? 'opacity-100' : 'opacity-0')}
+	></button>
+	<aside
+		class={cn(
+			'absolute left-0 top-0 h-full w-[82%] max-w-sm bg-background border-r border-border shadow-2xl flex flex-col transition-transform duration-200',
+			open ? 'translate-x-0' : '-translate-x-full'
+		)}
+	>
 		<div class="flex items-center justify-between gap-3 px-5 h-[76px] shrink-0">
 			<a href={localePath('/', locale)} class="flex items-center gap-3 min-w-0">
 				<img src="/logo-104.webp" alt="" width="44" height="44" class="rounded-xl shadow-sm" />
@@ -68,7 +79,10 @@
 				{@const Icon = ICONS[link.href]}
 				<a
 					href={localePath(link.href, locale)}
-					class={cn('flex items-center gap-4 px-3 py-3 rounded-lg text-lg transition-colors', isActive(link.href) ? 'text-primary bg-primary/10 font-semibold' : 'text-foreground hover:bg-muted')}
+					class={cn(
+						'flex items-center gap-4 px-3 py-3 rounded-lg text-lg transition-colors',
+						isActive(link.href) ? 'text-primary bg-primary/10 font-semibold' : 'text-foreground hover:bg-muted'
+					)}
 				>
 					{#if Icon}<Icon class="w-5 h-5 shrink-0" />{/if}
 					{t(link.key)}
@@ -77,7 +91,10 @@
 		</nav>
 
 		<div class="shrink-0 border-t border-border/60 px-5 py-4 space-y-3">
-			<a href={localePath('/donate', locale)} class="flex items-center justify-center gap-2.5 h-12 rounded-xl bg-primary text-primary-foreground font-semibold text-lg shadow-sm hover:opacity-90 transition-opacity">
+			<a
+				href={localePath('/donate', locale)}
+				class="flex items-center justify-center gap-2.5 h-12 rounded-xl bg-primary text-primary-foreground font-semibold text-lg shadow-sm hover:opacity-90 transition-opacity"
+			>
 				<HandHeart class="w-5 h-5" />
 				{t('donate')}
 			</a>

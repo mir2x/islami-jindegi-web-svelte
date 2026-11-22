@@ -30,7 +30,10 @@
 							onkey(f.key);
 							open = false;
 						}}
-						class={cn('w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors hover:bg-muted', f.key === activeKey ? 'text-primary font-semibold' : 'text-foreground')}
+						class={cn(
+							'w-full flex items-center justify-between gap-2 px-4 py-3 text-sm text-left transition-colors hover:bg-muted',
+							f.key === activeKey ? 'text-primary font-semibold' : 'text-foreground'
+						)}
 					>
 						<span class="truncate">{f.label}</span>
 						{#if f.key === activeKey}<Check class="w-4 h-4 shrink-0" />{/if}

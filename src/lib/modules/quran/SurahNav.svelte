@@ -59,8 +59,10 @@
 			<button
 				type="button"
 				onclick={() => (tab = id)}
-				class={cn('flex-1 min-w-0 px-1 py-3 text-sm font-semibold whitespace-nowrap transition-colors', tab === id ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground hover:text-foreground')}
-				>{label[id]}</button
+				class={cn(
+					'flex-1 min-w-0 px-1 py-3 text-sm font-semibold whitespace-nowrap transition-colors',
+					tab === id ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground hover:text-foreground'
+				)}>{label[id]}</button
 			>
 		{/each}
 	</div>
@@ -123,8 +125,12 @@
 							</div>
 							<p class="text-lg text-right text-foreground line-clamp-1" style:font-family={DEFAULT_ARABIC_FONT} style:direction="rtl">{b.arabic}</p>
 						</button>
-						<button type="button" onclick={() => quranBookmarks.remove(b)} title={tb('remove')} aria-label={tb('remove')} class="shrink-0 mt-1 p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-							><Trash2 class="w-3.5 h-3.5" /></button
+						<button
+							type="button"
+							onclick={() => quranBookmarks.remove(b)}
+							title={tb('remove')}
+							aria-label={tb('remove')}
+							class="shrink-0 mt-1 p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"><Trash2 class="w-3.5 h-3.5" /></button
 						>
 					</div>
 				{:else}

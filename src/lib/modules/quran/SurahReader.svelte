@@ -142,7 +142,8 @@
 
 	<div class="relative flex flex-1 overflow-hidden">
 		<!-- Phones: tap outside the sidebar to close it. -->
-		{#if navOpen}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (navPref = false)} class="sm:hidden absolute inset-0 z-40 bg-black/50 cursor-default"></button>{/if}
+		{#if navOpen}<button type="button" tabindex="-1" aria-label="Close" onclick={() => (navPref = false)} class="sm:hidden absolute inset-0 z-40 bg-black/50 cursor-default"
+			></button>{/if}
 		{#if navOpen}<SurahNav {allSurahs} surahNumber={surah.surahNumber} activeAyah={audio.activeAyah} ongo={go} />{/if}
 
 		<div bind:this={scroller} class="flex-1 overflow-y-auto">

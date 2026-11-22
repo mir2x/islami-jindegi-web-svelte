@@ -227,7 +227,8 @@
 	<div class="mb-4">
 		<h1 class="text-2xl font-bold tracking-tight">Daily Popup</h1>
 		<p class="mt-1 text-sm text-muted-foreground">
-			Choose what the app's popup shows each day. A day with nothing chosen shows a random malfuzat. Click a day, pick an item, save, and carry on to the next day without leaving this page.
+			Choose what the app's popup shows each day. A day with nothing chosen shows a random malfuzat. Click a day, pick an item, save, and carry on to the next day without leaving
+			this page.
 		</p>
 	</div>
 
@@ -252,7 +253,9 @@
 					<button
 						type="button"
 						onclick={() => goTo(key)}
-						class="flex min-h-20 flex-col gap-1 rounded-lg border p-1.5 text-left transition-colors hover:bg-muted/60 {key === selected ? 'border-primary ring-2 ring-primary/30' : 'border-border'} {inMonth ? 'bg-card' : 'bg-muted/30 text-muted-foreground'}"
+						class="flex min-h-20 flex-col gap-1 rounded-lg border p-1.5 text-left transition-colors hover:bg-muted/60 {key === selected
+							? 'border-primary ring-2 ring-primary/30'
+							: 'border-border'} {inMonth ? 'bg-card' : 'bg-muted/30 text-muted-foreground'}"
 					>
 						<span class="flex items-center justify-between text-xs font-semibold">
 							<span class={key === todayKey ? 'rounded-full bg-primary px-1.5 text-primary-foreground' : ''}>{parseKey(key).getDate()}</span>
@@ -276,7 +279,9 @@
 					<p class="mt-1 font-semibold">{current.title || 'Untitled'}</p>
 					<span class="mt-1 inline-block rounded px-1.5 text-xs font-semibold {moduleMeta(current.module).cls}">{moduleMeta(current.module).label}</span>
 					{#if !isShowable(current)}
-						<p class="mt-2 text-xs text-destructive">{current.exists ? 'This item is unpublished' : 'This item was deleted'}: the app shows a random pick until you choose another.</p>
+						<p class="mt-2 text-xs text-destructive">
+							{current.exists ? 'This item is unpublished' : 'This item was deleted'}: the app shows a random pick until you choose another.
+						</p>
 					{/if}
 				</div>
 			{:else}
@@ -309,7 +314,9 @@
 						<button
 							type="button"
 							onclick={() => (picked = c)}
-							class="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60 {picked?.id === c.id ? 'bg-primary/10 font-semibold' : ''}"
+							class="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left text-sm transition-colors hover:bg-muted/60 {picked?.id === c.id
+								? 'bg-primary/10 font-semibold'
+								: ''}"
 						>
 							<span>{c.title || 'Untitled'}</span>
 							{#if c.date}<span class="shrink-0 text-[11px] font-normal text-muted-foreground">{c.date}</span>{/if}
@@ -327,7 +334,10 @@
 			{#if total > 0}<p class="-mt-2 text-right text-[11px] text-muted-foreground">{candidates.length} of {total}</p>{/if}
 
 			{#if picked}
-				<p class="text-sm"><span class="text-muted-foreground">Chosen:</span> <span class="font-semibold">{picked.title || 'Untitled'}</span> <span class="text-xs text-muted-foreground">({moduleMeta(pickedKind).label})</span></p>
+				<p class="text-sm">
+					<span class="text-muted-foreground">Chosen:</span> <span class="font-semibold">{picked.title || 'Untitled'}</span>
+					<span class="text-xs text-muted-foreground">({moduleMeta(pickedKind).label})</span>
+				</p>
 			{/if}
 
 			<div class="flex flex-wrap gap-2">
