@@ -1,12 +1,17 @@
 <script lang="ts">
 	import Calendar from '@lucide/svelte/icons/calendar';
+	import Moon from '@lucide/svelte/icons/moon';
+	import Sun from '@lucide/svelte/icons/sun';
+	import Sunrise from '@lucide/svelte/icons/sunrise';
+	import Sunset from '@lucide/svelte/icons/sunset';
+	import Landmark from '@lucide/svelte/icons/landmark';
 	import Loader2 from '@lucide/svelte/icons/loader-circle';
 	import MapPin from '@lucide/svelte/icons/map-pin';
 	import { onMount } from 'svelte';
 	import { formatNum, formatTime, toBanglaDate, toHijri } from '#lib/calendar.ts';
 	import { getHijriToday, type HijriDisplayDate } from '#lib/hijri.ts';
 	import { currentLocale, localePath, useT } from '#lib/i18n/use-t.svelte.ts';
-	import { calcPrayerSlots, findActiveSlot, findNextSlot } from '#lib/prayer-times.ts';
+	import { calcPrayerSlots, findActiveSlot, findNextSlot, type PrayerSlot } from '#lib/prayer-times.ts';
 	import { cn } from '#lib/utils.ts';
 
 	const DHAKA = { lat: 23.8103, lng: 90.4125 };
@@ -32,6 +37,19 @@
 	const locationName = $derived(located ?? t('dhakaLocation'));
 	const hijri = $derived<HijriDisplayDate>(hijriState ?? { ...toHijri(now), source: 'local' });
 	const bangla = $derived(toBanglaDate(now));
+
+
+	const ICONS: Record<string, typeof Sun> = { tahajjud: Moon, fajr: Sunrise, sunrise: Sunrise, ishraq: Sun, midday: Sun, dhuhr: Sun, asr: Sun, sunset: Sunset, maghrib: Moon, isha: Moon };
+	const iconFor = (key: string) => ICONS[key] ?? Landmark;
+
+	const endsIn = $derived.by(() => {
+		if (!active) return '';
+		const mins = Math.max(1, Math.ceil((active.end.getTime() - now.getTime()) / 60000));
+		const h = Math.floor(mins / 60);
+		const m = mins % 60;
+		const dur = h > 0 ? t('durHM', { h: formatNum(h, locale), m: formatNum(m, locale) }) : t('durM', { m: formatNum(m, locale) });
+		return t('endsIn', { time: dur });
+	});
 
 	onMount(() => {
 		mounted = true;
@@ -76,6 +94,30 @@
 	const href = $derived(localePath('/namaz-times', locale));
 </script>
 
+{#snippet side(title: string, slot: PrayerSlot | null | undefined, times: [string, string][])}
+	<div class="flex items-center gap-2.5">
+		{#if slot}
+			{@const Icon = iconFor(slot.key)}
+			<span class="w-9 h-9 rounded-full bg-foreground/10 dark:bg-white/10 flex items-center justify-center shrink-0 text-primary dark:text-white"><Icon class="w-5 h-5" /></span>
+		{/if}
+		<div class="min-w-0">
+			<p class="text-xs lg:text-sm font-semibold text-primary dark:text-amber-300">{title}</p>
+			<p class="text-lg lg:text-xl font-medium text-foreground dark:text-white leading-tight truncate">{slot ? (locale === 'bn' ? slot.nameBn : slot.nameEn) : '—'}</p>
+		</div>
+	</div>
+	{#if slot}
+		<div class="mt-2.5 pt-2.5 border-t border-foreground/10 dark:border-white/10 flex gap-3">
+			{#each times as [lbl, val], i (i)}
+				{#if i > 0}<div class="w-px bg-foreground/15 dark:bg-white/15"></div>{/if}
+				<div class="min-w-0 flex-1">
+					<p class={label}>{lbl}</p>
+					<p class="text-lg lg:text-xl font-semibold tabular-nums text-foreground dark:text-white">{val}</p>
+				</div>
+			{/each}
+		</div>
+	{/if}
+{/snippet}
+
 {#if !mounted}
 	<div class="rounded-2xl bg-card dark:bg-[#163f4f] border border-foreground/15 shadow-sm px-5 py-4 flex items-center gap-3 text-muted-foreground shrink-0 w-full">
 		<Loader2 class="w-4 h-4 animate-spin shrink-0 text-primary" /><span class="text-sm">{tCommon('loading')}</span>
@@ -102,37 +144,24 @@
 			</p>
 		</a>
 
-		<!-- Prayer times: one full-width card, current | next columns -->
+		<!-- Prayer times: current | next, matching the app's hero card -->
 		<a
 			{href}
-			class="group rounded-2xl bg-card dark:bg-[#163f4f] border border-border/60 dark:border-foreground/15 shadow-sm hover:border-primary/50 hover:shadow-md transition-all p-4 lg:p-5 flex items-start justify-between gap-4"
+			class="group rounded-2xl bg-card dark:bg-[#163f4f] border border-border/60 dark:border-foreground/15 shadow-sm hover:border-primary/50 hover:shadow-md transition-all p-3 lg:p-4 flex items-stretch gap-3"
 		>
-			<div class="min-w-0">
-				<p class="text-sm lg:text-base font-semibold text-primary dark:text-amber-300">{t('current')}</p>
-				{#if active}
-					<p class="mt-0.5 text-xl lg:text-2xl font-semibold text-foreground dark:text-white leading-snug">{locale === 'bn' ? active.nameBn : active.nameEn}</p>
-					<div class="mt-2 flex items-end gap-5 lg:gap-6">
-						<div>
-							<p class={label}>{t('start')}</p>
-							<p class="text-lg lg:text-xl font-medium tabular-nums text-foreground/80 dark:text-white/80">{formatTime(active.start, locale)}</p>
-						</div>
-						<div>
-							<p class={label}>{t('end')}</p>
-							<p class="text-xl lg:text-2xl font-semibold tabular-nums text-foreground dark:text-white">{formatTime(active.end, locale)}</p>
-						</div>
-					</div>
-				{:else}<p class="mt-1 text-base text-muted-foreground">—</p>{/if}
+			<div class="min-w-0 flex-[3] flex flex-col">
+				{@render side(t('current'), active, [
+					[t('waqtStarts'), active ? formatTime(active.start, locale) : ''],
+					[t('waqtEnds'), active ? formatTime(active.end, locale) : '']
+				])}
+				{#if endsIn}
+					<span class="mt-2.5 self-start rounded-full bg-foreground/10 dark:bg-white/10 px-3 py-1 text-xs lg:text-sm text-foreground/80 dark:text-white/80">{endsIn}</span>
+				{/if}
 			</div>
-			{#if next}
-				<div class="text-right shrink-0">
-					<p class="text-sm lg:text-base font-semibold text-primary dark:text-amber-300">{t('next')}</p>
-					<p class="mt-0.5 text-lg lg:text-xl font-semibold text-foreground dark:text-white leading-snug">{locale === 'bn' ? next.nameBn : next.nameEn}</p>
-					<div class="mt-2">
-						<p class={label}>{t('start')}</p>
-						<p class="text-lg lg:text-xl font-medium tabular-nums text-foreground/80 dark:text-white/80">{formatTime(next.start, locale)}</p>
-					</div>
-				</div>
-			{/if}
+			<div class="w-px bg-foreground/15 dark:bg-white/15 shrink-0"></div>
+			<div class="min-w-0 flex-[2] flex flex-col">
+				{@render side(t('next'), next, [[t('waqtStarts'), next ? formatTime(next.start, locale) : '']])}
+			</div>
 		</a>
 	</div>
 {/if}
