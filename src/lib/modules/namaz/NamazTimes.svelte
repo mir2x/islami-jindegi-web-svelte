@@ -124,7 +124,10 @@
 
 		<div class="flex gap-2 mb-3 lg:mb-[1vh] lg:shrink-0">
 			{#each [['/qibla', Compass, 'qibla'], ['/mosques', Landmark, 'mosques']] as const as [href, Icon, key] (href)}
-				<a href={localePath(href, locale)} class="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground hover:bg-primary/5 hover:text-primary transition-colors">
+				<a
+					href={localePath(href, locale)}
+					class="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-semibold text-foreground hover:bg-primary/5 hover:text-primary transition-colors"
+				>
 					<Icon class="w-4 h-4" />{tNav(key)}
 				</a>
 			{/each}

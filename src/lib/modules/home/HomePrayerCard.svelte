@@ -38,8 +38,18 @@
 	const hijri = $derived<HijriDisplayDate>(hijriState ?? { ...toHijri(now), source: 'local' });
 	const bangla = $derived(toBanglaDate(now));
 
-
-	const ICONS: Record<string, typeof Sun> = { tahajjud: Moon, fajr: Sunrise, sunrise: Sunrise, ishraq: Sun, midday: Sun, dhuhr: Sun, asr: Sun, sunset: Sunset, maghrib: Moon, isha: Moon };
+	const ICONS: Record<string, typeof Sun> = {
+		tahajjud: Moon,
+		fajr: Sunrise,
+		sunrise: Sunrise,
+		ishraq: Sun,
+		midday: Sun,
+		dhuhr: Sun,
+		asr: Sun,
+		sunset: Sunset,
+		maghrib: Moon,
+		isha: Moon
+	};
 	const iconFor = (key: string) => ICONS[key] ?? Landmark;
 
 	const endsIn = $derived.by(() => {
