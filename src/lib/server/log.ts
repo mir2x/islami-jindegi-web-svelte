@@ -3,7 +3,7 @@ import { currentRequestId } from './request-context.ts';
 type Level = 'info' | 'warn' | 'error';
 
 /**
- * One JSON object per line on stdout (journal -> Alloy -> Loki, unit `ij-web.service`). The field names
+ * One JSON object per line on stdout (journal -> OpenTelemetry Collector -> OpenObserve, unit `ij-web.service`). The field names
  * follow the proxy's access line (`ts`, `level`, `logger`, `msg`); `request_id` is the id nginx gave the
  * request and the API logs as `TraceId`, so one search finds a page load on all three.
  */
