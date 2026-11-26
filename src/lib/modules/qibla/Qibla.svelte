@@ -7,6 +7,7 @@
 	import { onDestroy } from 'svelte';
 	import Navigation from '@lucide/svelte/icons/navigation';
 	import { createCompass } from './compass.svelte.ts';
+	import KaabaMarker from './KaabaMarker.svelte';
 
 	const t = useT('QiblaPage');
 	const locale = $derived(currentLocale());
@@ -41,8 +42,14 @@
 	</div>
 
 	<div class="rounded-3xl border border-border bg-card p-6 sm:p-8 text-center">
-		<svg viewBox="-136 -136 272 272" class="w-full max-w-72 mx-auto" role="img" aria-label={t('diagramLabel', { degrees: bearing })}>
-			<polygon points="0,-122 -7,-136 7,-136" class={aligned ? 'fill-primary' : 'fill-foreground'} />
+		<svg viewBox="-136 -162 272 298" class="w-full max-w-72 mx-auto" role="img" aria-label={t('diagramLabel', { degrees: bearing })}>
+			<!-- With the compass on, the top is where the phone points, so the Kaaba there is the target the arrow is turned
+			     to. Without it north is up, and a Kaaba there would say the Qibla is north. -->
+			{#if live.status === 'live'}
+				<KaabaMarker />
+			{:else}
+				<polygon points="0,-122 -7,-136 7,-136" class="fill-foreground" />
+			{/if}
 			<g transform="rotate({-(live.angle ?? 0)})">
 				<circle r="104" class="fill-muted/40 stroke-border" stroke-width="1" />
 				{#each ticks as a (a)}
