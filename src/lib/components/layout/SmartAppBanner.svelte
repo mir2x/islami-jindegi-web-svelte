@@ -46,7 +46,7 @@
 			<div class="min-w-0 flex-1">
 				<p class="font-semibold text-foreground truncate text-[13px] leading-tight">{isBn ? 'ইসলামী যিন্দেগী' : 'Islami Jindegi'}</p>
 				<p class="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
-					{isBn ? 'অ্যাপটিতে সহজে পড়ুন ও অডিও শুনুন' : 'Read & listen in the official mobile app'}
+					{isBn ? 'এ্যাপটিতে সহজে পড়ুন ও অডিও শুনুন' : 'Read & listen in the official mobile app'}
 				</p>
 			</div>
 		</div>
@@ -56,7 +56,7 @@
 			rel="noopener noreferrer"
 			class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground font-medium text-xs hover:bg-primary/90 transition-colors shadow-xs"
 		>
-			<span>{isBn ? 'অ্যাপে খুলুন' : platform === 'ios' ? 'Open in App' : 'Get the App'}</span>
+			<span>{isBn ? 'এ্যাপে খুলুন' : platform === 'ios' ? 'Open in App' : 'Get the App'}</span>
 			<ExternalLink class="w-3 h-3 opacity-80" />
 		</a>
 	</aside>
